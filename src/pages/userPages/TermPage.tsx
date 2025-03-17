@@ -1,9 +1,9 @@
 // Custom Components
 import CompletedTermPage from "@/components/termPageComponents/CompletedTermPage";
 import RegularTermPage from "@/components/termPageComponents/RegularTermPage";
-import Footer from "@/components/Footer";
+import Footer from "@/components/sharedHooks/Footer";
 // Hooks
-import useData from '@/hooks/use-data';
+import useData from '@/hooks/generalHooks/use-data';
 
 const TermPage = () => {
     // Hooks

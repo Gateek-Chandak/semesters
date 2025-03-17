@@ -4,10 +4,10 @@ import { Course } from "@/types/mainTypes"
 import { updateTerm } from "@/redux/slices/dataSlice"
 // Hooks
 import { useEffect, useState } from "react"
-import useData from "../use-data"
+import useData from "../generalHooks/use-data"
 import { useDispatch } from "react-redux"
-import { useToast } from "../use-toast"
-import useParsedRouteParams from "../use-parsed-route-params"
+import { useToast } from "../generalHooks/use-toast"
+import useParsedRouteParams from "../generalHooks/use-parsed-route-params"
 
 const useLocalCourseList = () => {
     // Hoosks

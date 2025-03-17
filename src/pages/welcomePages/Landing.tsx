@@ -9,7 +9,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ArrowUpRight, ArrowDown } from "lucide-react";
 // Hooks
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/generalHooks/use-toast";
 // Custom Components
 import FacultyCard from "@/components/landingPageComponents/FacultyCard";
 // Services

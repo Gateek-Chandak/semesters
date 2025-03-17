@@ -9,7 +9,7 @@ import CoursePage from './pages/userPages/CoursePage.js';
 import Dashboard from './pages/userPages/Dashboard.js';
 import TermPage from './pages/userPages/TermPage.js';
 import PrivacyPolicyTermsConditions from './pages/welcomePages/PP&TC.js';
-import ProtectedRoute from './components/ProtectedRoute.js'
+import ProtectedRoute from './components/sharedHooks/ProtectedRoute.js'
 
 function App() {
 

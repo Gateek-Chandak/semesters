@@ -6,13 +6,13 @@ import { Trash2Icon } from "lucide-react";
 // Types
 import { Course } from "@/types/mainTypes";
 // Custom Components
-import ConfirmDeletePopup from "@/components/ConfirmDeletePopup";
+import ConfirmDeletePopup from "@/components/sharedHooks/ConfirmDeletePopup";
 // Hooks
 import { ChangeEvent, useState } from "react";
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 // Services
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/generalHooks/use-toast";
 import TermDataService from "@/services/termDataService";
 
 const _inputFieldValidationService = new InputFieldValidationService();

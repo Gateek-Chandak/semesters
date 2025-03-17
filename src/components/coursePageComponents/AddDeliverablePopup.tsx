@@ -11,7 +11,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "../ui/dialog";
 // Hooks
 import { useState, ChangeEvent } from "react";
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 // Libraries
 import { DateTimePicker } from "./DateTimePicker";
 // Services

@@ -1,4 +1,4 @@
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
 import { Button } from "../ui/button";
 import AddSchemePopup from "./AddSchemePopup";

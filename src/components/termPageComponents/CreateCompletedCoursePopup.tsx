@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import FormSubmitService from "@/services/formSubmitService";
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
 // Hooks
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 
 const _inputFieldValidationService = new InputFieldValidationService();
 

@@ -10,9 +10,9 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 // Hooks
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/generalHooks/use-toast";
 import useTermCalendarEvents from "@/hooks/termPageHooks/use-term-calendar-events";
-import useParsedRouteParams from "@/hooks/use-parsed-route-params";
+import useParsedRouteParams from "@/hooks/generalHooks/use-parsed-route-params";
 // Services
 import { APIService } from "@/services/apiService";
 

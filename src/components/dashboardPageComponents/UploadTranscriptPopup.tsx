@@ -10,7 +10,7 @@ import {
     DialogFooter
   } from "@/components/ui/dialog"
 // Hooks
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/generalHooks/use-toast";
 import { useState } from "react";
 // Redux
 import { useDispatch } from "react-redux";

@@ -11,12 +11,12 @@ import { Table,
 import { CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 // Custom Components
 import EditAssessmentRow from "./EditAssessmentRow";
-import ConfirmDeletePopup from "../ConfirmDeletePopup";
+import ConfirmDeletePopup from "../sharedHooks/ConfirmDeletePopup";
 // Types
 import { GradingScheme } from "@/types/mainTypes";
 // Hooks
 import { ChangeEvent, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/generalHooks/use-toast";
 import useLocalScheme from "@/hooks/coursePageHooks/use-local-scheme";
 // Services
 import TermDataService from "@/services/termDataService";

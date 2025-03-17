@@ -19,7 +19,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Term } from "@/types/mainTypes";
 import { createPortal } from "react-dom";
 // Hooks
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 
 interface RearrangeTermsPopupProps {
     isRearrangingTerms: boolean;

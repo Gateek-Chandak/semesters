@@ -1,7 +1,7 @@
 import { Assessment, GradingScheme } from "@/types/mainTypes"
 import { useEffect, useState } from "react"
-import useData from "../use-data"
-import { toast } from "../use-toast";
+import useData from "../generalHooks/use-data"
+import { toast } from "../generalHooks/use-toast";
 import { CalculationService } from "@/services/calculationService";
 import TermDataService from "@/services/termDataService";
 const _calculationService = new CalculationService();

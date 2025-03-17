@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 // Hooks
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 // Services
 import { CalculationService } from "@/services/calculationService";
 const _calculationService = new CalculationService();

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { CalculationService } from '@/services/calculationService';
-import useData from '../use-data';
+import useData from '../generalHooks/use-data';
 
 const _calculationService = new CalculationService();
 

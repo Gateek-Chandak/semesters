@@ -10,8 +10,8 @@ import { SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import { Trigger } from "@/components/sidebarComponents/navTrigger";
 // Hooks
 import { Outlet, useParams } from "react-router-dom";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useToast } from "@/hooks/use-toast"
+import { useIsMobile } from "@/hooks/generalHooks/use-mobile";
+import { useToast } from "@/hooks/generalHooks/use-toast"
 import { Link } from "react-router-dom";
 // Redux
 import { useSelector } from "react-redux"

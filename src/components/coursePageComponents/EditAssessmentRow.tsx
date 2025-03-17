@@ -7,7 +7,7 @@ import { XIcon } from "lucide-react";
 // Types
 import { Assessment, GradingScheme } from "@/types/mainTypes";
 // Custom Components
-import ConfirmDeletePopup from "../ConfirmDeletePopup";
+import ConfirmDeletePopup from "../sharedHooks/ConfirmDeletePopup";
 import { DateTimePicker } from "./DateTimePicker";
 // Services
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";

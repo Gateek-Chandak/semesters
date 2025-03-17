@@ -8,7 +8,7 @@ import AddDeliverablePopup from "./AddDeliverablePopup";
 import AddSchemePopup from "./AddSchemePopup";
 // Hooks
 import { useState } from "react";
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 // Types
 import { GradingScheme } from "@/types/mainTypes";
 import { format } from "date-fns";

@@ -3,18 +3,18 @@ import { CheckIcon, EyeIcon, EyeOffIcon, PencilIcon, XIcon } from "lucide-react"
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 // Custom Components
-import MetricCard from "../MetricCard";
+import MetricCard from "../sharedHooks/MetricCard";
 import { CircularProgress } from "./CircularProgessBar";
 import EventsInProximity from "./EventsInProximity";
 import DisplayCourseCard from "./DisplayCourseCard";
 import EditCourseCard from "./EditCourseCard";
-import { Calendar } from "../Calendar";
+import { Calendar } from "../sharedHooks/Calendar";
 import CreateCoursePopup from "./CreateCoursePopup";
 import ExportGoogleCalPopup from "./ExportGoogleCalPopup";
 // Types
-import { CalendarEvent } from "../Calendar";
+import { CalendarEvent } from "../sharedHooks/Calendar";
 // Hooks
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 import useTermCalendarEvents from "@/hooks/termPageHooks/use-term-calendar-events";
 import { useState } from "react";
 import useLocalCourseList from "@/hooks/termPageHooks/use-local-course-list";
@@ -80,7 +80,7 @@ const RegularTermPage = () => {
             {/* Bottom Row */}
             <div className="w-full h-fit mt-6 grid grid-cols-1 lg:grid-cols-2 grid-rows-[auto_1fr] gap-8">
                 {/* Course List */}
-                <div className="col-span-1 flex flex-col gap-6">
+                <div className="col-span-1 flex flex-col gap-8">
                     {/* Header and Buttons */}
                     <div className="flex gap-6 lg:gap-0 flex-col items-center lg:flex-row w-full">
                         <h1 className="lg:mr-auto text-2xl font-light">Current Courses</h1>

@@ -6,7 +6,7 @@ import {
   SidebarSeparator
 } from "@/components/ui/sidebar"
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/generalHooks/use-mobile"
 
 export function Trigger() {
   const isMobile = useIsMobile()

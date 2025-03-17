@@ -1,7 +1,7 @@
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import { Button } from "../ui/button"
 import { useMemo } from "react"
-import useData from "@/hooks/use-data"
+import useData from "@/hooks/generalHooks/use-data"
 import { CalculationService } from "@/services/calculationService"
 import { Card } from "../ui/card"
 

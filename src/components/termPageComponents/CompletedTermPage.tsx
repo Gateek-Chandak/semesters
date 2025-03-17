@@ -7,7 +7,7 @@ import DisplayCourseCard from "./DisplayCourseCard";
 import EditCourseCard from "./EditCourseCard";
 import CreateCompletedCoursePopup from "./CreateCompletedCoursePopup";
 // Hooks
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 import { useState } from "react";
 import useLocalCourseList from "@/hooks/termPageHooks/use-local-course-list";
 

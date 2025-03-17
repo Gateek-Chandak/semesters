@@ -20,7 +20,7 @@ import ColourPicker from "./ColourPicker";
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
 import FormSubmitService from "@/services/formSubmitService";
 // Hooks
-import useData from "@/hooks/use-data";
+import useData from "@/hooks/generalHooks/use-data";
 
 const _inputFieldValidationService = new InputFieldValidationService();
 

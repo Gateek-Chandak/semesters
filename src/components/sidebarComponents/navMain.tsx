@@ -19,7 +19,7 @@ import {
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/generalHooks/use-mobile";
 import { Course, Term } from "@/types/mainTypes";
 
 export function NavMain({ data }: {data: any}) {

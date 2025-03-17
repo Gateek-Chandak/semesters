@@ -18,15 +18,15 @@ import UploadTranscriptPopup from '@/components/dashboardPageComponents/UploadTr
 import { CircularProgress } from '@/components/dashboardPageComponents/CircularProgessBar';
 import AddTermPopup from '@/components/dashboardPageComponents/AddTermPopup';
 import MainTermCard from "@/components/dashboardPageComponents/MainTermCard";
-import ConfirmDeletePopup from "@/components/ConfirmDeletePopup";
+import ConfirmDeletePopup from "@/components/sharedHooks/ConfirmDeletePopup";
 import EditTermCard from '@/components/dashboardPageComponents/ModifyTermCard';
 import RearrangeTermsPopup from '@/components/dashboardPageComponents/RearrangeTermsPopup';
-import MetricCard from '@/components/MetricCard';
-import Footer from '@/components/Footer';
+import MetricCard from '@/components/sharedHooks/MetricCard';
+import Footer from '@/components/sharedHooks/Footer';
 // Services
 import { CalculationService } from '@/services/calculationService';
 import TermDataService from '@/services/termDataService';
-import useData from '@/hooks/use-data';
+import useData from '@/hooks/generalHooks/use-data';
 
 const _calculationService = new CalculationService();
 

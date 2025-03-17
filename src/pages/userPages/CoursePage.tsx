@@ -1,9 +1,9 @@
 // UI
-import { Calendar, CalendarEvent } from '../../components/Calendar'
+import { Calendar, CalendarEvent } from '../../components/sharedHooks/Calendar'
 import { CircularProgress } from '@/components/coursePageComponents/CircularProgessBar';
-import Footer from '@/components/Footer';
+import Footer from '@/components/sharedHooks/Footer';
 // Hooks
-import useData from '@/hooks/use-data';
+import useData from '@/hooks/generalHooks/use-data';
 // Custom Components
 import DeliverablesCard from '@/components/coursePageComponents/DeliverablesCard';
 import GradeEstimatorCard from '@/components/coursePageComponents/GradeEstimatorCard';
