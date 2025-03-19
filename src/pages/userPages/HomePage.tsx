@@ -13,12 +13,13 @@ import { Outlet, useParams } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast"
 import { Link } from "react-router-dom";
+import useSyncTermData from "@/hooks/use-sync-term-data";
 // Redux
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
 // Custom Components
 import { AppSidebar } from "@/components/sidebarComponents/AppSidebar"
-// Serices
+// Services
 import { CalculationService } from "@/services/calculationService";
 import { useEffect } from "react";
 
@@ -28,6 +29,7 @@ const HomePage = ( ) => {
   // Inits
   const { toast } = useToast()
   const isMobile = useIsMobile()
+  useSyncTermData();
   // Dont think this works
   const error = useSelector((state: RootState) => state.data.error)
   useEffect(() => {
