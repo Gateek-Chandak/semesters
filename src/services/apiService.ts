@@ -3,7 +3,6 @@
 // Imports
 import { Term } from "@/types/mainTypes";
 import axios, { AxiosError } from "axios";
-import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // CONSTANTS
 const API_BASE_URL = import.meta.env.VITE_SITE_URL;
@@ -80,26 +79,23 @@ export class APIService {
     }
 
     // syncTermDataWithDatabase(termData) syncs database with local state for term data
-    syncTermDataChanges = createAsyncThunk(
-        'data/syncTermData', // This is the action type
-        async (termData: Term[], { rejectWithValue }) => {
+    async syncTermDataWithDatabase (data: Term[]) {
             try {
                 const response = await axios.post(
                     `${API_BASE_URL}/api/term-database/update-term-data`, 
-                    { termData },
+                    { data },
                     { withCredentials: true }  // Ensures cookies are sent with the request
                 );
                 
                 if (response.data.exists) {
                     return response.data;
                 } 
-                return rejectWithValue('Error syncing data');
+                throw new Error("Error Syncing Data");
             } catch (error) {
                 // Handle errors and return a rejected value
                 console.error('Error syncing term data:', error);
-                return rejectWithValue('Error syncing data');
+                throw new Error("Error Syncing Data");
             }
-        }
-    );
+    }
 }
 

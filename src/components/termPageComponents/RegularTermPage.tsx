@@ -2,6 +2,7 @@
 import { CheckIcon, EyeIcon, EyeOffIcon, PencilIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { Separator } from "../ui/separator";
 // Custom Components
 import MetricCard from "../sharedHooks/MetricCard";
 import { CircularProgress } from "./CircularProgessBar";
@@ -11,6 +12,7 @@ import EditCourseCard from "./EditCourseCard";
 import { Calendar } from "../sharedHooks/Calendar";
 import CreateCoursePopup from "./CreateCoursePopup";
 import ExportGoogleCalPopup from "./ExportGoogleCalPopup";
+import StudyHoursChart from "./StudyHoursChart";
 // Types
 import { CalendarEvent } from "../sharedHooks/Calendar";
 // Hooks
@@ -103,6 +105,11 @@ const RegularTermPage = () => {
                             <h1 className="text-7xl font-extralight">+</h1>
                         </Card>
                     </div>
+                    <Separator />
+                    <div className="flex gap-6 lg:gap-0 flex-col items-center lg:flex-row w-full">
+                        <h1 className="lg:mr-auto text-2xl font-light">Study Log</h1>
+                    </div>
+                    <StudyHoursChart />
                 </div>
                 {/* Calendar Component */}
                 <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8 rounded-xl">

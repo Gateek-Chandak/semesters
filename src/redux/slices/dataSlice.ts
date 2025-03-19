@@ -2,9 +2,6 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Assessment, Course, GradingScheme, Term } from '@/types/mainTypes';
-// Services
-import { APIService } from '@/services/apiService';
-const _apiService = new APIService();
 
 // Type for Term Data
 interface DataState {
@@ -130,16 +127,7 @@ const dataSlice = createSlice({
                 state.data[termIndex].courses[courseIndex].gradingSchemes[schemeIndex].assessments[assessmentIndex] = assessment;
             }
         },
-    },
-    extraReducers: (builder) => {
-        builder
-          .addCase(_apiService.syncTermDataChanges.fulfilled, (state) => {
-            state.error = null; // Reset error on success
-          })
-          .addCase(_apiService.syncTermDataChanges.rejected, (state) => {
-            state.error = 'Error Syncing Data'
-          });
-    },
+    }
 });
 
 export const { setData, updateCourse, updateScheme, addCourse, deleteCourse, updateAssessment, updateTerm, updateCourseName, updateCourseSubtitle, addTerm, addTerms, updateCompletedCourseGrade } = dataSlice.actions;
