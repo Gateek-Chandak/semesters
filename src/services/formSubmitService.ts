@@ -1,8 +1,8 @@
 // This service handles all form submit logic for term data and incoming data related to forms
 
 // Hooks
-import { useToast } from "@/hooks/generalHooks/use-toast";
-import useData from "@/hooks/generalHooks/use-data";
+import { useToast } from "@/hooks/general/use-toast";
+import useData from "@/hooks/general/use-data";
 // Redux
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";

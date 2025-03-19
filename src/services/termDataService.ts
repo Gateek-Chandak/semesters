@@ -1,14 +1,14 @@
 // This service handles all Term Data modifications and all other associated data retrieval
 
 // Hooks
-import { useToast } from "@/hooks/generalHooks/use-toast";
+import { useToast } from "@/hooks/general/use-toast";
 // Redux
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { setData, updateScheme, updateCourse, deleteCourse } from "@/redux/slices/dataSlice";
 // Hooks
-import useData from "@/hooks/generalHooks/use-data";
+import useData from "@/hooks/general/use-data";
 import { Course, GradingScheme } from "@/types/mainTypes";
 
 const TermDataService = () => {
