@@ -30,7 +30,7 @@ interface AddTermPopupProps {
   
 const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatingTerm,}) => {
     // Services
-    const { createNewTerm } = FormSubmitService();
+    const { createTerm } = FormSubmitService();
     // States
     //   values
     const [termName, setTermName] = useState<string>("Fall")
@@ -50,16 +50,21 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
         setError("")
     }
 
-    const handleCreate = () => {
-        const shouldCreateTerm = createNewTerm(termName ,selectedYear, isTermComplete)
-        if (!shouldCreateTerm) {
-            setError('This term already exists')
-            return;
-        } else {
-            // reset all values
+    const handleCreate = async () => {
+        try {
+            const shouldCreateTerm = await createTerm(termName, selectedYear, isTermComplete);
+    
+            if (!shouldCreateTerm) {
+                setError('This term already exists');
+                return;
+            }
+    
             handleClose();
+        } catch (error) {
+            console.error("Error handling term creation:", error);
+            setError('An unexpected error occurred');
         }
-    }
+    };
 
     return ( 
         <Dialog open={isCreatingTerm} onOpenChange={handleClose}>

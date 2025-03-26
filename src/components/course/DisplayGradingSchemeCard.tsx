@@ -28,7 +28,7 @@ const DisplayGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { se
     return ( 
         <CarouselItem className="pt-5 custom-card flex flex-col gap-8">
             <div className='w-full pr-7 flex flex-row justify-between items-center gap-3'>
-                <h1 className={`mr-auto text-left ${courseData!.gradingSchemes.length > 1 ? "relative left-20 top-1" : "ml-3" } text-lg font-medium`}>{scheme.schemeName}</h1>
+                <h1 className={`mr-auto text-left ${courseData!.grading_schemes.length > 1 ? "relative left-20 top-1" : "ml-3" } text-lg font-medium`}>{scheme.scheme_name}</h1>
                 <Button className='bg-white text-black border-2 border-black hover:bg-gray-100' onClick={() => setIsEditing((prev: boolean) => !prev)}>
                         Edit<PencilIcon/>
                 </Button>
@@ -58,11 +58,11 @@ const DisplayGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { se
                         </TableRow>
                     </TableHeader>
                     <TableBody className=''>
-                        {scheme.assessments.map((assessment, index) => {
+                        {scheme.assessments.map((assessment) => {
                             return (
-                                <TableRow key={index}>
-                                    <TableCell className="text-center w-[25%]">{assessment.assessmentName}</TableCell>
-                                    <TableCell className="text-center w-[25%]">{assessment.dueDate ? format(assessment.dueDate, `MMMM dd, yyyy '@' hh:mma`) : 'TBD'}</TableCell>
+                                <TableRow key={assessment.id}>
+                                    <TableCell className="text-center w-[25%]">{assessment.assessment_name}</TableCell>
+                                    <TableCell className="text-center w-[25%]">{assessment.due_date ? format(assessment.due_date, `MMMM dd, yyyy '@' hh:mma`) : 'TBD'}</TableCell>
                                     <TableCell className="text-center w-[25%]">{assessment.weight}</TableCell>
                                     <TableCell className="text-center w-[25%]">{(assessment.grade === 0 || assessment.grade) ? assessment.grade : ""}</TableCell>
                                 </TableRow>)})}
@@ -70,7 +70,7 @@ const DisplayGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { se
                 </Table>
             </div>
             {/* Popups */}
-            <AddDeliverablePopup isAddingDeliverable={isAddingDeliverable} setIsAddingDeliverable={setIsAddingDeliverable} />
+            <AddDeliverablePopup scheme_id={scheme.id} isAddingDeliverable={isAddingDeliverable} setIsAddingDeliverable={setIsAddingDeliverable} />
             <AddSchemePopup isAddingScheme={isAddingScheme} setIsAddingScheme={setIsAddingScheme} />
         </CarouselItem>
      );

@@ -2,9 +2,7 @@ import { Assessment, GradingScheme } from "@/types/mainTypes"
 import { useEffect, useState } from "react"
 import useData from "../general/use-data"
 import { toast } from "../general/use-toast";
-import { CalculationService } from "@/services/calculationService";
 import TermDataService from "@/services/termDataService";
-const _calculationService = new CalculationService();
 
 const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
     const { updateGradingScheme } = TermDataService();
@@ -15,7 +13,7 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
 
     useEffect(() => {
         // Catch empty schemes
-        if (localScheme.schemeName == "") {
+        if (localScheme.scheme_name == "") {
             toast({
                 variant: "destructive",
                 title: "Warning",
@@ -26,8 +24,8 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
             return;
         }
         // Catch schemes with the same name
-        const duplicateSchemeName = courseData?.gradingSchemes.find((scheme: GradingScheme, index) => scheme.schemeName == localScheme.schemeName && index != schemeIndex)
-        if (duplicateSchemeName) {
+        const duplicatescheme_name = courseData?.grading_schemes.find((scheme: GradingScheme, index: number) => scheme.scheme_name == localScheme.scheme_name && index != schemeIndex)
+        if (duplicatescheme_name) {
             toast({
                 variant: "destructive",
                 title: "Warning",
@@ -40,13 +38,13 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
 
         // Catch assessments with the same name
         const assessmentsSeen = new Set();
-        const duplicateAssessmentName = localScheme.assessments.some((assessment: Assessment) => {
-            if (assessmentsSeen.has(assessment.assessmentName)) {
+        const duplicateassessment_name = localScheme.assessments.some((assessment: Assessment) => {
+            if (assessmentsSeen.has(assessment.assessment_name)) {
                 return true;
             }
-            assessmentsSeen.add(assessment.assessmentName)                
+            assessmentsSeen.add(assessment.assessment_name)                
         })
-        if (duplicateAssessmentName) {
+        if (duplicateassessment_name) {
             toast({
                 variant: "destructive",
                 title: "Warning",
@@ -58,12 +56,12 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
         } 
 
         // Catch empty assessment names
-        const emptyAssessmentName = localScheme.assessments.some((assessment: Assessment) => {
-            if (assessment.assessmentName == "") {
+        const emptyassessment_name = localScheme.assessments.some((assessment: Assessment) => {
+            if (assessment.assessment_name == "") {
                 return true;
             }             
         })
-        if (emptyAssessmentName) {
+        if (emptyassessment_name) {
             toast({
                 variant: "destructive",
                 title: "Warning",
@@ -76,18 +74,17 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
         setCannotSave( { value: false, reason: "" }); 
     }, [localScheme])
 
-    const saveSchemeChanges = () => {
+    const saveSchemeChanges = (updatedGrade: number) => {
         if (scheme == localScheme) {
             return;
         }
         if (!cannotSave.value) {
             // update the grading scheme grade
-            const updatedSchemeGrade = _calculationService.updateGradingSchemeGrade(localScheme.assessments)
-            updateGradingScheme(schemeIndex, courseIndex!, {...localScheme, grade: updatedSchemeGrade})
+            updateGradingScheme(schemeIndex, courseIndex!, {...localScheme, grade: updatedGrade})
             toast({
                 variant: "success",
                 title: "Update Successful",
-                description: localScheme.schemeName + " was updated successfully",
+                description: localScheme.scheme_name + " was updated successfully",
                 duration: 1000
             })
         } else {
@@ -107,14 +104,14 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
         toast({
             variant: "success",
             title: "Discard Successful",
-            description: "Changes to " + localScheme.schemeName + " were discarded",
+            description: "Changes to " + localScheme.scheme_name + " were discarded",
             duration: 1000
         })
     }
 
 
     const setSchemeName = (name: string) => {
-        setLocalScheme((prev: GradingScheme) => ({ ...prev, schemeName: name }))
+        setLocalScheme((prev: GradingScheme) => ({ ...prev, scheme_name: name }))
     }
 
     const syncChanges = (assessmentIndex: number, localAssessment: Assessment) => {
@@ -135,9 +132,9 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
     }
 
     // Handles deleting an assessment
-    const handleAssessmentDelete = (assessmentName: string) => {
+    const handleAssessmentDelete = (assessment_id: number) => {
         setLocalScheme((prev: GradingScheme) => {
-            const updatedAssessments = prev.assessments.filter((a: Assessment) => a.assessmentName != assessmentName)
+            const updatedAssessments = prev.assessments.filter((a: Assessment) => a.id != assessment_id)
             return { ...prev, assessments: updatedAssessments}
         })
     }

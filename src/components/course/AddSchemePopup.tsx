@@ -40,8 +40,8 @@ const AddSchemePopup: React.FC<AddSchemePopupProps> = ( {isAddingScheme, setIsAd
         }
     }
 
-    const handleSchemeAdd = () => {
-        const shouldCreateScheme = createScheme(schemeName)
+    const handleSchemeAdd = async () => {
+        const shouldCreateScheme = await createScheme(schemeName);
         if (shouldCreateScheme) {
             handleClose();
         }

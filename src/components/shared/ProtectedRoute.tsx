@@ -26,17 +26,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
           const id = await response.data.user.id
           const name = await response.data.user.name
           const email = await response.data.user.email
-          const userResponse = await axios.post(`${import.meta.env.VITE_SITE_URL}/api/term-database/get-term-data`, { googleId: id })
+          const userResponse = await axios.get(`${import.meta.env.VITE_SITE_URL}/api/term-database/get-term-data/${id}`)
 
           if (userResponse.data.exists) {
             dispatch(setData(userResponse.data.user.term_data))
           } else {
             const newUserData = await axios.post(`${import.meta.env.VITE_SITE_URL}/api/term-database/create-new-user`, { googleId: id, name: name, email: email });
-            dispatch(setData(newUserData.data.user.term_data))
+            dispatch(setData(newUserData.data.term_data))
             console.log('created new user', newUserData.data.user)
           }
 
-          dispatch(login(response.data.user));
+          dispatch(login({ user: response.data.user, user_id: userResponse.data.user.id}));
         } else {
           dispatch(logout())
         }

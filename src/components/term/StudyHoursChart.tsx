@@ -15,26 +15,31 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Button } from "../ui/button"
+import { Separator } from "../ui/separator"
 // Hooks
 import { useState, useMemo } from "react"
 import useParsedRouteParams from "@/hooks/general/use-parsed-route-params"
-import { Separator } from "../ui/separator"
+// Custom Components
+import AddStudyLogPopup from "./AddStudyLogPopup"
 
 // Generates Study Data from the start date to current day.
-function generateStudyData() {
-    const startDate = new Date("2025-01-01");
+function generateStudyData(testData: any) {
+    const lastDate = new Date(testData[testData.length - 1].date);
     const today = new Date();
-    const data = [];
-    
-    while (startDate <= today) {
-      data.push({
-        date: startDate.toISOString().split("T")[0],
-        hoursStudied: Math.floor(Math.random() * 15),
-      });
-      startDate.setDate(startDate.getDate() + 1);
+    const result = structuredClone(testData)
+
+    let currentDate = new Date(lastDate);
+    currentDate.setDate(currentDate.getDate() + 1);
+
+    while (currentDate < today) {
+        result.push({
+            date: currentDate.toISOString().split('T')[0],
+            hoursStudied: 0,
+        });
+        currentDate.setDate(currentDate.getDate() + 1);
     }
-    
-    return data;
+
+    return result;
 }
 
 const chartConfig = {
@@ -51,10 +56,20 @@ const StudyHoursChart = () => {
     // Hooks
     const { parsedTerm } = useParsedRouteParams();
     const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("hoursStudied")
+    // States
+    //  conditionals
+    const [isAddingLog, setIsAddingLog] = useState<boolean>(false);
 
-    const chartData = generateStudyData();
+    const testData = [
+        { date: "2025-03-16", hoursStudied: 5 },
+        { date: "2025-03-17", hoursStudied: 5 },
+        { date: "2025-03-18", hoursStudied: 5 },
+        { date: "2025-03-19", hoursStudied: 5 },
+        { date: "2025-04-19", hoursStudied: 5 },
+    ]
+    const chartData = generateStudyData(testData);
     const chart = "hoursStudied" as keyof typeof chartConfig
-    const total = useMemo(() => ({hoursStudied: chartData.reduce((acc, curr) => acc + curr.hoursStudied, 0)}),[])
+    const total = useMemo(() => ({hoursStudied: chartData.reduce((acc: number, curr: any) => acc + curr.hoursStudied, 0)}),[])
 
     return (
     <Card className="w-full">
@@ -123,9 +138,9 @@ const StudyHoursChart = () => {
         </CardContent>
         <Separator />
         <CardFooter className="pt-6 flex flex-row gap-4 justify-start items-center">
-            <Button variant={'default'} className="!px-6">Add Today's Log</Button>
-            <Button variant={'outline'} className="border-2 border-black !px-6">Add Log</Button>
+            <Button variant={'outline'} className="border-2 border-black !px-6" onClick={() => setIsAddingLog(true)}>Add Log</Button>
         </CardFooter>
+        <AddStudyLogPopup forToday={true} isAddingLog={isAddingLog} setIsAddingLog={setIsAddingLog}/>
     </Card>
     )
 }

@@ -18,10 +18,10 @@ const DeliverablesCard = ( ) => {
     return ( 
         <Carousel className="w-full">
             <CarouselContent>
-                {courseData && (courseData.gradingSchemes.length > 0) && courseData.gradingSchemes.map((scheme, index) => (
-                    isEditing ? <EditGradingSchemeCard key={index} schemeIndex={index} setIsEditing={setIsEditing} scheme={scheme}/> : 
-                                <DisplayGradingSchemeCard key={index} setIsEditing={setIsEditing} scheme={scheme} />))}
-                {courseData && (courseData.gradingSchemes.length <= 0) && 
+                {courseData && (courseData.grading_schemes.length > 0) && courseData.grading_schemes.map((scheme, index) => (
+                    isEditing ? <EditGradingSchemeCard key={scheme.id} schemeIndex={index} setIsEditing={setIsEditing} scheme={scheme}/> : 
+                                <DisplayGradingSchemeCard key={scheme.id} setIsEditing={setIsEditing} scheme={scheme} />))}
+                {courseData && (courseData.grading_schemes.length <= 0) && 
                     <CarouselItem className='min-h-[41rem] custom-card'>
                         <div className='ml-auto flex flex-row justify-end pr-6 relative py-6 gap-3'>                               
                             {!isEditing && <Button variant={'default'} className='' onClick={() => setIsAddingScheme(true)}>+ Add New Grading Scheme</Button>}
@@ -29,8 +29,8 @@ const DeliverablesCard = ( ) => {
                         <h1 className='text-2xl font-light text-center mt-52'>No Deliverables Found.</h1>
                     </CarouselItem>}
             </CarouselContent>
-            {courseData && !isEditing && (courseData.gradingSchemes.length > 1) && <CarouselPrevious />}
-            {courseData && !isEditing && (courseData.gradingSchemes.length > 1) && <CarouselNext /> }
+            {courseData && !isEditing && (courseData.grading_schemes.length > 1) && <CarouselPrevious />}
+            {courseData && !isEditing && (courseData.grading_schemes.length > 1) && <CarouselNext /> }
             {courseData && <AddSchemePopup isAddingScheme={isAddingScheme} setIsAddingScheme={setIsAddingScheme} />}
         </Carousel>
      );

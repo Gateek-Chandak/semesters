@@ -13,9 +13,8 @@ import useCalendarEvents from '@/hooks/course/use-course-calendar-events';
 
 const CoursePage = () => {
     // Hooks
-
     const { courseData } = useData();
-    const calendarEvents = useCalendarEvents(courseData)
+    const calendarEvents = useCalendarEvents();
 
     return ( 
         <div className="w-full min-h-screen h-fit px-5 lg:px-10 pt-7 bg-[#f7f7f7] flex flex-col justify-start items-center overflow-visible">
@@ -24,8 +23,8 @@ const CoursePage = () => {
                 <div className='w-full'>   
                     {/* Title */}
                     <div className="w-[100%] flex flex-row items-center justify-center lg:justify-start gap-6 text-2xl">
-                        <h1 className={`font-medium text-3xl text-${courseData?.colour}-600`}>{courseData?.courseTitle}</h1>
-                        <h1 className="font-extralight text-3xl">{courseData?.courseSubtitle}</h1>
+                        <h1 className={`font-medium text-3xl text-${courseData?.colour}-600`}>{courseData?.course_title}</h1>
+                        <h1 className="font-extralight text-3xl">{courseData?.course_subtitle}</h1>
                     </div>
                     {/* Metric Cards */}
                     <div className="mt-6 w-full grid grid-cols-1 lg:grid-cols-[70%_auto] gap-6">

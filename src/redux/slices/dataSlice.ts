@@ -22,22 +22,11 @@ const dataSlice = createSlice({
         setData(state, action: PayloadAction<Term[]>) {
             state.data = action.payload;
         },
-        // Add an array of terms
-        addTerms(state, action: PayloadAction<{ terms: Term[] }>) {
-          const { terms } = action.payload;
-      
-          if (terms) {
-              const combinedTerms = [
-                  ...terms.filter(newTerm => !state.data.some((existingTerm: Term) => existingTerm.term === newTerm.term)),
-                  ...state.data
-              ];
-              state.data = combinedTerms; 
-          }
-        },   
         // Add a single term    
         addTerm(state, action: PayloadAction<{ term: Term }>) {
           const { term } = action.payload;
-          if (term) {
+          const duplicateTerm = state.data.find((t: Term) => t.term_name == term.term_name)
+          if (term && !duplicateTerm) {
               // Ensure the state is updated immutably by spreading the previous state and adding the new term
               state.data = [...state.data, term];
           }
@@ -45,7 +34,7 @@ const dataSlice = createSlice({
         // Update a Term
         updateTerm(state, action: PayloadAction<{ term: string; courses: Course[] }>) {
             const { term, courses } = action.payload;
-            const termIndex = state.data.findIndex((t: Term) => t.term === term);
+            const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
             if (termIndex !== -1) {
               state.data[termIndex].courses = courses;
             }
@@ -53,10 +42,10 @@ const dataSlice = createSlice({
         // Update name of a course
         updateCourseName(state, action: PayloadAction<{ term: string; courseIndex: number; course: Course }>) {
             const { term, courseIndex, course } = action.payload;
-            const termIndex = state.data.findIndex((t: Term) => t.term === term);
+            const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
             if (termIndex !== -1) {
                 const repeatedCourseTitle = state.data[termIndex].courses.find(
-                  (c: Course) => c.courseTitle.toLowerCase() === course.courseTitle.toLowerCase()
+                  (c: Course) => c.course_title.toLowerCase() === course.course_title.toLowerCase()
                 )
                 if  (repeatedCourseTitle) {
                   return;
@@ -67,7 +56,7 @@ const dataSlice = createSlice({
         // Update subtitle for a course
         updateCourseSubtitle(state, action: PayloadAction<{ term: string; courseIndex: number; course: Course }>) {
           const { term, courseIndex, course } = action.payload;
-          const termIndex = state.data.findIndex((t: Term) => t.term === term);
+          const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
           if (termIndex !== -1) {
               state.data[termIndex].courses[courseIndex] = course;
           }
@@ -75,7 +64,7 @@ const dataSlice = createSlice({
         // Update course grade for a completed term
         updateCompletedCourseGrade(state, action: PayloadAction<{ term: string; courseIndex: number; course: Course }>) {
           const { term, courseIndex, course } = action.payload;
-          const termIndex = state.data.findIndex((t: Term) => t.term === term);
+          const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
           if (termIndex !== -1) {
               state.data[termIndex].courses[courseIndex] = course;
           }
@@ -83,7 +72,7 @@ const dataSlice = createSlice({
         // Modify a course
         updateCourse(state, action: PayloadAction<{ term: string; courseIndex: number; course: Course }>) {
           const { term, courseIndex, course } = action.payload;
-          const termIndex = state.data.findIndex((t: Term) => t.term === term);
+          const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
           if (termIndex !== -1) {
               state.data[termIndex].courses[courseIndex] = course;
           }
@@ -91,45 +80,53 @@ const dataSlice = createSlice({
         // Modify a scheme
         updateScheme(state, action: PayloadAction<{ term: string; courseIndex: number; schemeIndex: number, scheme: GradingScheme }>) {
           const { term, courseIndex, schemeIndex, scheme } = action.payload;
-          const termIndex = state.data.findIndex((t: Term) => t.term === term);
+          const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
           if (termIndex !== -1) {
-              state.data[termIndex].courses[courseIndex].gradingSchemes[schemeIndex] = scheme;
+              state.data[termIndex].courses[courseIndex].grading_schemes[schemeIndex] = scheme;
           }
         },
         // Add a course
-        addCourse(state, action: PayloadAction<{ term: string; course: Course }>) {
-          const { term, course } = action.payload;
-          const termIndex = state.data.findIndex((t: Term) => t.term === term);
+        addCourse(state, action: PayloadAction<{ term_id: number; course: any }>) {
+          const { term_id, course } = action.payload;
+          const termIndex = state.data.findIndex((t: Term) => t.id === term_id);
 
           if (termIndex !== -1) {
-              const existingCourse = state.data[termIndex].courses.find(
-                  (c: Course) => c.courseTitle.toLowerCase() === course.courseTitle.toLowerCase() // Case insensitive comparison
-              );
+              const existingCourse = state.data[termIndex].courses.find((c: Course) => c.course_title.toLowerCase() === course.course_title.toLowerCase());
+
               if (existingCourse) {
-                  return;  
+                  console.warn(`Course "${course.course_title}" already exists in term ID ${term_id}`);
+                  return;
               }
-              state.data[termIndex].courses.push(course);
+
+              state.data[termIndex].courses = [
+                  ...state.data[termIndex].courses,
+                  course,
+              ];
+
+              console.log(`Added course "${course.course_title}" to term ID ${term_id}`);
           }
         },
         // Delete a course
-        deleteCourse(state, action: PayloadAction<{ term: string; courseIndex: number }>) {
-            const { term, courseIndex } = action.payload;
-            const termIndex = state.data.findIndex((t: Term) => t.term === term);
+        deleteCourse(state, action: PayloadAction<{ term_id: number; courseId: number }>) {
+            const { term_id, courseId } = action.payload;
+            const termIndex = state.data.findIndex((t: Term) => t.id === term_id);
             if (termIndex !== -1) {
-                state.data[termIndex].courses.splice(courseIndex, 1);
+                state.data[termIndex].courses = [
+                  ...state.data[termIndex].courses.filter((course: Course) => course.id != courseId)
+                ]
             }
         },
         // Update an assessment
         updateAssessment(state, action: PayloadAction<{ term: string; courseIndex: number; schemeIndex: number; assessmentIndex: number; assessment: Assessment }>) {
             const { term, courseIndex, schemeIndex, assessmentIndex, assessment } = action.payload;
-            const termIndex = state.data.findIndex((t: Term) => t.term === term);
+            const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
             if (termIndex !== -1) {
-                state.data[termIndex].courses[courseIndex].gradingSchemes[schemeIndex].assessments[assessmentIndex] = assessment;
+                state.data[termIndex].courses[courseIndex].grading_schemes[schemeIndex].assessments[assessmentIndex] = assessment;
             }
         },
     }
 });
 
-export const { setData, updateCourse, updateScheme, addCourse, deleteCourse, updateAssessment, updateTerm, updateCourseName, updateCourseSubtitle, addTerm, addTerms, updateCompletedCourseGrade } = dataSlice.actions;
+export const { setData, updateCourse, updateScheme, addCourse, deleteCourse, updateAssessment, updateTerm, updateCourseName, updateCourseSubtitle, addTerm, updateCompletedCourseGrade } = dataSlice.actions;
 
 export default dataSlice.reducer;

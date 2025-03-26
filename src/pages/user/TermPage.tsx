@@ -12,9 +12,9 @@ const TermPage = () => {
     return ( 
         <div className="w-full min-h-dvh h-fit px-5 lg:px-10 pt-7 bg-[#f7f7f7] flex flex-col justify-start items-center gap-5 overflow-visible">
             {/* Incomplete Term */}
-            {!termData?.isCompleted && <RegularTermPage />}
+            {!termData?.is_completed && <RegularTermPage />}
             {/* Completed Term */}
-            {termData?.isCompleted && <CompletedTermPage />}
+            {termData?.is_completed && <CompletedTermPage />}
             <Footer />
         </div>
         );

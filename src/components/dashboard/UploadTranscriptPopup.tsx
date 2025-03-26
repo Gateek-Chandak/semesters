@@ -12,9 +12,11 @@ import {
 // Hooks
 import { useToast } from "@/hooks/general/use-toast";
 import { useState } from "react";
+import useUser from "@/hooks/general/use-user";
+import useData from "@/hooks/general/use-data";
 // Redux
 import { useDispatch } from "react-redux";
-import { addTerms } from "@/redux/slices/dataSlice";
+import { addCourse, addTerm } from "@/redux/slices/dataSlice";
 // Types
 import { Term } from "@/types/mainTypes";
 // Services
@@ -31,9 +33,10 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
     // Services
     const _apiService = new APIService();    
     // Inits
+    const { data } = useData();
     const { toast } = useToast();
-    // Inits
     const dispatch = useDispatch()
+    const { user } = useUser();
     // States
     //  conditionals
     const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -73,6 +76,23 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
         }
     };
 
+    const createCourse = async (course: any, term_id: number) => {
+        const createdCourse = await _apiService.createCourse(term_id, course.course_title, course.course_subtitle, course.colour, course.highest_grade, course.is_completed);
+        dispatch(addCourse({term_id: term_id, course: createdCourse}));
+    }
+
+    const createTerm = async (term: any) => {
+        const duplicateTerm = data.find((t: Term) => t.term_name == term.term_name)
+        if (duplicateTerm) {
+            return;
+        }
+        const createdTerm = await _apiService.createTerm(user!.id, term.term_name, term.is_completed);
+        dispatch(addTerm({term: createdTerm}))
+        for (let i = 0; i < term.courses.length; i++) {
+            await createCourse(term.courses[i], createdTerm.id)
+        }
+    }
+
     // Upload a transcript to the API
     const uploadTranscript = async () => {
         if (uploadedFile) {
@@ -80,16 +100,13 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
             setIsUploading(true)
             const formData = new FormData();
             formData.append("pdf", uploadedFile);
-            // simple helper to handle dispatch
-            const addTermsToData = (terms: Term[]) => {
-                if (terms) {
-                    dispatch(addTerms({terms}))
-                }
-            }
+
             // API request
             try {
-                const response = await _apiService.uploadTranscript(formData) as Term[];
-                addTermsToData(response)
+                const response = await _apiService.uploadTranscript(formData);
+                for (let i = 0; i < response.length; i++) {
+                    await createTerm(response[i]);
+                }
                 setIsUploading(false)
                 setIsActive(false)
                 setUploadedFile(null)

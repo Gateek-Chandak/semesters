@@ -10,33 +10,42 @@ import CreateCompletedCoursePopup from "./CreateCompletedCoursePopup";
 import useData from "@/hooks/general/use-data";
 import { useState } from "react";
 import useLocalCourseList from "@/hooks/term/use-local-course-list";
+import useUser from "@/hooks/general/use-user";
+// Services
+import { APIService } from "@/services/apiService";
+
+const _apiService = new APIService();
 
 const CompletedTermPage = () => {
     // Hooks
     const { termData } = useData();
-    const { localTermCourses, saveTermCoursesChanges, discardTermCoursesChanges, syncChanges, cannotSave } = useLocalCourseList();
+    const { user } = useUser();
+    const { localTermCourses, saveTermCoursesChanges, syncChanges, cannotSave } = useLocalCourseList();
     // States
     //  conditionals
     const [isCreatingCourse, setIsCreatingCourse] = useState<boolean>(false)
     const [isManagingCourses, setIsManagingCourses] = useState<boolean>(false)
     const [isGradesShowing, setIsGradesShowing] = useState<boolean>(false)
 
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
+        saveTermCoursesChanges();
         if (!cannotSave.value) {
             setIsManagingCourses(false)
-            saveTermCoursesChanges();
+            if (localTermCourses != termData?.courses) {
+                await Promise.all(localTermCourses.map(course => _apiService.updateCourse(user!.id, course)));
+            }
         }
     }
 
-    const handleDiscardChanges = () => {
-        setIsManagingCourses(false)
-        discardTermCoursesChanges();
-    }
+    // const handleDiscardChanges = () => {
+    //     setIsManagingCourses(false)
+    //     discardTermCoursesChanges();
+    // }
 
     return ( 
         <div className="min-h-dvh h-fit max-w-[1840px] w-full flex flex-col gap-6 overflow-auto">
             <div className="w-full flex flex-row items-center justify-center md:justify-start gap-4">
-                <h1 className="text-3xl font-bold">{termData!.term}</h1>
+                <h1 className="text-3xl font-bold">{termData!.term_name}</h1>
             </div>
             <div className="flex flex-col md:flex-row justify-start gap-6">
                 {/* Overall Average */}
@@ -48,11 +57,11 @@ const CompletedTermPage = () => {
                     <div className="w-full items-center md:w-40 md:h-40 text-xs text-muted-foreground md:hidden flex flex-col justify-between gap-6">
                         <p className="text-sm md:text-xs">This term is complete. You may view your grades.</p>
                         <div className="flex flex-row justify-center items-center gap-4 md:flex-col">
-                            {!isManagingCourses && <Button className='border-2 border-black bg-white text-black hover:bg-gray-100 !text-xs w-[100%]' onClick={() => setIsManagingCourses(true)}>Manage Courses <PencilIcon/></Button>}
-                            {isManagingCourses && <Button variant={"outline"} className='text-red-500 border-2 border-red-500 hover:text-red-500 !text-xs w-[100%]' onClick={handleDiscardChanges}>Discard Changes <Check/></Button>}
-                            {isManagingCourses && <Button variant={"outline"} className='text-green-500 border-2 border-green-500 hover:text-green-500 !text-xs w-[100%]' onClick={handleSaveChanges}>Save Changes <Check/></Button>}
-                            {!isManagingCourses && !isGradesShowing && <Button className='!text-xs lg:!w-40 w-[100%]' onClick={() => setIsGradesShowing(true)}>Show Grades <EyeIcon /></Button>}
-                            {!isManagingCourses && isGradesShowing && <Button className='!text-xs lg:!w-40 w-[100%]' onClick={() => setIsGradesShowing(false)}>Hide Grades <EyeOffIcon /></Button>}
+                        {!isManagingCourses && <Button className='border-2 border-black bg-white text-black hover:bg-gray-100 !text-xs w-[100%]' onClick={() => setIsManagingCourses(true)}>Manage Courses <PencilIcon/></Button>}
+                                {/* {isManagingCourses && <Button variant={"outline"} className='text-red-500 border-2 border-red-500 hover:text-red-500 !text-xs w-[100%]' onClick={handleDiscardChanges}>Discard Changes <Check/></Button>} */}
+                                {isManagingCourses && <Button variant={"outline"} className='border-black text-black border-2 !text-xs w-[100%]' onClick={handleSaveChanges}>Confirm Changes <Check/></Button>}
+                                {!isManagingCourses && !isGradesShowing && <Button className='!text-xs lg:!w-40 w-[100%]' onClick={() => setIsGradesShowing(true)}>Show Grades <EyeIcon /></Button>}
+                                {!isManagingCourses && isGradesShowing && <Button className='!text-xs lg:!w-40 w-[100%]' onClick={() => setIsGradesShowing(false)}>Hide Grades <EyeOffIcon /></Button>}
                         </div>
                     </div>
                        
@@ -61,14 +70,14 @@ const CompletedTermPage = () => {
                             <p className="text-sm md:text-xs">This term is complete. You may view your grades.</p>
                             <div className="flex flex-row justify-center items-center gap-4 md:flex-col">
                                 {!isManagingCourses && <Button className='border-2 border-black bg-white text-black hover:bg-gray-100 !text-xs w-[100%]' onClick={() => setIsManagingCourses(true)}>Manage Courses <PencilIcon/></Button>}
-                                {isManagingCourses && <Button variant={"outline"} className='text-red-500 border-2 border-red-500 hover:text-red-500 !text-xs w-[100%]' onClick={handleDiscardChanges}>Discard Changes <Check/></Button>}
-                                {isManagingCourses && <Button variant={"outline"} className='text-green-500 border-2 border-green-500 hover:text-green-500 !text-xs w-[100%]' onClick={handleSaveChanges}>Save Changes <Check/></Button>}
+                                {/* {isManagingCourses && <Button variant={"outline"} className='text-red-500 border-2 border-red-500 hover:text-red-500 !text-xs w-[100%]' onClick={handleDiscardChanges}>Discard Changes <Check/></Button>} */}
+                                {isManagingCourses && <Button variant={"outline"} className='border-black text-black border-2 !text-xs w-[100%]' onClick={handleSaveChanges}>Confirm Changes <Check/></Button>}
                                 {!isManagingCourses && !isGradesShowing && <Button className='!text-xs lg:!w-40 w-[100%]' onClick={() => setIsGradesShowing(true)}>Show Grades <EyeIcon /></Button>}
                                 {!isManagingCourses && isGradesShowing && <Button className='!text-xs lg:!w-40 w-[100%]' onClick={() => setIsGradesShowing(false)}>Hide Grades <EyeOffIcon /></Button>}
                             </div>
                         </div>
-                        {!isManagingCourses && localTermCourses && localTermCourses.map((course) => { return ( <DisplayCourseCard key={course.courseTitle} course={course} gradesShown={isGradesShowing} isCompleted={true}/> ); })}
-                        {isManagingCourses && localTermCourses && localTermCourses.map((course, index) => { return ( <EditCourseCard key={course.courseTitle} course={course} courseIndex={index} syncChanges={syncChanges} isCompleted={true} /> ); })}
+                        {!isManagingCourses && localTermCourses && localTermCourses.map((course) => { return ( <DisplayCourseCard key={course.course_title} course={course} gradesShown={isGradesShowing} isCompleted={true}/> ); })}
+                        {isManagingCourses && localTermCourses && localTermCourses.map((course, index) => { return ( <EditCourseCard key={course.course_title} course={course} courseIndex={index} syncChanges={syncChanges} isCompleted={true} /> ); })}
                         <div onClick={() => setIsCreatingCourse(true)} 
                             className="h-40 w-40 flex flex-col justify-center items-center custom-card hover:border-slate-300 transform md:transition-all duration-200 hover:scale-[1.04]"
                             role="button" 

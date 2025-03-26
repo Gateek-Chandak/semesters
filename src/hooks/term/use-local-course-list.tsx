@@ -21,17 +21,17 @@ const useLocalCourseList = () => {
 
     useEffect(() => {
         setLocalTermCourses(termData?.courses!)
-    }, [parsedTerm])
+    }, [parsedTerm, termData])
 
     // IMPLEMENT ALL ERRORS FOR EMPTY FIELDS
     useEffect(() => {
         // Catch courses with the same name
         const coursesSeen = new Set();
         const duplicateCourseName = localTermCourses.some((course: Course) => {
-            if (coursesSeen.has(course.courseTitle)) {
+            if (coursesSeen.has(course.course_title)) {
                 return true;
             }
-            coursesSeen.add(course.courseTitle)                
+            coursesSeen.add(course.course_title)                
         })
         if (duplicateCourseName) {
             toast({
@@ -46,7 +46,7 @@ const useLocalCourseList = () => {
 
         // Catch empty course names
         const emptyCourseName = localTermCourses.some((course: Course) => {
-            if (course.courseTitle.trim() == "") {
+            if (course.course_title.trim() == "") {
                 return true;
             }             
         })
@@ -62,12 +62,12 @@ const useLocalCourseList = () => {
         }
 
         // Catch empty course subtitle
-        const emptyCourseSubtitle = localTermCourses.some((course: Course) => {
-            if (course.courseSubtitle.trim() == "" && !termData?.isCompleted) {
+        const emptycourse_subtitle = localTermCourses.some((course: Course) => {
+            if (course.course_subtitle.trim() == "" && !termData?.is_completed) {
                 return true;
             }             
         })
-        if (emptyCourseSubtitle) {
+        if (emptycourse_subtitle) {
             toast({
                 variant: "destructive",
                 title: "Warning",
@@ -90,13 +90,13 @@ const useLocalCourseList = () => {
         }
         if (!cannotSave.value) {
             dispatch(updateTerm({
-                term: termData!.term,
+                term: termData!.term_name,
                 courses: localTermCourses
             }))
             toast({
                 variant: "success",
                 title: "Update Successful",
-                description: termData?.term + " was updated successfully",
+                description: termData?.term_name + " was updated successfully",
                 duration: 1000
             })
         } else {
@@ -111,6 +111,7 @@ const useLocalCourseList = () => {
     }
 
     // discard changes action
+    //  * DEPRECATED FOR NOW
     const discardTermCoursesChanges = () => {
         setLocalTermCourses(termData!.courses)
         if (termData?.courses == localTermCourses) {
@@ -119,7 +120,7 @@ const useLocalCourseList = () => {
         toast({
             variant: "success",
             title: "Discard Successful",
-            description: "Changes to " + termData?.term + " were discarded",
+            description: "Changes to " + termData?.term_name + " were discarded",
             duration: 1000
         })
     }

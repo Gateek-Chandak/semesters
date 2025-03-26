@@ -8,7 +8,7 @@ import { XIcon } from "lucide-react";
 import { Assessment, GradingScheme } from "@/types/mainTypes";
 // Custom Components
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup";
-import { DateTimePicker } from "./DateTimePicker";
+import { DateTimePicker } from "../shared/DateTimePicker";
 // Services
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
 
@@ -17,7 +17,6 @@ const _inputFieldValidationService = new InputFieldValidationService();
 interface EditAssessmentRowProps {
     assessment: Assessment;
     assessmentIndex: number;
-    scheme: GradingScheme;
     schemeIndex: number;
     syncChanges: any;
     setAssessmentDate: any;
@@ -39,7 +38,7 @@ const EditAssessmentRow: React.FC<EditAssessmentRowProps> = ( { assessment, asse
     
         switch (name) {
             case "assessmentName": // weird logic to handle updating name
-                updatedAssessment.assessmentName = _inputFieldValidationService.inputAssessmentName(value);
+                updatedAssessment.assessment_name = _inputFieldValidationService.inputAssessmentName(value);
                 setLocalAssessment(updatedAssessment);
                 return;
             case "assessmentGrade":
@@ -71,7 +70,7 @@ const EditAssessmentRow: React.FC<EditAssessmentRowProps> = ( { assessment, asse
 
     // Handles when the user changes a date
     const handleDateChange = (selectedDate: string) => {
-        const updatedAssessment = {...localAssessment, dueDate: selectedDate}
+        const updatedAssessment = {...localAssessment, due_date: selectedDate}
         setLocalAssessment(updatedAssessment)
         setAssessmentDate(assessmentIndex, updatedAssessment)
     }
@@ -84,11 +83,11 @@ const EditAssessmentRow: React.FC<EditAssessmentRowProps> = ( { assessment, asse
                 </Button>
             </TableCell>
             <TableCell className="text-center w-[25%]">
-                <Input type="text" name="assessmentName" value={localAssessment.assessmentName} onChange={validateFields} 
+                <Input type="text" name="assessmentName" value={localAssessment.assessment_name} onChange={validateFields} 
                        onBlur={() => syncChanges(assessmentIndex, localAssessment)}/>
             </TableCell>
             <TableCell className="text-center w-[25%]">
-                <DateTimePicker dueDate={localAssessment.dueDate} syncLocalAssessmentChanges={handleDateChange}/>
+                <DateTimePicker enableHours={true} dueDate={localAssessment.due_date} syncLocalAssessmentChanges={handleDateChange}/>
             </TableCell>
             <TableCell className="w-[10%]">
                 <Input type="number" name="assessmentWeight" value={localAssessment.weight} onChange={validateFields}/>
@@ -103,7 +102,8 @@ const EditAssessmentRow: React.FC<EditAssessmentRowProps> = ( { assessment, asse
                     className="w-[60%] p-2 my-3 inline"/>
                     {" "}%
             </TableCell>
-            <ConfirmDeletePopup name={localAssessment.assessmentName}
+            <ConfirmDeletePopup name={localAssessment.assessment_name}
+                                id={localAssessment.id}
                                 deleteItem={handleAssessmentDelete}
                                 isDeleting={isDeleting}
                                 setIsDeleting={setIsDeleting}/>

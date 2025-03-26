@@ -11,9 +11,6 @@ import {
   } from "@/components/ui/dialog"
 // Other
 import { ChangeEvent, useState } from "react";
-// import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 // Custom Components
 import ColourPicker from "./ColourPicker";
 // Services
@@ -34,9 +31,6 @@ const CreateCoursePopup: React.FC<CreateCoursePopupProps> = ({ isCreatingCourse,
     const { createCourse } = FormSubmitService();
     // Hooks
     const { termData } = useData();
-    // const { toast } = useToast()
-    const navigate = useNavigate();
-    const { term: originalTerm } = useParams()
     // States
     //  values
     const [courseCode, setCourseCode] = useState<string>("");
@@ -103,18 +97,14 @@ const CreateCoursePopup: React.FC<CreateCoursePopupProps> = ({ isCreatingCourse,
 
     // Create a new course
     const handleCreateCourse = async (): Promise<void> => {
-        setIsUploading(true)
-        setIsCreatingCourse(false)
-        createCourse(termData!, courseCode, courseNumber, courseSubtitle, selectedColour, uploadedFile)
-            .then((shouldCreateCourse: boolean) => {
-                handleClose();
-                if (shouldCreateCourse) {
-                    const courseParam =  courseCode + '-' + courseNumber
-                    handleClose();
-                    navigate(`/home/${originalTerm}/${courseParam}`);
-                }
-            });
-    }
+        const shouldCreateCourse = await createCourse(termData!, courseCode, courseNumber, courseSubtitle,selectedColour, uploadedFile);
+
+        if (shouldCreateCourse) {
+            handleClose();
+            setIsCreatingCourse(false);
+        }
+    };
+    
 
     return (
         <Dialog open={isCreatingCourse || isUploading} onOpenChange={handleClose}>

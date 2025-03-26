@@ -57,13 +57,17 @@ const Dashboard = () => {
     const numOfEventsInNext7Days: number = useMemo(() => _calculationService.getEventsInTimeFrame(currentTermCalendarEvents, 7), [currentTermCalendarEvents]);
 
     // Delete a term
-    const triggerDeleteTerm = (name: string) => {
-        const shouldDeleteTerm = deleteTerm(name, termBeingDeleted);
-        if (shouldDeleteTerm) {
-            setIsDeletingTerm(false)
-            setTermBeingDeleted('')
+    const triggerDeleteTerm = async (name: string) => {
+        try {
+            const shouldDeleteTerm = await deleteTerm(name, termBeingDeleted);
+            if (shouldDeleteTerm) {
+                setIsDeletingTerm(false);
+                setTermBeingDeleted('');
+            }
+        } catch (error) {
+            console.error("Error triggering term deletion:", error);
         }
-    }
+    };
 
     return ( 
         <div className="w-full flex flex-col justify-between items-center gap-6 px-5 lg:px-10 min-h-screen h-full bg-[#f7f7f7]">
@@ -134,7 +138,7 @@ const Dashboard = () => {
                                         </div>
                                     </Button>}
                                 {!isManagingTerms && 
-                                    <Button variant={'outline'} onClick={() => setIsRearrangingTerms(!IsrearrangingTerms)} className='border-2 border-black'>
+                                    <Button disabled variant={'outline'} onClick={() => setIsRearrangingTerms(!IsrearrangingTerms)} className='border-2 border-black'>
                                         <div className="text-xs md:text-sm font-medium flex flex-row justify-between items-center w-full gap-2">
                                             <h1>Rearrange Order</h1>
                                             <Repeat />
@@ -161,10 +165,10 @@ const Dashboard = () => {
                             {/* Regular Term Cards */}
                             {!isManagingTerms 
                                 ? data.slice(0).reverse().slice(2).map((term) => (
-                                    <DisplayTermCard key={term.term} term={term} isShowingGrades={isShowingGrades} />
+                                    <DisplayTermCard key={term.term_name} term={term} isShowingGrades={isShowingGrades} />
                                 ))
                                 : data.slice(0).reverse().slice(2).map((term) => (
-                                    <EditTermCard key={term.term} term={term} isDeleting={isDeletingTerm} 
+                                    <EditTermCard key={term.term_name} term={term} isDeleting={isDeletingTerm} 
                                     setIsDeleting={setIsDeletingTerm} setTermBeingDeleted={setTermBeingDeleted} />
                                 ))}
                             <Card onClick={() => setIsCreatingTerm(!isCreatingTerm)} className="custom-card transform transition-all duration-200 hover:scale-[1.04] hover:border-gray-300">

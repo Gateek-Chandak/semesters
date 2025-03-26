@@ -13,16 +13,21 @@ import { CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 import EditAssessmentRow from "./EditAssessmentRow";
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup";
 // Types
-import { GradingScheme } from "@/types/mainTypes";
+import { Assessment, GradingScheme } from "@/types/mainTypes";
 // Hooks
 import { ChangeEvent, useState } from "react";
 import { useToast } from "@/hooks/general/use-toast";
 import useLocalScheme from "@/hooks/course/use-local-scheme";
+import useUser from "@/hooks/general/use-user";
 // Services
 import TermDataService from "@/services/termDataService";
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
+import { APIService } from "@/services/apiService";
+import { CalculationService } from "@/services/calculationService";
 
 const _inputFieldValidationService = new InputFieldValidationService();
+const _apiService = new APIService();
+const _calculationService = new CalculationService();
 
 interface DisplayGradingSchemeCardProps {
     setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,15 +40,34 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
     const { deleteScheme } = TermDataService();
     // Hooks
     const { toast } = useToast();
+    const { user } = useUser();
     const { localScheme, cannotSave, setSchemeName, saveSchemeChanges, syncChanges, setAssessmentDate, handleAssessmentDelete, setLocalScheme, discardSchemeChanges } = useLocalScheme(scheme, schemeIndex);
     // States
     //  conditionals
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
     // Saves a scheme
-    const handleSaveChanges = () => {
-        saveSchemeChanges()
+    const handleSaveChanges = async () => {
+        const updatedSchemeGrade = _calculationService.updateGradingSchemeGrade(localScheme.assessments);
+        saveSchemeChanges(updatedSchemeGrade);
         if (!cannotSave.value) {
+            if (localScheme != scheme) {
+                const updatedScheme = {
+                    ...localScheme,
+                    grade: updatedSchemeGrade
+                }
+                await _apiService.updateGradingScheme(user!.id, updatedScheme);
+                // Logic for deleting assessments
+                const assessmentIdsRemaining = localScheme.assessments.map((a: Assessment) => {return a.id})
+                const assessmentsToDelete = scheme.assessments.filter((a: Assessment) => !assessmentIdsRemaining.includes(a.id));
+                for (let i = 0; i < assessmentsToDelete.length; i++) {
+                    await _apiService.deleteAssessment(user!.id, assessmentsToDelete[i].id);
+                }
+                // Logic for updating assessments
+                for(let i = 0; i < localScheme.assessments.length; i++) {
+                    await _apiService.updateAssessment(user!.id, localScheme.assessments[i]);
+                }
+            }
             setIsEditing(false)
         }
     }
@@ -54,7 +78,8 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
     }
 
     // deletes a scheme
-    const handleDeleteScheme = (name: string) => {
+    const handleDeleteScheme = async (name: string) => {
+        await _apiService.deleteGradingScheme(user!.id, scheme.id)
         deleteScheme(name)
         toast({
             variant: "success",
@@ -81,7 +106,7 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
     return ( 
         <CarouselItem className="pt-5 custom-card flex flex-col gap-8">
             <div className='w-full pr-4 flex flex-col md:flex-row justify-between items-center gap-3'>
-                <Input className="text-left h-10 max-w-72 !text-lg font-medium" value={localScheme.schemeName} name="schemeName" onChange={validateFields}/>
+                <Input className="text-left h-10 max-w-72 !text-lg font-medium" value={localScheme.scheme_name} name="schemeName" onChange={validateFields}/>
                 <div className="flex flex-row gap-3">
                     <Button variant="outline" className="md:ml-auto bg-white border border-red-500 text-red-500 text-xs hover:bg-red-500 hover:text-white" onClick={() => setIsDeleting(!isDeleting)}>
                         <Trash2Icon className="" />
@@ -104,12 +129,13 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
                     </TableHeader>
                     <TableBody>
                         {localScheme.assessments.map((assessment, index) => {
-                            return ( <EditAssessmentRow  key={assessment.assessmentName} assessmentIndex={index} assessment={assessment} scheme={scheme} schemeIndex={schemeIndex}
-                                                         syncChanges={syncChanges} setAssessmentDate={setAssessmentDate} handleAssessmentDelete={handleAssessmentDelete} setLocalScheme={setLocalScheme}/> )})}
+                            return ( <EditAssessmentRow  key={assessment.id} assessmentIndex={index} assessment={assessment} schemeIndex={schemeIndex}
+                                                         syncChanges={syncChanges} setAssessmentDate={setAssessmentDate} handleAssessmentDelete={handleAssessmentDelete} 
+                                                         setLocalScheme={setLocalScheme}/> )})}
                     </TableBody> 
                 </Table>
             </div>
-            <ConfirmDeletePopup name={scheme.schemeName} deleteItem={handleDeleteScheme}
+            <ConfirmDeletePopup name={scheme.scheme_name} deleteItem={handleDeleteScheme}
                                 isDeleting={isDeleting} setIsDeleting={setIsDeleting}/>
         </CarouselItem>
      );

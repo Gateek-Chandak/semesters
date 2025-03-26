@@ -12,7 +12,6 @@ import { ChangeEvent, useState } from "react";
 import useData from "@/hooks/general/use-data";
 // Services
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
-import { toast } from "@/hooks/general/use-toast";
 import TermDataService from "@/services/termDataService";
 
 const _inputFieldValidationService = new InputFieldValidationService();
@@ -45,18 +44,18 @@ const EditCourseCard: React.FC<EditCourseCardProps> = ({ course, courseIndex, is
                 if (validatedValue === undefined) {
                     return;
                 }
-                updatedLocalCourse.highestGrade = validatedValue || 0;
+                updatedLocalCourse.highest_grade = validatedValue || 0;
                 break;
             case "courseCode":
-                updatedLocalCourse.courseTitle = _inputFieldValidationService.inputCourseCode(value) + " " + updatedLocalCourse.courseTitle.split(' ')[1]
+                updatedLocalCourse.course_title = _inputFieldValidationService.inputCourseCode(value) + " " + updatedLocalCourse.course_title.split(' ')[1]
                 setLocalCourse(updatedLocalCourse);
                 return;
             case "courseSubtitle":
-                updatedLocalCourse.courseSubtitle = _inputFieldValidationService.inputCourseSubtitle(value)
+                updatedLocalCourse.course_subtitle = _inputFieldValidationService.inputCourseSubtitle(value)
                 setLocalCourse(updatedLocalCourse)
                 return;
             case "courseNumber":
-                updatedLocalCourse.courseTitle = updatedLocalCourse.courseTitle.split(' ')[0] + " " + _inputFieldValidationService.inputCourseNumber(value);
+                updatedLocalCourse.course_title = updatedLocalCourse.course_title.split(' ')[0] + " " + _inputFieldValidationService.inputCourseNumber(value);
                 setLocalCourse(updatedLocalCourse);
                 return;
             default:
@@ -67,26 +66,13 @@ const EditCourseCard: React.FC<EditCourseCardProps> = ({ course, courseIndex, is
         syncChanges(courseIndex, updatedLocalCourse)
     }
 
-    const triggerDeleteCourse = () => {
+    const triggerDeleteCourse = async () => {
         if (termData) {
             if (courseIndex !== -1) {
-                handleDeleteCourse(termData.term, courseIndex!);
-                toast({
-                    variant: "success",
-                    title: "Delete Successful",
-                    description: course.courseTitle + " was deleted successfully",
-                    duration: 1000
-                })
-                setIsDeleting(false)
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Delete Unsuccessful",
-                    description: course.courseTitle + " was not found",
-                    duration: 1000
-                })
-                setIsDeleting(false)
-            }
+                await handleDeleteCourse(termData.id, course.id);
+            } 
+
+            setIsDeleting(false);
         }
     };
 
@@ -94,21 +80,21 @@ const EditCourseCard: React.FC<EditCourseCardProps> = ({ course, courseIndex, is
         <Card className="h-40 w-40 bg-card rounded-2xl "> 
             <div className="h-40 w-40 flex flex-col justify-between gap-2 items-center p-4">
                 <div className={`flex flex-row justify-between gap-2 w-full`}>
-                    <Input className="!text-sm" value={localCourse.courseTitle.split(' ')[0]} onChange={validateFields} name="courseCode" onBlur={() => syncChanges(courseIndex, localCourse)}/>
-                    <Input className="!text-sm" value={localCourse.courseTitle.split(' ')[1]} onChange={validateFields} name="courseNumber" onBlur={() => syncChanges(courseIndex, localCourse)}/>
+                    <Input className="!text-sm" value={localCourse.course_title.split(' ')[0]} onChange={validateFields} name="courseCode" onBlur={() => syncChanges(courseIndex, localCourse)}/>
+                    <Input className="!text-sm" value={localCourse.course_title.split(' ')[1]} onChange={validateFields} name="courseNumber" onBlur={() => syncChanges(courseIndex, localCourse)}/>
                 </div>
                 {isCompleted && 
                     <Input className="text-lg" type="number" name="courseGrade" 
-                        value={localCourse.highestGrade || 0}
+                        value={localCourse.highest_grade || 0}
                         onChange={validateFields}/>}
                 {!isCompleted &&
-                    <Input className="!text-sm" value={localCourse.courseSubtitle} onChange={validateFields} name="courseSubtitle" onBlur={() => syncChanges(courseIndex, localCourse)}/>}
+                    <Input className="!text-sm" value={localCourse.course_subtitle} onChange={validateFields} name="courseSubtitle" onBlur={() => syncChanges(courseIndex, localCourse)}/>}
                 <Button variant="outline" className="h-8 w-full mt-1 border border-red-500 text-red-500 text-xs hover:bg-red-500 hover:text-white" 
-                        onClick={() => setIsDeleting(!isDeleting)} disabled={(localCourse.courseTitle.split(' ')[0].trim() == "" && localCourse.courseTitle.split(' ')[1].trim() == "") || (localCourse.courseSubtitle.trim() == "" && !isCompleted)}>
+                        onClick={() => setIsDeleting(!isDeleting)} disabled={(localCourse.course_title.split(' ')[0].trim() == "" && localCourse.course_title.split(' ')[1].trim() == "") || (localCourse.course_subtitle.trim() == "" && !isCompleted)}>
                     <Trash2Icon className="" />
                 </Button>
             </div>
-            <ConfirmDeletePopup name={course.courseTitle}
+            <ConfirmDeletePopup name={course.course_title}
                                 isDeleting={isDeleting}
                                 setIsDeleting={setIsDeleting}
                                 deleteItem={triggerDeleteCourse}/>

@@ -16,9 +16,10 @@ interface DateTimePickerProps {
   dueDate: string | null;
   syncLocalAssessmentChanges?: (date: string) => void;
   setLocalDueDate?: React.Dispatch<React.SetStateAction<string | null>>;
+  enableHours: boolean
 }
 
-export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentChanges }: DateTimePickerProps) {
+export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentChanges, enableHours }: DateTimePickerProps) {
   const [date, setDate] = React.useState<Date | null>(dueDate ? new Date(dueDate) : null);
   const [isOpen, setIsOpen] = React.useState(false);
  
@@ -31,6 +32,9 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
       }
       if (setLocalDueDate) {
         setLocalDueDate(selectedDate.toISOString())
+      }
+      if (!enableHours) {
+        setIsOpen(false);
       }
     }
   };
@@ -60,7 +64,6 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
       if (setLocalDueDate) {
         setLocalDueDate(newDate.toISOString())
       }
-
     }
   };
  
@@ -90,7 +93,8 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
             onSelect={handleDateSelect}
             initialFocus
           />
-          <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
+          {enableHours && 
+            <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
             <ScrollArea className="w-64 p-2 sm:w-auto">
               <div className="flex sm:flex-col p-2">
                 {hours.map((hour) => (
@@ -154,7 +158,7 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
                 ))}
               </div>
             </ScrollArea>
-          </div>
+            </div>}
         </div>
       </PopoverContent>
     </Popover>

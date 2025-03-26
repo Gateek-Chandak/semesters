@@ -36,7 +36,7 @@ const RearrangeTermsPopup: React.FC<RearrangeTermsPopupProps> = ({ isRearranging
     const [rearrangedTerms, setRearrangedTerms] = useState<Term[]>(data);
     const [movingTerm, setMovingTerm] = useState<Term | null>(null)
     // Ids for sortable property
-    const termIds = useMemo(() => rearrangedTerms.map((term: Term) => term.term), [rearrangedTerms]);
+    const termIds = useMemo(() => rearrangedTerms.map((term: Term) => term.term_name), [rearrangedTerms]);
 
     useEffect(() => {
         setRearrangedTerms(data)
@@ -66,10 +66,10 @@ const RearrangeTermsPopup: React.FC<RearrangeTermsPopupProps> = ({ isRearranging
         }
         // extract the indexes
         const activeTermIndex = rearrangedTerms.findIndex(
-            (term) => term.term == activeTerm
+            (term) => term.term_name == activeTerm
         )
         const overTermIndex = rearrangedTerms.findIndex(
-            (term) => term.term == overTerm
+            (term) => term.term_name == overTerm
         )
         // dispatch action to finalize move
         const newTerms = arrayMove(rearrangedTerms, activeTermIndex, overTermIndex)
@@ -97,7 +97,7 @@ const RearrangeTermsPopup: React.FC<RearrangeTermsPopupProps> = ({ isRearranging
                         <div className="flex flex-row flex-wrap items-start justify-center gap-6 w-full h-fit max-h-full py-2 overflow-y-auto">
                             <SortableContext items={termIds}>
                                 {rearrangedTerms.slice(0).reverse().map((term: Term) => ( <DisplayTermCard  typeRearrange={true} 
-                                                                                                            key={term.term}
+                                                                                                            key={term.term_name}
                                                                                                             term={term} 
                                                                                                             isShowingGrades={false}/>))}
                             </SortableContext>
@@ -110,7 +110,7 @@ const RearrangeTermsPopup: React.FC<RearrangeTermsPopupProps> = ({ isRearranging
                 <DragOverlay>
                     {movingTerm && (
                         <DisplayTermCard typeRearrange={true} 
-                                         key={movingTerm.term} 
+                                         key={movingTerm.term_name} 
                                          term={movingTerm} 
                                          isShowingGrades={false}/>
                     )}

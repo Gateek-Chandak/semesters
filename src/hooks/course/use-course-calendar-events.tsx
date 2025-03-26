@@ -1,14 +1,17 @@
 import { useMemo } from "react";
 import { CalendarEvent } from "@/types/mainTypes";
 import { CalculationService } from "@/services/calculationService";
+import useData from "../general/use-data";
 
 const _calculationService = new CalculationService();
 
-const useCalendarEvents = (courseData: any) => {
+const useCalendarEvents = () => {
+    const { courseData } = useData();
+
     const calendarEvents: CalendarEvent[] | undefined = useMemo(() => {
-        return courseData?.gradingSchemes?.length
+        return (courseData?.grading_schemes)
             ? _calculationService.getCourseCalendarEvents(courseData)
-            : undefined;
+            : [];
     }, [courseData]);
 
     return calendarEvents;

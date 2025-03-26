@@ -21,15 +21,13 @@ import { RootState } from '../../redux/store';
 // This is sample data.
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const data = useSelector((state: RootState) => state.data.data);
-  const userName = useSelector((state: RootState) => state.auth.user? state.auth.user.name : '');
-  const userEmail = useSelector((state: RootState) => state.auth.user? state.auth.user.email : '');
-  const userPicture = useSelector((state: RootState) => state.auth.user? state.auth.user.picture: '');
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const displayUser = {
-    name: userName,
-    email: userEmail,
-    picture: userPicture,
+    
+    name: user!.name,
+    email: user!.email,
+    picture: user!.picture,
   }
 
   const { open, openMobile } = useSidebar()
@@ -49,7 +47,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {(open || openMobile) && <Link to="/home" className="w-full truncate relative text-sm">Home</Link>}
         </div>
         {(open || openMobile) && <SidebarSeparator />}
-        <NavMain data={data} />
+        <NavMain/>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={displayUser} />

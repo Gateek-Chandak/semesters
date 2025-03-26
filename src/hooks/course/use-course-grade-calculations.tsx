@@ -17,7 +17,7 @@ const useCourseGradeCalculations = () => {
         ? parseFloat(_calculationService.calculateMinGrade(courseData).toFixed(2))
         : 0,
       maxGradePossible: parseFloat(_calculationService.calculateMaxGrade(courseData).toFixed(2)),
-      highestCourseGrade: _calculationService.getHighestCourseGrade(courseData.gradingSchemes)
+      highestCourseGrade: _calculationService.getHighestCourseGrade(courseData.grading_schemes)
     };
   }, [courseData]);
 

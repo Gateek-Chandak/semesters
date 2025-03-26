@@ -35,7 +35,7 @@ const GradeEstimatorCard = () => {
     // Used to update target grade and grade needed UI card
     const gradeButtonAction = (grade: number) => {
         setTargetGrade(grade)
-        if (courseData && courseData.gradingSchemes.length <= 0) {
+        if (courseData && courseData.grading_schemes.length <= 0) {
             return;
         }
 

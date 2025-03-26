@@ -13,7 +13,8 @@ interface ConfirmDeletePopupProps {
     name: string;
     isDeleting: boolean;
     setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
-    deleteItem: (courseName: string) => void;
+    deleteItem: (name: any) => any;
+    id?: number
 }
 
 const ConfirmDeletePopup: React.FC<ConfirmDeletePopupProps> = ({
@@ -21,6 +22,7 @@ const ConfirmDeletePopup: React.FC<ConfirmDeletePopupProps> = ({
     isDeleting,
     setIsDeleting,
     deleteItem,
+    id
 }) => {
 
     return ( 
@@ -32,7 +34,7 @@ const ConfirmDeletePopup: React.FC<ConfirmDeletePopupProps> = ({
                 </DialogHeader>
                 <DialogFooter>
                     <Button variant={"outline"} onClick={() => setIsDeleting(false)} className="w-full">Cancel</Button>
-                    <Button variant={"destructive"} onClick={() => deleteItem(name)} className="w-full">Confirm</Button>
+                    <Button variant={"destructive"} onClick={() => deleteItem(id ? id : name)} className="w-full">Confirm</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

@@ -65,13 +65,14 @@ const CreateCompletedCoursePopup: React.FC<CreateCoursePopupProps> = ({ isCreati
     }
 
 
-    // Create a new completed course
     const handleCreateCourse = async (): Promise<void> => {
-        const shouldCreateCourse = createCompletedCourse(termData!, courseCode, courseNumber, courseGrade);
+        setIsCreatingCourse(true);
+        const shouldCreateCourse = await createCompletedCourse(termData!, courseCode, courseNumber, courseGrade);
+
         if (shouldCreateCourse) {
             handleClose();
         }
-    }
+    };
 
     return ( 
         <Dialog open={isCreatingCourse} onOpenChange={handleClose}>

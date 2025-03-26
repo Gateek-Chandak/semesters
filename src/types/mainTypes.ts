@@ -24,30 +24,44 @@ export type CalendarEvent = {
   course: string;
   color?: 'green' | 'black' | 'blue' | 'pink' | 'purple' | 'orange' | 'red' 
 };
-// Individual Assessments 
+
+// Individual Assessment
 export type Assessment = {
-    assessmentName: string,
-    dueDate: null | string,
-    weight: number,
-    grade: null | number
-}
-// Individual Grading Schemes
+    id: number,
+    grading_scheme_id: number;
+    assessment_name: string;
+    due_date: string | null;
+    weight: number;
+    grade: number | null;
+};
+
+// Individual Grading Scheme
 export type GradingScheme = {
-    schemeName: string,
-    grade: number,
-    assessments: Assessment[]
-}
+    id: number,
+    course_id: number;
+    scheme_name: string;
+    grade: number;
+    assessments: Assessment[];
+};
+
 // Holds types for all courses
 export type Course = {
-    courseTitle: string;
-    courseSubtitle: string;
-    colour: 'green' | 'black' | 'blue' | 'pink' | 'purple' | 'orange' | 'red' 
-    highestGrade: number;
-    gradingSchemes: GradingScheme[];
+    id: number,
+    term_id: number;
+    course_title: string;
+    course_subtitle: string;
+    colour: 'green' | 'black' | 'blue' | 'pink' | 'purple' | 'orange' | 'red';
+    highest_grade: number;
+    grading_schemes: GradingScheme[];
 };
+
 // Holds types for a term
 export type Term = {
-    term: string;
-    isCompleted: boolean;
+    id: number,
+    user_id: number;
+    term_name: string;
+    is_completed: boolean;
+    start_date: string;
+    end_date: string;
     courses: Course[];
 };

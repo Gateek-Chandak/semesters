@@ -13,14 +13,14 @@ interface EditTermCardProps {
 const EditTermCard: React.FC<EditTermCardProps> = ({ term, isDeleting, setIsDeleting, setTermBeingDeleted }) => {
 
     const handleDelete = () => {
-        setTermBeingDeleted(term.term)
+        setTermBeingDeleted(term.term_name)
         setIsDeleting(!isDeleting)
     }
 
     return (
         <div className="custom-card">
             <div className="h-40 w-40 flex flex-col justify-between gap-4 items-center py-8">
-                <h1 className='text-xl'>{term.term}</h1>
+                <h1 className='text-xl'>{term.term_name}</h1>
                 <Button variant="outline" className="h-10 border border-red-500 text-red-500 text-xs hover:bg-red-500 hover:text-white" onClick={handleDelete}>
                     Delete <Trash2Icon className="" />
                 </Button>
