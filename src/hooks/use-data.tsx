@@ -16,14 +16,14 @@ const useData = () => {
 
     const courseData = useMemo(() => {
         return parsedCourse && termData ? _calculationService.getCourseData(termData, parsedCourse) : undefined;
-    }, [data, parsedCourse]);
+    }, [data, parsedCourse, termData]);
 
     const courseIndex = useMemo(() => {
         if (parsedCourse && termData) {
             return _calculationService.getCourseIndex(termData, parsedCourse!);
         }
         return 0;
-    }, [data, parsedCourse]);
+    }, [data, parsedCourse, termData]);
 
     return { data, termData, courseData, courseIndex };
 };
