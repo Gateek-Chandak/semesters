@@ -21,7 +21,7 @@ const useLocalCourseList = () => {
 
     useEffect(() => {
         setLocalTermCourses(termData?.courses!)
-    }, [parsedTerm])
+    }, [parsedTerm, termData])
 
     // IMPLEMENT ALL ERRORS FOR EMPTY FIELDS
     useEffect(() => {
