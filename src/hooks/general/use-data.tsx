@@ -25,7 +25,7 @@ const useData = () => {
             return termData?.courses.findIndex((c: Course) => c.course_title.toLowerCase() === parsedCourse.toLowerCase());
         }
         return 0;
-    }, [data, parsedCourse]);
+    }, [data, parsedCourse, termData]);
 
     return { data, termData, courseData, courseIndex };
 };
