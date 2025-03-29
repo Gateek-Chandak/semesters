@@ -8,33 +8,7 @@ import { addHours } from "date-fns";
 import { Assessment, CalendarEvent, Course, GradingScheme, Term } from "@/types/mainTypes";
 
 export class CalculationService{
-    // GENERAL CALCULATIONS ---------------------------------------------------------------------------
-
-    // parseParams(term, string) uses provided params and decodes them into valid term and course
-    //                           values
-    parseParams(paramTerm: string | undefined, paramCourse: string | undefined): { parsedTerm: string | undefined, parsedCourse: string | undefined} {
-        const parsedCourse = paramCourse?.replace('-', ' ');
-        const parsedTerm = paramTerm?.replace('-', ' ');
-
-        return { parsedTerm, parsedCourse};
-    }
-
-    // getCurrentDate() gets the current date
-    getCurrentDate() {
-        return new Date();
-    }
-
     // COURSE DATA CALCULATIONS -----------------------------------------------------------------------
-
-    // getCourseData(termData, courseName) takes in term data and produces the data for a course
-    getCourseData(termData: Term | undefined, courseName: string): Course | undefined {
-        return termData?.courses.find((c: Course) => c.course_title.toLowerCase() === courseName?.toLowerCase())
-    }
-
-    // getCourseIndex(termData, courseName) takes in term data and produces the index for a given course
-    getCourseIndex(termData: Term | undefined, courseName: string): number | undefined {
-        return termData?.courses.findIndex((c: Course) => c.course_title.toLowerCase() === courseName.toLowerCase())
-    }
 
     // getCourseCalendarEvents(courseData) takes in course data and returns a list of calendar
     //                                     events to be used in a calendar component
@@ -117,7 +91,7 @@ export class CalculationService{
         return maxGrade;
     }
 
-    // calculateMinGradeNeeded(grade, courseData) calculates the minimym grade needed to pass a course using grading scheme(s)
+    // calculateMinGradeNeeded(grade, courseData) calculates the minimum grade needed to get 'grade' using grading scheme(s)
     calculateMinGradeNeeded(grade: number, courseData: Course | undefined): number | null {
         let minGradeNeeded: number | null = null;
         let atLeastOneSchemeCanContribute = false;
@@ -156,16 +130,15 @@ export class CalculationService{
         return minGradeNeeded;
     }
     
-
     // updateSchemes(courseData, assessmentGrade, assessmentName) updates a courses grading schemes along with its grades
-    updateSchemes(gradingSchemes: GradingScheme[], assessmentGrade: number | null, assessmentName: string) {
+    updateSchemeGrades(gradingSchemes: GradingScheme[], assessmentGrade: number | null, assessment_id: number) {
         const updatedSchemes = gradingSchemes.map((scheme) => {
             let totalGrade = 0;
             let totalWeight = 0;
 
             const updatedAssessments = scheme.assessments.map((assessment) => {
                 // Update the grade for the matching assessment
-                if (assessment.assessment_name === assessmentName) {
+                if (assessment.id === assessment_id) {
                     assessment = { ...assessment, grade: assessmentGrade }; // Assign rounded value or null
                 }
                 // Include only completed assessments in the grade calculation
@@ -180,7 +153,6 @@ export class CalculationService{
             if (totalWeight > 100) {
                 totalWeight = 100;
             }
-
             // Calculate final grade, scaled to completed assessments
             const finalGrade = totalWeight > 0 ? (totalGrade / totalWeight) * 100 : 0;
             return {
@@ -204,7 +176,6 @@ export class CalculationService{
                 totalWeight += assessment.weight;
             }
         });
-
         // Ensure totalWeight doesn't exceed 100
         totalWeight = Math.min(totalWeight, 100);
 
@@ -222,11 +193,6 @@ export class CalculationService{
     }
 
     // TERM DATA CALCULATIONS -------------------------------------------------------------------------
-
-    // getTermData(termName) produces the data for any given term
-    getTermData(data: any, termName: string): Term {
-        return data.find((t: Term) => t.term_name === termName);
-    }
 
     // getTermCalendarEvents(courseData) takes in term data and returns a list of calendar
     //                                     events to be used in a calendar component
@@ -261,8 +227,8 @@ export class CalculationService{
     // getEventsInTimeFrame(calendarEvents, timeFrame) gets the number of calendar events 
     //                                                 in the next timeFrame days
     getEventsInTimeFrame(calendarEvents: CalendarEvent[], timeFrame: number): number {
-        const now = this.getCurrentDate();
-        const proximityDaysFromNow = this.getCurrentDate();
+        const now = new Date();
+        const proximityDaysFromNow = new Date();
         proximityDaysFromNow.setDate(now.getDate() + timeFrame);
         const calculatedEvents = calendarEvents?.filter(event => {
             if (event.start) {

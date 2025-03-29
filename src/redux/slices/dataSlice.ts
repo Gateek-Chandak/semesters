@@ -25,9 +25,8 @@ const dataSlice = createSlice({
         // Add a single term    
         addTerm(state, action: PayloadAction<{ term: Term }>) {
           const { term } = action.payload;
-          const duplicateTerm = state.data.find((t: Term) => t.term_name == term.term_name)
+          const duplicateTerm = state.data.find((t: Term) => t.id == term.id)
           if (term && !duplicateTerm) {
-              // Ensure the state is updated immutably by spreading the previous state and adding the new term
               state.data = [...state.data, term];
           }
         },            

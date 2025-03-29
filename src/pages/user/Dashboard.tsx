@@ -25,14 +25,14 @@ import MetricCard from '@/components/shared/MetricCard';
 import Footer from '@/components/shared/Footer';
 // Services
 import { CalculationService } from '@/services/calculationService';
-import TermDataService from '@/services/termDataService';
+import DeleteDataService from '@/services/deleteDataService';
 import useData from '@/hooks/general/use-data';
 
 const _calculationService = new CalculationService();
 
 const Dashboard = () => {
     // Services 
-    const { deleteTerm } = TermDataService();
+    const { handleDeleteTerm } = DeleteDataService();
     // Hooks
     const { data } = useData();
     // States
@@ -49,7 +49,7 @@ const Dashboard = () => {
     // Inits
     const userName = useSelector((state: RootState) => state.auth.user ? state.auth.user.name : '')
     // Get today's date
-    const formattedDate = format(_calculationService.getCurrentDate(), 'EEEE, MMMM dd');
+    const formattedDate = format(new Date(), 'EEEE, MMMM dd');
 
     // Calculate values associated with current term
     const currentTerm: Term = useMemo(() => data[data.length-1], [data]);
@@ -58,14 +58,10 @@ const Dashboard = () => {
 
     // Delete a term
     const triggerDeleteTerm = async (name: string) => {
-        try {
-            const shouldDeleteTerm = await deleteTerm(name, termBeingDeleted);
-            if (shouldDeleteTerm) {
-                setIsDeletingTerm(false);
-                setTermBeingDeleted('');
-            }
-        } catch (error) {
-            console.error("Error triggering term deletion:", error);
+        const shouldDeleteTerm = await handleDeleteTerm(name, termBeingDeleted);
+        if (shouldDeleteTerm) {
+            setIsDeletingTerm(false);
+            setTermBeingDeleted('');
         }
     };
 

@@ -9,22 +9,20 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import { Trigger } from "@/components/sidebar/navTrigger";
 // Hooks
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useIsMobile } from "@/hooks/general/use-mobile";
 import { useToast } from "@/hooks/general/use-toast"
 import { Link } from "react-router-dom";
+import useParsedRouteParams from "@/hooks/general/use-parsed-route-params";
 // Redux
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
 // Custom Components
 import { AppSidebar } from "@/components/sidebar/AppSidebar"
 // Services
-import { CalculationService } from "@/services/calculationService";
 import { useEffect } from "react";
 
 const HomePage = ( ) => {
-  // Services
-  const _calculationService = new CalculationService();
   // Inits
   const { toast } = useToast()
   const isMobile = useIsMobile()
@@ -43,8 +41,7 @@ const HomePage = ( ) => {
   }, [error])
   
   // Get Current Term and Course
-  const { term: paramTerm, course: paramCourse } = useParams()
-  const { parsedTerm: term, parsedCourse: course } = _calculationService.parseParams(paramTerm, paramCourse) 
+  const { parsedTerm: term, parsedCourse: course } = useParsedRouteParams();
 
   return (
     <SidebarProvider>

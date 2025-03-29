@@ -70,7 +70,7 @@ const DisplayGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { se
                 </Table>
             </div>
             {/* Popups */}
-            <AddDeliverablePopup scheme_id={scheme.id} isAddingDeliverable={isAddingDeliverable} setIsAddingDeliverable={setIsAddingDeliverable} />
+            <AddDeliverablePopup scheme={scheme} isAddingDeliverable={isAddingDeliverable} setIsAddingDeliverable={setIsAddingDeliverable} />
             <AddSchemePopup isAddingScheme={isAddingScheme} setIsAddingScheme={setIsAddingScheme} />
         </CarouselItem>
      );

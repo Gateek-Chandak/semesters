@@ -2,25 +2,24 @@
 import { CarouselItem } from "../ui/carousel";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Table,
-         TableHeader,
-         TableRow,
-         TableHead,
-         TableBody,
-} from "../ui/table";
+import { Table, TableHeader, TableRow, TableHead, TableBody } from "../ui/table";
 import { CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 // Custom Components
 import EditAssessmentRow from "./EditAssessmentRow";
 import ConfirmDeletePopup from "../shared/ConfirmDeletePopup";
 // Types
-import { Assessment, GradingScheme } from "@/types/mainTypes";
+import { GradingScheme } from "@/types/mainTypes";
 // Hooks
 import { ChangeEvent, useState } from "react";
-import { useToast } from "@/hooks/general/use-toast";
 import useLocalScheme from "@/hooks/course/use-local-scheme";
 import useUser from "@/hooks/general/use-user";
+import useData from "@/hooks/general/use-data";
+import { useToast } from "@/hooks/general/use-toast";
+// Redux
+import { useDispatch } from "react-redux";
+import { updateScheme } from "@/redux/slices/dataSlice";
 // Services
-import TermDataService from "@/services/termDataService";
+import DeleteDataService from "@/services/deleteDataService";
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
 import { APIService } from "@/services/apiService";
 import { CalculationService } from "@/services/calculationService";
@@ -37,39 +36,83 @@ interface DisplayGradingSchemeCardProps {
 
 const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIsEditing, scheme, schemeIndex } ) => {
     // Services
-    const { deleteScheme } = TermDataService();
+    const { handleDeleteScheme } = DeleteDataService();
     // Hooks
-    const { toast } = useToast();
+    const { courseData, termData, courseIndex } = useData();
     const { user } = useUser();
-    const { localScheme, cannotSave, setSchemeName, saveSchemeChanges, syncChanges, setAssessmentDate, handleAssessmentDelete, setLocalScheme, discardSchemeChanges } = useLocalScheme(scheme, schemeIndex);
+    const dispatch = useDispatch();
+    const { toast } = useToast();
+    const { localScheme, cannotSave, setSchemeName, syncChanges, setAssessmentDate, handleAssessmentDelete, setLocalScheme, discardSchemeChanges } = useLocalScheme(scheme, schemeIndex);
     // States
     //  conditionals
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
-    // Saves a scheme
-    const handleSaveChanges = async () => {
-        const updatedSchemeGrade = _calculationService.updateGradingSchemeGrade(localScheme.assessments);
-        saveSchemeChanges(updatedSchemeGrade);
-        if (!cannotSave.value) {
-            if (localScheme != scheme) {
-                const updatedScheme = {
-                    ...localScheme,
-                    grade: updatedSchemeGrade
-                }
-                await _apiService.updateGradingScheme(user!.id, updatedScheme);
-                // Logic for deleting assessments
-                const assessmentIdsRemaining = localScheme.assessments.map((a: Assessment) => {return a.id})
-                const assessmentsToDelete = scheme.assessments.filter((a: Assessment) => !assessmentIdsRemaining.includes(a.id));
-                for (let i = 0; i < assessmentsToDelete.length; i++) {
-                    await _apiService.deleteAssessment(user!.id, assessmentsToDelete[i].id);
-                }
-                // Logic for updating assessments
-                for(let i = 0; i < localScheme.assessments.length; i++) {
-                    await _apiService.updateAssessment(user!.id, localScheme.assessments[i]);
-                }
-            }
-            setIsEditing(false)
+    const updateSchemeInState = async (updatedScheme: GradingScheme) => {
+        dispatch(updateScheme({
+            term: termData!.term_name,
+            courseIndex: courseIndex,
+            schemeIndex: schemeIndex,
+            scheme: updatedScheme
+        }));
+    
+        toast({
+            variant: "success",
+            title: "Update Successful",
+            description: `${updatedScheme.scheme_name} was updated successfully`,
+            duration: 1000
+        });
+    };
+    
+    const handleAssessmentChanges = async () => {
+        const assessmentIdsRemaining = localScheme.assessments.map(a => a.id);
+        const assessmentsToDelete = scheme.assessments.filter(a => !assessmentIdsRemaining.includes(a.id));
+    
+        // Delete assessments that no longer exist
+        await Promise.all(assessmentsToDelete.map(a => _apiService.deleteAssessment(user!.id, a.id)));
+    
+        // Update remaining assessments
+        await Promise.all(localScheme.assessments.map(a => _apiService.updateAssessment(user!.id, a)));
+    };
+    
+    const updateCourseHighestGrade = async (updatedSchemeGrade: number) => {
+        const otherSchemes = courseData?.grading_schemes.filter(s => s.id !== localScheme.id) || [];
+        let newHighestGrade = updatedSchemeGrade;
+    
+        if (otherSchemes.length > 0) {
+            const currentHighestGrade = _calculationService.getHighestCourseGrade(otherSchemes);
+            newHighestGrade = Math.max(updatedSchemeGrade, currentHighestGrade);
         }
+    
+        if (newHighestGrade !== courseData?.highest_grade) {
+            await _apiService.updateCourse(user!.id, { ...courseData!, highest_grade: newHighestGrade });
+        }
+    };
+
+    // Finalizes changes on a scheme. This includes updating/deleting assessments, updating scheme grade, and 
+    // updating course highest_grade
+    const handleSaveChanges = async () => {
+        
+        if (cannotSave.value) {
+            toast({
+                variant: "destructive",
+                title: "Update Unsuccessful",
+                description: cannotSave.reason,
+                duration: 1000
+            })
+            return;
+        }
+        
+        if (localScheme != scheme) {
+            const updatedSchemeGrade = _calculationService.updateGradingSchemeGrade(localScheme.assessments);
+            const updatedScheme = {...localScheme, grade: updatedSchemeGrade}
+
+            await updateSchemeInState(updatedScheme)
+            await _apiService.updateGradingScheme(user!.id, updatedScheme);
+            await handleAssessmentChanges();
+            await updateCourseHighestGrade(updatedSchemeGrade);
+        }
+
+        setIsEditing(false)
     }
     // discards changes
     const handleDiscardChanges = () => {
@@ -78,16 +121,11 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
     }
 
     // deletes a scheme
-    const handleDeleteScheme = async (name: string) => {
-        await _apiService.deleteGradingScheme(user!.id, scheme.id)
-        deleteScheme(name)
-        toast({
-            variant: "success",
-            title: "Delete Successful",
-            description: name + " has been successfully deleted!",
-            duration: 2000
-        });
-        setIsEditing(false)
+    const deleteScheme = async (id: number) => {
+        const shouldDeleteScheme = await handleDeleteScheme(id)
+        if (shouldDeleteScheme) {
+            setIsEditing(false)
+        }
     };
     
     // Manage Input Contraints
@@ -135,7 +173,7 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
                     </TableBody> 
                 </Table>
             </div>
-            <ConfirmDeletePopup name={scheme.scheme_name} deleteItem={handleDeleteScheme}
+            <ConfirmDeletePopup name={scheme.scheme_name} id={scheme.id} deleteItem={deleteScheme}
                                 isDeleting={isDeleting} setIsDeleting={setIsDeleting}/>
         </CarouselItem>
      );

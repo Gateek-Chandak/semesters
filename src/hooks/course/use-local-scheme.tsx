@@ -1,12 +1,13 @@
+// Types
 import { Assessment, GradingScheme } from "@/types/mainTypes"
+// Hooks
 import { useEffect, useState } from "react"
 import useData from "../general/use-data"
-import { toast } from "../general/use-toast";
-import TermDataService from "@/services/termDataService";
+import { useToast } from "../general/use-toast";
 
 const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
-    const { updateGradingScheme } = TermDataService();
-    const { courseData, courseIndex } = useData();
+    const { courseData } = useData();
+    const { toast } = useToast();
 
     const [localScheme, setLocalScheme] = useState<GradingScheme>(scheme)
     const [cannotSave, setCannotSave] = useState<{ value: boolean, reason: string }>({ value: false, reason: ""})
@@ -74,29 +75,6 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
         setCannotSave( { value: false, reason: "" }); 
     }, [localScheme])
 
-    const saveSchemeChanges = (updatedGrade: number) => {
-        if (scheme == localScheme) {
-            return;
-        }
-        if (!cannotSave.value) {
-            // update the grading scheme grade
-            updateGradingScheme(schemeIndex, courseIndex!, {...localScheme, grade: updatedGrade})
-            toast({
-                variant: "success",
-                title: "Update Successful",
-                description: localScheme.scheme_name + " was updated successfully",
-                duration: 1000
-            })
-        } else {
-            toast({
-                variant: "destructive",
-                title: "Update Unsuccessful",
-                description: cannotSave.reason,
-                duration: 1000
-            })
-        }
-    }
-
     const discardSchemeChanges = () => {
         if (localScheme == scheme) {
             return;
@@ -108,7 +86,6 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
             duration: 1000
         })
     }
-
 
     const setSchemeName = (name: string) => {
         setLocalScheme((prev: GradingScheme) => ({ ...prev, scheme_name: name }))
@@ -140,7 +117,7 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
     }
 
     return { setLocalScheme, setCannotSave, localScheme, cannotSave,
-        setSchemeName, syncChanges, setAssessmentDate, handleAssessmentDelete, saveSchemeChanges, discardSchemeChanges }
+        setSchemeName, syncChanges, setAssessmentDate, handleAssessmentDelete, discardSchemeChanges }
 }
  
 export default useLocalScheme;

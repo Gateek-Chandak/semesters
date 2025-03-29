@@ -51,19 +51,13 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
     }
 
     const handleCreate = async () => {
-        try {
-            const shouldCreateTerm = await createTerm(termName, selectedYear, isTermComplete);
-    
-            if (!shouldCreateTerm) {
-                setError('This term already exists');
-                return;
-            }
-    
-            handleClose();
-        } catch (error) {
-            console.error("Error handling term creation:", error);
-            setError('An unexpected error occurred');
+        const shouldCreateTerm = await createTerm(termName, selectedYear, isTermComplete);
+        if (!shouldCreateTerm) {
+            setError('This term already exists');
+            return;
         }
+
+        handleClose();
     };
 
     return ( 

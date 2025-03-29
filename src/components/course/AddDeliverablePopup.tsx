@@ -24,10 +24,10 @@ const _inputFieldValidationService = new InputFieldValidationService();
 interface AddDeliverablePopupProps {
     isAddingDeliverable: boolean;
     setIsAddingDeliverable: React.Dispatch<React.SetStateAction<boolean>>;
-    scheme_id: number
+    scheme: GradingScheme
 }
 
-const AddDeliverablePopup: React.FC<AddDeliverablePopupProps> = ( {scheme_id, isAddingDeliverable, setIsAddingDeliverable} ) => {
+const AddDeliverablePopup: React.FC<AddDeliverablePopupProps> = ( {scheme, isAddingDeliverable, setIsAddingDeliverable} ) => {
     // Hooks
     const { courseData } = useData();
     const { createAssessment } = FormSubmitService();
@@ -78,9 +78,9 @@ const AddDeliverablePopup: React.FC<AddDeliverablePopupProps> = ( {scheme_id, is
                 return false
         }
     }
-
+// NEED TO MODIFY TO ALSO UPDATE GRADE STORED IN GRADING SCHEME DATABASE
     const handleCreateDeliverable = async () => {
-        const shouldCreateDeliverable = await createAssessment(scheme_id, assessmentName, assessmentWeight, assessmentGrade, assessmentDate, selectedScheme)
+        const shouldCreateDeliverable = await createAssessment(scheme.id, assessmentName, assessmentWeight, assessmentGrade, assessmentDate, selectedScheme)
         if (shouldCreateDeliverable) {
             handleClose();
         }

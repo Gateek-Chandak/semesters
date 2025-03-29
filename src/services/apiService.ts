@@ -8,6 +8,19 @@ import axios, { AxiosError } from "axios";
 const API_BASE_URL = import.meta.env.VITE_SITE_URL;
 
 export class APIService {
+    // handleLogin() handles the login API request 
+    async handleLogin() {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/auth/log-in`, {
+                method: 'GET',
+                withCredentials: true,
+                });
+                return response.data.url;    
+        } catch {
+            throw new Error("An unkown log-in error occurred");
+        }
+    }
+
     // uploadSchedule(formData) sends a request to make a new course with a syllabus
     async uploadSchedule(formData: FormData) {
         try {
@@ -39,19 +52,6 @@ export class APIService {
                 throw new Error(error.response?.data?.error || "File upload failed");
             }
             throw new Error("An unknown error occurred");
-        }
-    }
-
-    // handleLogin() handles the login API request 
-    async handleLogin() {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/api/auth/log-in`, {
-                method: 'GET',
-                withCredentials: true,
-              });
-              return response.data.url;    
-        } catch {
-            throw new Error("An unkown log-in error occurred");
         }
     }
 
@@ -136,7 +136,6 @@ export class APIService {
         }
     }
     
-
     // COURSE ROUTES
     async createCourse(term_id: number, course_title: string, course_subtitle: string, colour: string, highest_grade: number, is_completed: boolean) {
         
@@ -183,6 +182,7 @@ export class APIService {
 
     async updateCourse(user_id: number, course: Course) {
         const { id, course_title, course_subtitle, colour, highest_grade } = course;
+
         try {
             const response = await axios.put(`${API_BASE_URL}/api/term-database/update-course`, {
                 user_id, 
@@ -190,7 +190,7 @@ export class APIService {
             });
     
             if (response.data.success) {
-                return response.data;
+                return response.data.data;
             } 
             throw new Error("Error Syncing Data");
         } catch (error) {

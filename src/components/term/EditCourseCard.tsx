@@ -12,7 +12,7 @@ import { ChangeEvent, useState } from "react";
 import useData from "@/hooks/general/use-data";
 // Services
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
-import TermDataService from "@/services/termDataService";
+import DeleteDataService from "@/services/deleteDataService";
 
 const _inputFieldValidationService = new InputFieldValidationService();
 
@@ -25,7 +25,7 @@ interface EditCourseCardProps {
 
 const EditCourseCard: React.FC<EditCourseCardProps> = ({ course, courseIndex, isCompleted, syncChanges }) => {
     // Service
-    const { handleDeleteCourse } = TermDataService();
+    const { handleDeleteCourse } = DeleteDataService();
     // Hooks
     const { termData } = useData();
     // States
@@ -67,12 +67,11 @@ const EditCourseCard: React.FC<EditCourseCardProps> = ({ course, courseIndex, is
     }
 
     const triggerDeleteCourse = async () => {
-        if (termData) {
-            if (courseIndex !== -1) {
-                await handleDeleteCourse(termData.id, course.id);
-            } 
-
-            setIsDeleting(false);
+        if (termData && courseIndex !== -1) {
+            const shouldDeleteCourse = await handleDeleteCourse(termData.id, course.id);
+            if (shouldDeleteCourse) {
+                setIsDeleting(false);
+            }
         }
     };
 

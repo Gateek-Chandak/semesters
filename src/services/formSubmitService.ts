@@ -65,23 +65,6 @@ const FormSubmitService = () => {
         }
     }
 
-    // formatNewGradingScheme(courseInfo) takes in incoming course info from api and returns it as formatted
-    function formatNewGradingScheme(courseInfo: IncomingCourseInfo) {
-        console.log(courseInfo)
-        const response =  courseInfo.gradingSchemes.map((scheme) => ({
-            schemeName: scheme.schemeName,
-            grade: 0,
-            assessments: scheme.assessments.map((assessment) => ({
-                assessmentName: assessment.assessmentName,
-                dueDate: assessment.dueDate ? new Date(assessment.dueDate).toISOString() : null,
-                weight: assessment.weight,
-                grade: null,
-            })),
-        }));
-        console.log(response)
-        return response;
-    };
-
     // createCompletedCourse(termData, courseCode, courseNumber, courseSubtitle)
     async function createCourse(termData: any, courseCode: string, courseNumber: string, courseSubtitle: string, colour: string, file: File | null) {
         const { isValid, error } = _formValidationService.validateNewCourse(termData, courseCode, courseNumber, courseSubtitle);
@@ -224,7 +207,7 @@ const FormSubmitService = () => {
         }
     }
 
-    // createDeliverable(name, weight, grade, date, scheme) creates a new deliverable
+    // createDeliverable(scheme_id, name, weight, grade, date, schemeName) creates a new deliverable
     async function createAssessment(scheme_id: number, name: string, weight: number, grade: number | null, date: string | null, schemeName: string) {
         const { isValid, error } = _formValidationService.vaildateNewAssessment(name, courseData, schemeName);
         if (!isValid) {
@@ -238,23 +221,29 @@ const FormSubmitService = () => {
         }
 
         try {
+            // Create assessment
             const newAssessment: Assessment = await _apiService.createAssessment(user!.id, scheme_id, name, date, weight, grade)
-            let updatedSchemes = courseData?.grading_schemes.map((scheme) => {
-                if (scheme.scheme_name === schemeName) {
+            // Add new assessment to schemes
+            let updatedSchemes: GradingScheme[] = courseData!.grading_schemes.map((scheme) => {
+                if (scheme.id === scheme_id) {
                     return { ...scheme, assessments: [...scheme.assessments, newAssessment]};
                 }
                 return scheme;
             });
-            updatedSchemes = _calculationService.updateSchemes(updatedSchemes as GradingScheme[], newAssessment.grade, newAssessment.assessment_name)    
+            // Get schemes with updated grades
+            updatedSchemes = _calculationService.updateSchemeGrades(updatedSchemes, newAssessment.grade, newAssessment.id)    
+            // Update grading schemes with new updatedSchemes
+            for(let i = 0; i < updatedSchemes.length; i++) {
+                await _apiService.updateGradingScheme(user!.id, updatedSchemes[i]);
+            }
+            // Get highest grade between schemes
             const newHighestGrade = _calculationService.getHighestCourseGrade(updatedSchemes as GradingScheme[]);
+            // Update course in database with new highest grade
+            const updatedCourse: Course = await _apiService.updateCourse(user!.id, { ...courseData!, highest_grade: newHighestGrade })
             dispatch(updateCourse({
                 term: termData!.term_name,
                 courseIndex: courseIndex!,
-                course: {
-                    ...courseData as Course,
-                    highest_grade: newHighestGrade ||  0,
-                    grading_schemes: updatedSchemes,
-                },
+                course: {...updatedCourse, highest_grade: newHighestGrade, grading_schemes: updatedSchemes},
             }));
             toast({
                 variant: "success",
@@ -275,7 +264,7 @@ const FormSubmitService = () => {
         }
     }
 
-    function addStudyLog(date: string | null, lowerLimit: string, upperLimit: string) {
+    function createStudyLog(date: string | null, lowerLimit: string, upperLimit: string) {
         if (!date) {
             toast({
                 variant: "destructive",
@@ -302,7 +291,7 @@ const FormSubmitService = () => {
         return true;
     }
 
-    return { createTerm, createCompletedCourse, createCourse, formatNewGradingScheme, createAssessment, createScheme, addStudyLog };
+    return { createTerm, createCompletedCourse, createCourse, createAssessment, createScheme, createStudyLog };
 }
  
 export default FormSubmitService;
@@ -406,3 +395,19 @@ export class FormValidationService {
     }
 }
 
+// formatNewGradingScheme(courseInfo) takes in incoming course info from api and returns it as formatted
+function formatNewGradingScheme(courseInfo: IncomingCourseInfo) {
+    console.log(courseInfo)
+    const response =  courseInfo.gradingSchemes.map((scheme) => ({
+        schemeName: scheme.schemeName,
+        grade: 0,
+        assessments: scheme.assessments.map((assessment) => ({
+            assessmentName: assessment.assessmentName,
+            dueDate: assessment.dueDate ? new Date(assessment.dueDate).toISOString() : null,
+            weight: assessment.weight,
+            grade: null,
+        })),
+    }));
+    console.log(response)
+    return response;
+};
