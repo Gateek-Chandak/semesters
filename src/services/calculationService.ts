@@ -8,57 +8,31 @@ import { addHours } from "date-fns";
 import { Assessment, CalendarEvent, Course, GradingScheme, Term } from "@/types/mainTypes";
 
 export class CalculationService{
-    // GENERAL CALCULATIONS ---------------------------------------------------------------------------
-
-    // parseParams(term, string) uses provided params and decodes them into valid term and course
-    //                           values
-    parseParams(paramTerm: string | undefined, paramCourse: string | undefined): { parsedTerm: string | undefined, parsedCourse: string | undefined} {
-        const parsedCourse = paramCourse?.replace('-', ' ');
-        const parsedTerm = paramTerm?.replace('-', ' ');
-
-        return { parsedTerm, parsedCourse};
-    }
-
-    // getCurrentDate() gets the current date
-    getCurrentDate() {
-        return new Date();
-    }
-
     // COURSE DATA CALCULATIONS -----------------------------------------------------------------------
-
-    // getCourseData(termData, courseName) takes in term data and produces the data for a course
-    getCourseData(termData: Term | undefined, courseName: string): Course | undefined {
-        return termData?.courses.find((c: Course) => c.courseTitle.toLowerCase() === courseName?.toLowerCase())
-    }
-
-    // getCourseIndex(termData, courseName) takes in term data and produces the index for a given course
-    getCourseIndex(termData: Term | undefined, courseName: string): number | undefined {
-        return termData?.courses.findIndex((c: Course) => c.courseTitle.toLowerCase() === courseName.toLowerCase())
-    }
 
     // getCourseCalendarEvents(courseData) takes in course data and returns a list of calendar
     //                                     events to be used in a calendar component
     getCourseCalendarEvents(courseData: Course): CalendarEvent[] {
         const uniqueAssessments = new Set();
-        const calendarEvents = courseData.gradingSchemes.flatMap((scheme) =>
+        const calendarEvents = courseData.grading_schemes.flatMap((scheme) =>
             scheme.assessments
-                .filter((assessment) => assessment.dueDate !== null) // Filter out assessments with null dueDate
+                .filter((assessment) => assessment.due_date !== null) // Filter out assessments with null dueDate
                 .filter((assessment) => {
                     // Check if the assessment name is already added for this course
-                    if (uniqueAssessments.has(assessment.assessmentName)) {
+                    if (uniqueAssessments.has(assessment.assessment_name)) {
                         return false;
                     }
-                    uniqueAssessments.add(assessment.assessmentName)
+                    uniqueAssessments.add(assessment.assessment_name)
                     return true;
                 })
                 .map((assessment, index) => ({
                     id: index,
                     //@ts-expect-error calendar expects Date but I can only give Date | null
-                    start: new Date(assessment.dueDate),
+                    start: new Date(assessment.due_date),
                     //@ts-expect-error calendar expects Date but I can only give Date | null
-                    end: addHours(new Date(assessment.dueDate), 1),
-                    title: assessment.assessmentName,
-                    course: courseData.courseTitle,
+                    end: addHours(new Date(assessment.due_date), 1),
+                    title: assessment.assessment_name,
+                    course: courseData.course_title,
                     color: courseData.colour,
                 }))
         );
@@ -74,7 +48,7 @@ export class CalculationService{
 
         let minGrade = 0; // Start with the highest possible value
 
-        courseData?.gradingSchemes.forEach((scheme) => {
+        courseData?.grading_schemes.forEach((scheme) => {
             if (!scheme.assessments || scheme.assessments.length === 0) {
                 return; // Skip this scheme if it has no assessments
             }
@@ -95,7 +69,7 @@ export class CalculationService{
     calculateMaxGrade(courseData: Course | undefined): number {
         let maxGrade = 0; // Start with the lowest possible value (0)
             
-        courseData?.gradingSchemes.forEach((scheme) => {
+        courseData?.grading_schemes.forEach((scheme) => {
             // Calculate the total grade for the scheme by assigning 100 to all grades
             let totalGrade = scheme.assessments.reduce((total, assessment) => {
                 const grade = (assessment.grade !== null && assessment.grade !== undefined ) ? assessment.grade : 100; // Assign 100 to undefined or null grades
@@ -117,12 +91,12 @@ export class CalculationService{
         return maxGrade;
     }
 
-    // calculateMinGradeNeeded(grade, courseData) calculates the minimym grade needed to pass a course using grading scheme(s)
+    // calculateMinGradeNeeded(grade, courseData) calculates the minimum grade needed to get 'grade' using grading scheme(s)
     calculateMinGradeNeeded(grade: number, courseData: Course | undefined): number | null {
         let minGradeNeeded: number | null = null;
         let atLeastOneSchemeCanContribute = false;
     
-        courseData?.gradingSchemes.forEach((scheme) => {
+        courseData?.grading_schemes.forEach((scheme) => {
             if (!scheme.assessments || scheme.assessments.length === 0) return;
     
             const completed = scheme.assessments.filter(a => a.grade !== null);
@@ -156,20 +130,15 @@ export class CalculationService{
         return minGradeNeeded;
     }
     
-
     // updateSchemes(courseData, assessmentGrade, assessmentName) updates a courses grading schemes along with its grades
-    updateSchemes(gradingSchemes: GradingScheme[], assessmentGrade: number | null, assessmentName: string): {
-        assessments: Assessment[], 
-        grade: number, 
-        schemeName: string}[] 
-    {
+    updateSchemeGrades(gradingSchemes: GradingScheme[], assessmentGrade: number | null, assessment_id: number) {
         const updatedSchemes = gradingSchemes.map((scheme) => {
             let totalGrade = 0;
             let totalWeight = 0;
 
             const updatedAssessments = scheme.assessments.map((assessment) => {
                 // Update the grade for the matching assessment
-                if (assessment.assessmentName === assessmentName) {
+                if (assessment.id === assessment_id) {
                     assessment = { ...assessment, grade: assessmentGrade }; // Assign rounded value or null
                 }
                 // Include only completed assessments in the grade calculation
@@ -184,7 +153,6 @@ export class CalculationService{
             if (totalWeight > 100) {
                 totalWeight = 100;
             }
-
             // Calculate final grade, scaled to completed assessments
             const finalGrade = totalWeight > 0 ? (totalGrade / totalWeight) * 100 : 0;
             return {
@@ -208,7 +176,6 @@ export class CalculationService{
                 totalWeight += assessment.weight;
             }
         });
-
         // Ensure totalWeight doesn't exceed 100
         totalWeight = Math.min(totalWeight, 100);
 
@@ -227,34 +194,29 @@ export class CalculationService{
 
     // TERM DATA CALCULATIONS -------------------------------------------------------------------------
 
-    // getTermData(termName) produces the data for any given term
-    getTermData(data: any, termName: string): Term {
-        return data.find((t: Term) => t.term.toLowerCase() === termName?.toLowerCase());
-    }
-
     // getTermCalendarEvents(courseData) takes in term data and returns a list of calendar
     //                                     events to be used in a calendar component
     getTermCalendarEvents(termData: Term): CalendarEvent[] {
         const calendarEvents = termData?.courses.flatMap((course) => {
             // Use a Set to track unique assessment names for the course
             const uniqueAssessments = new Set();
-            return course.gradingSchemes.flatMap((scheme) =>
+            return course.grading_schemes.flatMap((scheme) =>
             scheme.assessments
                 .filter((assessment) => {
                 // Check if the assessment name is already added for this course
-                if (uniqueAssessments.has(assessment.assessmentName)) {
+                if (uniqueAssessments.has(assessment.assessment_name)) {
                     return false; // Skip duplicates
                 }
-                uniqueAssessments.add(assessment.assessmentName); // Mark as added
+                uniqueAssessments.add(assessment.assessment_name); // Mark as added
                 return true;
                 })
                 .map((assessment, index) => ({
-                id: index,
-                start: assessment.dueDate ? new Date(assessment.dueDate) : null,
-                end: assessment.dueDate ? addHours(new Date(assessment.dueDate), 1) : null,
-                title: assessment.assessmentName,
-                course: course.courseTitle,
-                color: course.colour,
+                    id: index,
+                    start: assessment.due_date ? new Date(assessment.due_date) : null,
+                    end: assessment.due_date ? addHours(new Date(assessment.due_date), 1) : null,
+                    title: assessment.assessment_name,
+                    course: course.course_title,
+                    color: course.colour,
                 }))
             );
         });
@@ -265,8 +227,8 @@ export class CalculationService{
     // getEventsInTimeFrame(calendarEvents, timeFrame) gets the number of calendar events 
     //                                                 in the next timeFrame days
     getEventsInTimeFrame(calendarEvents: CalendarEvent[], timeFrame: number): number {
-        const now = this.getCurrentDate();
-        const proximityDaysFromNow = this.getCurrentDate();
+        const now = new Date();
+        const proximityDaysFromNow = new Date();
         proximityDaysFromNow.setDate(now.getDate() + timeFrame);
         const calculatedEvents = calendarEvents?.filter(event => {
             if (event.start) {
@@ -282,7 +244,7 @@ export class CalculationService{
     // getDeliverablesRemaining(termData) gets the number of remaining deliverables for the term
     getDeliverablesRemaining(termData: Term): number {
         const pendingDeliverablesList = termData?.courses.flatMap((course) => 
-            course.gradingSchemes?.[0]?.assessments?.filter((assessment) => 
+            course.grading_schemes?.[0]?.assessments?.filter((assessment) => 
                 assessment.grade === null || assessment.grade === undefined
             ) || []
         );
@@ -293,7 +255,7 @@ export class CalculationService{
     getTermAverage(termData: Term): number {
         if (termData && termData.courses?.length > 0) {
             const courseGrades = termData.courses.reduce((total: number, course: Course) => {
-                return total + course.highestGrade;
+                return total + course.highest_grade;
             }, 0);
 
             const average = courseGrades / termData.courses.length;
@@ -309,9 +271,9 @@ export class CalculationService{
     getCumulativeGPA(data: Term[]): number {
         // Sum all grades
         const totalGrades = data.reduce((overallTotal: number, term: Term) => {
-            if (term.isCompleted) {
+            if (term.is_completed) {
                 return overallTotal + term.courses.reduce((termSum: number, course: Course) => {
-                    return termSum + course.highestGrade;
+                    return termSum + course.highest_grade;
                 }, 0);
             } else {
                 return overallTotal + 0
@@ -319,7 +281,7 @@ export class CalculationService{
         }, 0);
         // Sum all completed courses
         const totalCourses = data.reduce((count: number, term) => {
-            if (term.isCompleted) {
+            if (term.is_completed) {
                 return count + term.courses.length;
             } else {
                 return count + 0;

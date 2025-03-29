@@ -45,6 +45,7 @@
     "react-hotkeys-hook": "^4.6.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.2",
+    "recharts": "^2.15.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.3"

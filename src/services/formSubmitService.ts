@@ -1,25 +1,26 @@
 // This service handles all form submit logic for term data and incoming data related to forms
 
 // Hooks
-import { useToast } from "@/hooks/use-toast";
-import useData from "@/hooks/use-data";
+import { useToast } from "@/hooks/general/use-toast";
+import useData from "@/hooks/general/use-data";
 // Redux
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { addTerm, addCourse, updateCourse } from "@/redux/slices/dataSlice";
 // Types
-import { Course, GradingScheme, IncomingCourseInfo, Term } from "@/types/mainTypes";
+import { Assessment, Course, GradingScheme, IncomingCourseInfo, Term } from "@/types/mainTypes";
 import { AxiosError } from "axios";
 // Services
 import { APIService } from "./apiService";
 import { CalculationService } from "./calculationService";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 const _apiService = new APIService();
 const _calculationService = new CalculationService();
 
 const FormSubmitService = () => {
     // redux inits
-    const data = useSelector((state: RootState) => state.data.data);
+    const { data } = useData();
+    const user = useSelector((state: RootState) => state.auth.user);
     const dispatch = useDispatch();
     // hooks
     const { toast } = useToast();
@@ -27,81 +28,46 @@ const FormSubmitService = () => {
     // services
     const _formValidationService = new FormValidationService();
 
-    // createNewTerm(termName, selectedYear, isCompleted) creates a new term and dispatches the action
-    function createNewTerm(termName: string, selectedYear: number, isCompleted: boolean): boolean {
-        const isTermValid = _formValidationService.validateNewTerm(data, termName, selectedYear)
-
-        const assembledName = termName + ' ' + selectedYear.toString()
+    // createNewTerm(termName, selectedYear, is_completed) creates a new term and dispatches the action
+    async function createTerm(termName: string, selectedYear: number, is_completed: boolean): Promise<boolean> {
+        const isTermValid = _formValidationService.validateNewTerm(data, termName, selectedYear);
+        const assembledName = termName + ' ' + selectedYear.toString();
+    
         if (isTermValid) {
-            dispatch(addTerm({term: {term: assembledName, isCompleted: isCompleted, courses: []}}))
-            toast({
-                variant: "success",
-                title: "Create Successful",
-                description: assembledName + " has been successfully created!",
-                duration: 2000
-            });
-            return true;
+            try {
+                const newTerm: Term = await _apiService.createTerm(user!.id, assembledName, is_completed);
+                dispatch(addTerm({ term: { ...newTerm } }));
+                toast({
+                    variant: "success",
+                    title: "Create Successful",
+                    description: `${assembledName} has been successfully created!`,
+                    duration: 2000
+                });
+                return true;
+            } catch (error) {
+                console.error("Error creating term:", error);
+                toast({
+                    variant: "destructive",
+                    title: "Create Unsuccessful",
+                    description: `${assembledName} could not be created`,
+                    duration: 2000
+                });
+                return false;
+            }
         } else {
             toast({
                 variant: "destructive",
                 title: "Create Unsuccessful",
-                description: assembledName + " could not be created",
+                description: `${assembledName} could not be created`,
                 duration: 2000
             });
             return false;
         }
     }
-
-    // createCompletedCourse(termData, courseCode, courseNumber, grade) creates a new completed course
-    function createCompletedCourse(termData: Term, courseCode: string, courseNumber: string, grade: number | null): boolean {
-        const { isValid, error } = _formValidationService.validateNewCompletedCourse(termData, courseCode, courseNumber, grade);
-        if (!isValid) {
-            toast({
-                variant: "destructive",
-                title: "Create Unsuccessful",
-                description: error,
-                duration: 2000
-            });
-            return false;
-        }
-
-        const newCourse: Course = {
-            courseTitle: courseCode + ' ' + courseNumber,
-            courseSubtitle: "",
-            colour: "black",
-            highestGrade: grade!,
-            gradingSchemes: []
-        }
-        dispatch(addCourse({ term: termData.term, course: newCourse }));
-        toast({
-            variant: "success",
-            title: "Create Successful",
-            description: newCourse.courseTitle + " has been successfully created!",
-            duration: 2000
-        });
-        return true;
-    }
-
-    // formatNewGradingScheme(courseInfo) takes in incoming course info from api and returns it as formatted
-    function formatNewGradingScheme(courseInfo: IncomingCourseInfo) {
-        console.log(courseInfo)
-        const response =  courseInfo.gradingSchemes.map((scheme) => ({
-            schemeName: scheme.schemeName,
-            grade: 0,
-            assessments: scheme.assessments.map((assessment) => ({
-                assessmentName: assessment.assessmentName,
-                dueDate: assessment.dueDate ? new Date(assessment.dueDate).toISOString() : null,
-                weight: assessment.weight,
-                grade: null,
-            })),
-        }));
-        console.log(response)
-        return response;
-    };
 
     // createCompletedCourse(termData, courseCode, courseNumber, courseSubtitle)
-    async function createCourse(termData: Term, courseCode: string, courseNumber: string, courseSubtitle: string, colour: string, file: File | null): Promise<boolean> {
-        const { isValid, error } = _formValidationService.validateNewCourse(courseCode, courseNumber, courseSubtitle);
+    async function createCourse(termData: any, courseCode: string, courseNumber: string, courseSubtitle: string, colour: string, file: File | null) {
+        const { isValid, error } = _formValidationService.validateNewCourse(termData, courseCode, courseNumber, courseSubtitle);
         if (!isValid) {
             toast({
                 variant: "destructive",
@@ -113,29 +79,34 @@ const FormSubmitService = () => {
         }
 
         if (!file) {
-            const newCourse = {
-                courseTitle: courseCode + ' ' + courseNumber,
-                courseSubtitle: courseSubtitle,
-                colour: colour,
-                highestGrade: 0,
-                gradingSchemes: []
+            try {
+                const createdCourse: Course = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
+                dispatch(addCourse({ term_id: createdCourse.term_id, course: createdCourse }));
+                toast({
+                    variant: "success",
+                    title: "Create Successful",
+                    description: `${createdCourse.course_title} has been successfully created!`,
+                    duration: 2000
+                });
+                return true;
+            } catch (error: any) {
+                console.log(error)
+                toast({
+                    variant: "destructive",
+                    title: "Create Unsuccessful",
+                    description: error.error,
+                    duration: 2000
+                });
+                return false;
             }
-            dispatch(addCourse({ term: termData.term, course: newCourse as Course }));
-            return true;
-        } else if (file) {
+        } else {
             const formData = new FormData()
             formData.append("pdf", file);
             try {
                 const response = await _apiService.uploadSchedule(formData);
                 const gradingSchemes = formatNewGradingScheme(response);
-                const newCourse = {
-                    courseTitle: courseCode + ' ' + courseNumber,
-                    courseSubtitle: courseSubtitle,
-                    colour: colour,
-                    highestGrade: 0,
-                    gradingSchemes: gradingSchemes
-                };
-                dispatch(addCourse({ term: termData ? termData.term : "", course: newCourse as Course }));
+                const createdCourse = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
+                dispatch(addCourse({ term_id: createdCourse.term_id, course: {...createdCourse, grading_schemes: gradingSchemes} }));
                 return true;
             } catch (error: unknown) {
                 if (error instanceof AxiosError) {
@@ -157,11 +128,87 @@ const FormSubmitService = () => {
                 return false;
             }
         }
-        return false;
     }
 
-    // createDeliverable(name, weight, grade, date, scheme) creates a new deliverable
-    function createDeliverable(name: string, weight: number, grade: number | null, date: string | null, schemeName: string): boolean {
+    // createCompletedCourse(termData, courseCode, courseNumber, grade) creates a new completed course
+    async function createCompletedCourse(termData: any, courseCode: string, courseNumber: string, grade: number | null) {
+        const { isValid, error } = _formValidationService.validateNewCompletedCourse(termData, courseCode, courseNumber, grade);
+        if (!isValid) {
+            toast({
+                variant: "destructive",
+                title: "Create Unsuccessful",
+                description: error,
+                duration: 2000
+            });
+            return false;
+        }
+
+        try {
+            const createdCourse: Course = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, "", "black", grade || 0, true);
+            dispatch(addCourse({ term_id: createdCourse.term_id, course: createdCourse }));
+            toast({
+                variant: "success",
+                title: "Create Successful",
+                description: `${createdCourse.course_title} has been successfully created!`,
+                duration: 2000
+            });
+            return true;
+        } catch (error: any) {
+            console.log(error)
+            toast({
+                variant: "destructive",
+                title: "Create Unsuccessful",
+                description: error.error,
+                duration: 2000
+            });
+            return false;
+        }
+    }
+
+    // createScheme(name) creates a new grading scheme
+    async function createScheme(schemeName: string) {
+        const { isValid, error } = _formValidationService.validateNewScheme(courseData!, schemeName)
+        if (!isValid) {
+            toast({
+                variant: "destructive",
+                title: "Create Unsuccessful",
+                description: error,
+                duration: 2000
+            });
+            return false;
+        }
+
+        try {
+            const newScheme: GradingScheme = await _apiService.createGradingScheme(user!.id, courseData!.id, schemeName)
+            dispatch(updateCourse({
+                term: termData!.term_name,
+                courseIndex: courseIndex!,
+                course: {
+                    ...courseData as Course,
+                    grading_schemes: [...courseData!.grading_schemes, newScheme],
+                },
+            }));
+            toast({
+                variant: "success",
+                title: "Create Successful",
+                description: `${newScheme.scheme_name} has been successfully created!`,
+                duration: 2000
+            });
+            return true;
+        } catch (error: any) {
+            console.log(error)
+            toast({
+                variant: "destructive",
+                title: "Create Unsuccessful",
+                description: error.error,
+                duration: 2000
+            });
+            return false;
+        }
+    }
+
+    // createDeliverable(scheme_id, name, weight, grade, date, schemeName) creates a new deliverable
+    async function createAssessment(scheme_id: number, name: string, weight: number, grade: number | null, date: string | null, schemeName: string) {
         const { isValid, error } = _formValidationService.vaildateNewAssessment(name, courseData, schemeName);
         if (!isValid) {
             toast({
@@ -173,60 +220,78 @@ const FormSubmitService = () => {
             return false;
         }
 
-        const newAssessment = {
-            assessmentName: name,
-            weight: weight,
-            grade: grade,
-            dueDate: date,
-        };
-        let updatedSchemes = courseData?.gradingSchemes.map((scheme) => {
-            if (scheme.schemeName === schemeName) {
-                return { ...scheme, assessments: [...scheme.assessments, newAssessment]};
+        try {
+            // Create assessment
+            const newAssessment: Assessment = await _apiService.createAssessment(user!.id, scheme_id, name, date, weight, grade)
+            // Add new assessment to schemes
+            let updatedSchemes: GradingScheme[] = courseData!.grading_schemes.map((scheme) => {
+                if (scheme.id === scheme_id) {
+                    return { ...scheme, assessments: [...scheme.assessments, newAssessment]};
+                }
+                return scheme;
+            });
+            // Get schemes with updated grades
+            updatedSchemes = _calculationService.updateSchemeGrades(updatedSchemes, newAssessment.grade, newAssessment.id)    
+            // Update grading schemes with new updatedSchemes
+            for(let i = 0; i < updatedSchemes.length; i++) {
+                await _apiService.updateGradingScheme(user!.id, updatedSchemes[i]);
             }
-            return scheme;
-        });
-        updatedSchemes = _calculationService.updateSchemes(updatedSchemes as GradingScheme[], newAssessment.grade, newAssessment.assessmentName)    
-        const newHighestGrade = _calculationService.getHighestCourseGrade(updatedSchemes as GradingScheme[]);
-        dispatch(
-            updateCourse({
-                term: termData!.term,
+            // Get highest grade between schemes
+            const newHighestGrade = _calculationService.getHighestCourseGrade(updatedSchemes as GradingScheme[]);
+            // Update course in database with new highest grade
+            const updatedCourse: Course = await _apiService.updateCourse(user!.id, { ...courseData!, highest_grade: newHighestGrade })
+            dispatch(updateCourse({
+                term: termData!.term_name,
                 courseIndex: courseIndex!,
-                course: {
-                    ...courseData as Course,
-                    highestGrade: newHighestGrade ||  0,
-                    gradingSchemes: updatedSchemes,
-                },
-            })
-        );
-        return true;
-    }
-
-    // createScheme(name) creates a new grading scheme
-    function createScheme(name: string): boolean {
-        const { isValid, error } = _formValidationService.validateNewScheme(courseData!, name)
-        if (!isValid) {
+                course: {...updatedCourse, highest_grade: newHighestGrade, grading_schemes: updatedSchemes},
+            }));
+            toast({
+                variant: "success",
+                title: "Create Successful",
+                description: `${newAssessment.assessment_name} has been successfully created!`,
+                duration: 2000
+            });
+            return true;
+        } catch (error: any) {
+            console.log(error)
             toast({
                 variant: "destructive",
                 title: "Create Unsuccessful",
-                description: error,
+                description: error.error,
+                duration: 2000
+            });
+            return false;
+        }
+    }
+
+    function createStudyLog(date: string | null, lowerLimit: string, upperLimit: string) {
+        if (!date) {
+            toast({
+                variant: "destructive",
+                title: "No Date Selected",
+                description: "Please select a date.",
+                duration: 2000
+            });
+            return false;
+        }
+        const dateToAdd = new Date(date);
+        const lower = new Date(lowerLimit);
+        const upper = new Date(upperLimit);
+        console.log(dateToAdd, lower)
+        if (dateToAdd < lower || dateToAdd > upper) {
+            toast({
+                variant: "destructive",
+                title: "Date Out Of Range",
+                description: "The date selected is out of range for this term.",
                 duration: 2000
             });
             return false;
         }
 
-        const newScheme = { schemeName: name, grade: 0, assessments: []};
-        dispatch( updateCourse({
-            term: termData!.term,
-            courseIndex: courseIndex!,
-            course: {
-                ...courseData as Course,
-                gradingSchemes: [...courseData!.gradingSchemes, newScheme],
-            },
-        }));
         return true;
     }
 
-    return { createNewTerm, createCompletedCourse, createCourse, formatNewGradingScheme, createDeliverable, createScheme };
+    return { createTerm, createCompletedCourse, createCourse, createAssessment, createScheme, createStudyLog };
 }
  
 export default FormSubmitService;
@@ -248,7 +313,7 @@ export class FormValidationService {
         }
         // check if term exists already
         const assembledName = termName + ' ' + selectedYear.toString()
-        const isTermRepeated = data.find((t) => t.term.toLowerCase() === assembledName.toLowerCase())
+        const isTermRepeated = data.find((t) => t.term_name.toLowerCase() === assembledName.toLowerCase())
         if (isTermRepeated) {
             return false;
         }
@@ -270,7 +335,7 @@ export class FormValidationService {
             return { isValid: false, error: "Course grade is required" };
         }
         const assembledName = code + ' ' + number
-        const isDuplicate = termData?.courses.find((c) => c.courseTitle.toLowerCase() === assembledName.toLowerCase())
+        const isDuplicate = termData?.courses.find((c) => c.course_title.toLowerCase() === assembledName.toLowerCase())
         if (isDuplicate) {
             return { isValid: false, error: "A course with this name has already been created" };
         }
@@ -280,7 +345,7 @@ export class FormValidationService {
 
     // validateNewCourse(code, number, subtitle)
     //  * code, number, and subtitle must have a value
-    validateNewCourse(code: string, number: string, subtitle: string): { isValid: boolean, error: string } {
+    validateNewCourse(termData: Term, code: string, number: string, subtitle: string): { isValid: boolean, error: string } {
         if (!code || code.trim() === "") {
             return { isValid: false, error: "Course code is required"};
         }
@@ -288,9 +353,14 @@ export class FormValidationService {
             return { isValid: false, error: "Course number is required"};
         }
         if (!subtitle || subtitle.trim() === "") {
+            console.log(subtitle)
             return { isValid: false, error: "Course name is required"};
         }
-
+        const assembledName = code + ' ' + number
+        const isDuplicate = termData?.courses.find((c) => c.course_title.toLowerCase() === assembledName.toLowerCase())
+        if (isDuplicate) {
+            return { isValid: false, error: "A course with this name has already been created" };
+        }
         return { isValid: true, error: "" };
     }
 
@@ -300,8 +370,8 @@ export class FormValidationService {
         if (!name || name.trim() == "") {
             return { isValid: false, error: "Name is required" };
         }
-        const repeatedName = courseData?.gradingSchemes.find((scheme) =>
-            scheme.assessments.some((assessment) => (assessment.assessmentName === name && scheme.schemeName === schemeName))
+        const repeatedName = courseData?.grading_schemes.find((scheme) =>
+            scheme.assessments.some((assessment) => (assessment.assessment_name === name && scheme.scheme_name === schemeName))
         );
         if (repeatedName) {
             return { isValid: false, error: "A deliverable with this name already exists" }
@@ -316,7 +386,7 @@ export class FormValidationService {
         if (name.trim() === '' || name.length === 0) {
             return { isValid: false, error: "Name is required"}
         }
-        const repeatedName = courseData?.gradingSchemes.find((s) => s.schemeName === name);
+        const repeatedName = courseData?.grading_schemes.find((s) => s.scheme_name === name);
         if (repeatedName) {
             return { isValid: false, error: "A scheme with this name already exists" }
         }
@@ -325,3 +395,19 @@ export class FormValidationService {
     }
 }
 
+// formatNewGradingScheme(courseInfo) takes in incoming course info from api and returns it as formatted
+function formatNewGradingScheme(courseInfo: IncomingCourseInfo) {
+    console.log(courseInfo)
+    const response =  courseInfo.gradingSchemes.map((scheme) => ({
+        schemeName: scheme.schemeName,
+        grade: 0,
+        assessments: scheme.assessments.map((assessment) => ({
+            assessmentName: assessment.assessmentName,
+            dueDate: assessment.dueDate ? new Date(assessment.dueDate).toISOString() : null,
+            weight: assessment.weight,
+            grade: null,
+        })),
+    }));
+    console.log(response)
+    return response;
+};

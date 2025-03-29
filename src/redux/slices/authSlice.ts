@@ -5,6 +5,8 @@ import { redirect } from "react-router-dom";
 
 // Type for the user
 interface User {
+  id: number,
+  googleId: number,
   name: string;
   email: string;
   picture: string;
@@ -24,15 +26,21 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login(state, action: PayloadAction<User>) {
+    login(state, action: PayloadAction<{ user: any, user_id: any}>) {
       state.isAuthenticated = true;
-      state.user = action.payload;
+      state.user = {
+        id: action.payload.user_id,
+        googleId: action.payload.user.id,
+        name: action.payload.user.name,
+        email: action.payload.user.email,
+        picture: action.payload.user.picture
+      }
     },
     logout(state) {
       state.isAuthenticated = false;
       state.user = null;
       redirect('/')
-    },
+    }
   },
 });
 
