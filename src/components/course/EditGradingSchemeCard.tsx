@@ -17,7 +17,7 @@ import useData from "@/hooks/general/use-data";
 import { useToast } from "@/hooks/general/use-toast";
 // Redux
 import { useDispatch } from "react-redux";
-import { updateScheme } from "@/redux/slices/dataSlice";
+import { updateCourse, updateScheme } from "@/redux/slices/dataSlice";
 // Services
 import DeleteDataService from "@/services/deleteDataService";
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
@@ -47,13 +47,19 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
     //  conditionals
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
-    const updateSchemeInState = async (updatedScheme: GradingScheme) => {
+    const updateSchemeInState = async (updatedScheme: GradingScheme, newHighestGrade: number) => {
+        dispatch(updateCourse({
+            term: termData!.term_name,
+            courseIndex: courseIndex,
+            course: {...courseData!, highest_grade: newHighestGrade}
+        }))
         dispatch(updateScheme({
             term: termData!.term_name,
             courseIndex: courseIndex,
             schemeIndex: schemeIndex,
             scheme: updatedScheme
         }));
+
     
         toast({
             variant: "success",
@@ -86,6 +92,8 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
         if (newHighestGrade !== courseData?.highest_grade) {
             await _apiService.updateCourse(user!.id, { ...courseData!, highest_grade: newHighestGrade });
         }
+
+        return newHighestGrade;
     };
 
     // Finalizes changes on a scheme. This includes updating/deleting assessments, updating scheme grade, and 
@@ -106,10 +114,10 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
             const updatedSchemeGrade = _calculationService.updateGradingSchemeGrade(localScheme.assessments);
             const updatedScheme = {...localScheme, grade: updatedSchemeGrade}
 
-            await updateSchemeInState(updatedScheme)
             await _apiService.updateGradingScheme(user!.id, updatedScheme);
             await handleAssessmentChanges();
-            await updateCourseHighestGrade(updatedSchemeGrade);
+            const newHighestGrade = await updateCourseHighestGrade(updatedSchemeGrade);
+            await updateSchemeInState(updatedScheme, newHighestGrade);
         }
 
         setIsEditing(false)

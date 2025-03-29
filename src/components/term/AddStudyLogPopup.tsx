@@ -1,5 +1,5 @@
 // UI
-import { Button } from "../ui/button";
+// import { Button } from "../ui/button";
 import { Dialog, DialogHeader, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "../ui/dialog";
 // Custom Components
 import { DateTimePicker } from "../shared/DateTimePicker";
@@ -9,7 +9,6 @@ import { ChangeEvent, useState } from "react";
 import useParsedRouteParams from "@/hooks/general/use-parsed-route-params";
 // Services
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";
-import FormSubmitService from "@/services/formSubmitService";
 
 const _inputFieldValidationService = new InputFieldValidationService();
 
@@ -22,7 +21,6 @@ interface AddStudyLogPopupProps {
 const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsAddingLog }) => {
     // Hooks
     const { parsedTerm } = useParsedRouteParams();
-    const { addStudyLog } = FormSubmitService();
     // States
     const [hoursStudied, setHoursStudied] = useState<number>(0)
     const [date, setDate] = useState<string | null>((new Date()).toISOString());
@@ -62,13 +60,13 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
         }
     }
 
-    const handleSubmit = () => {
-        const shouldAddLog = addStudyLog(date, lowerLimit, upperLimit);
+    // const handleSubmit = () => {
+    //     const shouldAddLog = addStudyLog(date, lowerLimit, upperLimit);
         
-        if (shouldAddLog) {
-            setIsAddingLog(false);
-        }
-    }
+    //     if (shouldAddLog) {
+    //         setIsAddingLog(false);
+    //     }
+    // }
 
     const handleClose = () => {
         setHoursStudied(0);
@@ -94,7 +92,7 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleSubmit}>Add Course</Button>
+                    {/* <Button onClick={handleSubmit}>Add Course</Button> */}
                 </DialogFooter>
             </DialogContent>
         </Dialog>

@@ -11,7 +11,7 @@ import useTermGrade from "@/hooks/term/use-term-grade";
     const termGrade = useTermGrade();
     // States
     //  conditionals
-    const [isShowingAverage, setIsShowingAverage] = useState<boolean>(false)
+    const [isShowingAverage, setIsShowingAverage] = useState<boolean>(true)
 
     const circumference = 2 * Math.PI * 75
     const strokeDasharray = circumference

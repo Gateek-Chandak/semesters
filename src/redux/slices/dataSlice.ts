@@ -80,8 +80,26 @@ const dataSlice = createSlice({
         updateScheme(state, action: PayloadAction<{ term: string; courseIndex: number; schemeIndex: number, scheme: GradingScheme }>) {
           const { term, courseIndex, schemeIndex, scheme } = action.payload;
           const termIndex = state.data.findIndex((t: Term) => t.term_name === term);
+          
           if (termIndex !== -1) {
-              state.data[termIndex].courses[courseIndex].grading_schemes[schemeIndex] = scheme;
+            // Ensure immutable updates with spread operator
+            const updatedCourses = [...state.data[termIndex].courses];
+            const updatedGradingSchemes = [
+              ...updatedCourses[courseIndex].grading_schemes.slice(0, schemeIndex),
+              scheme,
+              ...updatedCourses[courseIndex].grading_schemes.slice(schemeIndex + 1)
+            ];
+            
+            updatedCourses[courseIndex] = {
+              ...updatedCourses[courseIndex],
+              grading_schemes: updatedGradingSchemes
+            };
+            
+            // Update state with new course data
+            state.data[termIndex] = {
+              ...state.data[termIndex],
+              courses: updatedCourses
+            };
           }
         },
         // Add a course
