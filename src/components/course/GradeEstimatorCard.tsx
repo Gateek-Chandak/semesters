@@ -70,7 +70,7 @@ const GradeEstimatorCard = () => {
                     {grades.map((grade) => (
                     <Button
                         key={grade}
-                        className={`!text-xs text-center rounded-md border bg-white text-black hover:bg-black hover:text-white active:bg-gray-700`}
+                        className={`!text-md text-center rounded-md border ${grade == targetGrade ? 'bg-black text-white' : 'bg-white  text-black'} hover:bg-black hover:text-white active:bg-gray-700`}
                         onClick={() => gradeButtonAction(grade)}
                     >
                         {grade}%

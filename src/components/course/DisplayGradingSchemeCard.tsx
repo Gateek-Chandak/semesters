@@ -36,7 +36,7 @@ const DisplayGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { se
                     <DropdownMenuTrigger asChild>
                         <Button variant="default">+ Add</Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56 flex flex-col gap-1">
+                    <DropdownMenuContent className="w-56 flex flex-col gap-1" side="right">
                         <DropdownMenuItem>
                             <Button variant={'ghost'} className='w-full' onClick={() => setIsAddingDeliverable(true)}><h1 className='w-full text-left'>+ Add New Deliverable</h1></Button>
                         </DropdownMenuItem>

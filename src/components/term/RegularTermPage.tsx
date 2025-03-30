@@ -95,10 +95,10 @@ const RegularTermPage = () => {
                         <h1 className="lg:mr-auto text-2xl font-light">Current Courses</h1>
                         <div className="lg:ml-auto flex flex-row gap-4">
                             {/* {isManagingCourses && <Button variant="outline" className='!w-[132px] text-xs !h-10 text-red-500 border-red-500 border-2 hover:text-red-500' onClick={handleDiscardChanges}>Discard<XIcon/></Button>} */}
-                            {isManagingCourses && <Button variant="outline" className='!w-[132px] text-xs !h-10 border-black text-black border-2' onClick={handleSaveChanges}>Confirm Changes<CheckIcon/></Button>}
-                            {!isManagingCourses && !isGradesShowing && <Button className='!w-[132px] !h-10 !text-xs' onClick={() => setIsGradesShowing(true)}>Show Grades <EyeIcon /></Button>}
-                            {!isManagingCourses && isGradesShowing && <Button className='!w-[132px] text-xs !h-10' onClick={() => setIsGradesShowing(false)}>Hide Grades <EyeOffIcon /></Button>}
-                            {!isManagingCourses && <Button className='!w-[132px] !h-10 border-2 border-black bg-white text-black hover:bg-gray-100 !text-xs' onClick={() => setIsManagingCourses(true)}>Manage Courses <PencilIcon/></Button>}
+                            {isManagingCourses && <Button variant="outline" className='text-xs !h-10 border-black text-black border-2' onClick={handleSaveChanges}>Confirm Changes<CheckIcon/></Button>}
+                            {!isManagingCourses && <Button className='!h-10 border-2 border-black bg-white text-black hover:bg-gray-100 !text-xs' onClick={() => setIsManagingCourses(true)}>Manage Courses<PencilIcon/></Button>}
+                            {!isManagingCourses && !isGradesShowing && <Button className='!h-10 !text-xs' onClick={() => setIsGradesShowing(true)}>Show Grades <EyeIcon /></Button>}
+                            {!isManagingCourses && isGradesShowing && <Button className='text-xs !h-10' onClick={() => setIsGradesShowing(false)}>Hide Grades <EyeOffIcon /></Button>}
                         </div>
                     </div>
                     {/* Course Cards */}
@@ -116,13 +116,7 @@ const RegularTermPage = () => {
                 {/* Calendar Component */}
                 <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8 rounded-xl">
                     <h1 className="lg:mr-auto text-2xl font-light lg:text-left text-center">Term Calendar</h1>
-                    <Calendar events={calendarEvents as CalendarEvent[]}>
-                        <div className="w-full pt-1 px-6">
-                            <Button variant={'outline'} className="border border-blue-500 text-blue-500 hover:text-blue-600" onClick={() => setIsExporting(!isExporting)}>
-                                Export to Google Calendar
-                            </Button>
-                        </div>  
-                    </Calendar>
+                    <Calendar events={calendarEvents as CalendarEvent[]} setIsExporting={setIsExporting} termView={true} />
                 </div>
             </div>
             {/* Popup when creating a incomplete course */}

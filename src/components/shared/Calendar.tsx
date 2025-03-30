@@ -34,7 +34,7 @@ import {
   useState,
 } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2, ArrowUpRight } from 'lucide-react';
 
 const monthEventVariants = cva('size-2 rounded-full', {
   variants: {
@@ -105,6 +105,8 @@ type CalendarProps = {
   enableHotkeys?: boolean;
   onChangeView?: (view: View) => void;
   onEventClick?: (event: CalendarEvent) => void;
+  termView?: boolean;
+  setIsExporting?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Calendar = ({
@@ -116,6 +118,8 @@ const Calendar = ({
   onEventClick,
   events: defaultEvents = [],
   onChangeView,
+  termView = false,
+  setIsExporting
 }: CalendarProps) => {
   const [view, setView] = useState<View>(_defaultMode);
   const [date, setDate] = useState(defaultDate);
@@ -164,28 +168,41 @@ const Calendar = ({
       <div className={`${isFullScreen ? "flex flex-row justify-center items-center z-50 fixed top-0 left-0 w-full h-full p-10 inset-0 bg-black bg-opacity-[82%]" : ""} w-full`}>
         <div className={`${isFullScreen ? "md:w-full md:h-full" : ""} min-h-[35rem] transition-all ease-in-out duration-300 w-full custom-card p-3 flex flex-col`}>
           <div className='border border-slate-200 rounded-xl py-3 h-full w-full overflow-auto'>
-            <div className="flex items-center gap-2 mb-6 overflow-auto mr-6">
+            <div className="flex items-center gap-4 mb-6 overflow-auto px-3">
                   {/* <CalendarViewTrigger view="week" className="aria-[current=true]:bg-accent">Week</CalendarViewTrigger> */}
                   {/* <CalendarViewTrigger view="month" className="aria-[current=true]:bg-accent">Month</CalendarViewTrigger> */}
-                  <Button variant="ghost" className='ml-2 !rotate-180' onClick={() => setIsFullScreen(!isFullScreen)}>
+                  <CalendarCurrentDate />
+                  <div className='flex items-center gap-2'>
+                    <CalendarPrevTrigger>
+                        <ChevronLeft size={20} />
+                        <span className="sr-only">Previous</span>
+                    </CalendarPrevTrigger>
+                    <CalendarTodayTrigger>Today</CalendarTodayTrigger>
+                    <CalendarNextTrigger>
+                        <ChevronRight size={20} />
+                        <span className="sr-only">Next</span>
+                    </CalendarNextTrigger>
+                  </div>
+
+                  {isFullScreen && termView &&
+                    <Button variant={'outline'} className="border border-blue-500 text-blue-500 hover:text-blue-600" onClick={() => setIsExporting!(true)}>
+                      Export to Google Calendar <ArrowUpRight />
+                    </Button>}
+
+                  <Button variant="ghost" className='!rotate-180 ml-auto' onClick={() => setIsFullScreen(!isFullScreen)}>
                     {isFullScreen ? <Minimize2 /> : <Maximize2 />}
                   </Button>
-                  <span className="flex-1" />
-                  <CalendarCurrentDate />
-                  <CalendarPrevTrigger>
-                      <ChevronLeft size={20} />
-                      <span className="sr-only">Previous</span>
-                  </CalendarPrevTrigger>
-                  <CalendarTodayTrigger>Today</CalendarTodayTrigger>
-                  <CalendarNextTrigger>
-                      <ChevronRight size={20} />
-                      <span className="sr-only">Next</span>
-                  </CalendarNextTrigger>
               </div>
-              <div className={`flex-1 px-6 relative ${isFullScreen ? "h-[90%] mb-2" : "h-full"}`}>
+              <div className={`flex-1 px-3 relative ${isFullScreen ? "h-[90%] mb-2" : "h-full"}`}>
                   {/* <CalendarWeekView /> */}
-                  <CalendarMonthView />
+                  <CalendarMonthView isFullScreen={isFullScreen} />
               </div>
+              {!isFullScreen && termView &&
+                <div className="w-full pt-1 px-3">
+                  <Button variant={'outline'} className="border border-blue-500 text-blue-500 hover:text-blue-600" onClick={() => setIsExporting!(true)}>
+                      Export to Google Calendar <ArrowUpRight />
+                  </Button>
+                </div>  }
               {children}
           </div>   
         </div>
@@ -360,7 +377,7 @@ const CalendarWeekView = () => {
   );
 };
 
-const CalendarMonthView = () => {
+const CalendarMonthView = ( { isFullScreen }: { isFullScreen: boolean} ) => {
   const { date, view, events, locale } = useCalendar();
 
   const monthDates = useMemo(() => getDaysInMonth(date), [date]);
@@ -392,7 +409,7 @@ const CalendarMonthView = () => {
           return (
             <div
               className={cn(
-                'ring-1 p-2 text-sm text-muted-foreground ring-border overflow-auto',
+                'min-h-[4.9rem] ring-1 p-2 text-sm text-muted-foreground ring-border overflow-auto',
                 !isSameMonth(date, _date) && 'text-muted-foreground/50'
               )}
               key={_date.toString()}
@@ -418,7 +435,7 @@ const CalendarMonthView = () => {
                         monthEventVariants({ variant: event.color })
                       )}
                     ></div>
-                    <span className="flex-1 truncate">{event.title}</span>
+                    <span className={`flex-1 truncate text-black ${isFullScreen ? "text-lg" : "text-sm"}`}>{event.title}</span>
                     {/* <time className="tabular-nums text-muted-foreground/50 text-xs">
                       {format(event.start, 'HH:mm')}
                     </time> */}

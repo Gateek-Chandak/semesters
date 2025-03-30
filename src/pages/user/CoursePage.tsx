@@ -24,7 +24,7 @@ const CoursePage = () => {
                     {/* Title */}
                     <div className="w-[100%] flex flex-col lg:flex-row items-center justify-center lg:justify-start gap-6 text-2xl">
                         <h1 className={`font-medium text-3xl text-${courseData?.colour}-600`}>{courseData?.course_title}</h1>
-                        <h1 className="font-extralight text-3xl w-full truncate">{courseData?.course_subtitle}</h1>
+                        <h1 className="font-extralight text-3xl w-full sm:w-auto truncate">{courseData?.course_subtitle}</h1>
                     </div>
                     {/* Metric Cards */}
                     <div className="mt-6 w-full grid grid-cols-1 lg:grid-cols-[70%_auto] gap-6">
