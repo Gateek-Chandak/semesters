@@ -64,33 +64,27 @@ const RearrangeTermsPopup: React.FC<RearrangeTermsPopupProps> = ({ isRearranging
     // Handles functionality when a term is placed
     function onDragEnd(e: DragEndEvent) {
         const { active, over } = e;
-        // if drop has not happened yet
-        if (!over) {
-            return;
-        }
-        // get the terms that are involved
-        const activeTerm = active.id;
-        const overTerm = over.id;
-        // if term is placed in its original spot
-        if (activeTerm === overTerm) {
-            return;
-        }
-        // extract the indexes
-        const activeTermIndex = rearrangedTerms.findIndex(
-            (term) => term.id == activeTerm
-        )
-        const overTermIndex = rearrangedTerms.findIndex(
-            (term) => term.id == overTerm
-        )
-
-        const updatedTerms = structuredClone(rearrangedTerms);
-        const tempOrderIndex = updatedTerms[activeTermIndex].order_index;
-        updatedTerms[activeTermIndex].order_index = updatedTerms[overTermIndex].order_index;
-        updatedTerms[overTermIndex].order_index = tempOrderIndex;
-
-        // dispatch action to finalize move
-        const newTerms = arrayMove(updatedTerms, activeTermIndex, overTermIndex)
-        setRearrangedTerms(newTerms);
+        if (!over) return;
+    
+        // Get dragged term ID
+        const activeTermId = active.id;
+        const overTermId = over.id;
+        if (activeTermId === overTermId) return;
+    
+        // Find indexes in current array
+        const activeIndex = rearrangedTerms.findIndex(term => term.id == activeTermId);
+        const overIndex = rearrangedTerms.findIndex(term => term.id == overTermId);
+    
+        // Reorder terms in the array
+        const newOrderedTerms = arrayMove(rearrangedTerms, activeIndex, overIndex);
+    
+        // Reassign order_index to maintain sequential order
+        const updatedTerms = newOrderedTerms.map((term, index) => ({
+            ...term,
+            order_index: index + 1 // Ensuring a continuous sequence
+        }));
+    
+        setRearrangedTerms(updatedTerms);
     }
 
     async function confirmRearrange() {
@@ -101,6 +95,7 @@ const RearrangeTermsPopup: React.FC<RearrangeTermsPopupProps> = ({ isRearranging
                 duration: 2000
             })
             dispatch(setData(rearrangedTerms))
+            console.log(rearrangedTerms)
             const response = await _apiService.updateTermOrder(user!.id, rearrangedTerms);
             if (!response) {
                 dispatch(setData(cachedData));
