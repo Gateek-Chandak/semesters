@@ -6,6 +6,7 @@ import { setData } from '@/redux/slices/dataSlice';
 import axios from 'axios';
 import { RootState } from '../../redux/store'; // Path to your store
 import useData from '@/hooks/general/use-data';
+import { redirect } from 'react-router-dom';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -42,6 +43,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
           }
         } else {
           dispatch(logout())
+          redirect('/')
         }
       } catch {
         // console.error('Authentication verification failed', error);

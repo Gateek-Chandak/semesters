@@ -38,7 +38,7 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
     // Services
     const { handleDeleteScheme } = DeleteDataService();
     // Hooks
-    const { courseData, termData, courseIndex } = useData();
+    const { courseData, termData } = useData();
     const { user } = useUser();
     const dispatch = useDispatch();
     const { toast } = useToast();
@@ -52,15 +52,15 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
 
     const updateSchemeInState = (updatedScheme: GradingScheme, newHighestGrade: number) => {
         dispatch(updateCourse({
-            term: termData!.term_name,
-            courseIndex: courseIndex,
-            course: {...courseData!, highest_grade: newHighestGrade}
+            term_id: termData!.id,
+            course_id: courseData!.id,
+            updatedCourse: {...courseData!, highest_grade: newHighestGrade}
         }))
         dispatch(updateScheme({
-            term: termData!.term_name,
-            courseIndex: courseIndex,
-            schemeIndex: schemeIndex,
-            scheme: updatedScheme
+            term_id: termData!.id,
+            course_id: courseData!.id,
+            scheme_id: scheme.id,
+            updatedScheme: updatedScheme
         }));
     };
     

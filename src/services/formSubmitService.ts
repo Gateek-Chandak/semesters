@@ -24,7 +24,7 @@ const FormSubmitService = () => {
     const dispatch = useDispatch();
     // hooks
     const { toast } = useToast();
-    const { courseData, courseIndex, termData } = useData();
+    const { courseData, termData } = useData();
     // services
     const _formValidationService = new FormValidationService();
 
@@ -42,7 +42,7 @@ const FormSubmitService = () => {
                     duration: 3000
                 });
                 const newTerm: Term = await _apiService.createTerm(user!.id, assembledName, is_completed);
-                dispatch(addTerm({ term: { ...newTerm } }));
+                dispatch(addTerm({ newTerm: { ...newTerm } }));
                 toast({
                     variant: "success",
                     title: "Create Successful",
@@ -92,7 +92,7 @@ const FormSubmitService = () => {
                     duration: 3000
                 });
                 const createdCourse: Course = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
-                dispatch(addCourse({ term_id: createdCourse.term_id, course: createdCourse }));
+                dispatch(addCourse({ term_id: createdCourse.term_id, newCourse: createdCourse }));
                 toast({
                     variant: "success",
                     title: "Create Successful",
@@ -123,7 +123,7 @@ const FormSubmitService = () => {
                 const response = await _apiService.uploadSchedule(formData);
                 const gradingSchemes = formatNewGradingScheme(response);
                 const createdCourse = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
-                dispatch(addCourse({ term_id: createdCourse.term_id, course: {...createdCourse, grading_schemes: gradingSchemes} }));
+                dispatch(addCourse({ term_id: createdCourse.term_id, newCourse: {...createdCourse, grading_schemes: gradingSchemes} }));
                 return true;
             } catch (error: unknown) {
                 if (error instanceof AxiosError) {
@@ -168,7 +168,7 @@ const FormSubmitService = () => {
                 duration: 3000
             });
             const createdCourse: Course = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, "", "black", grade || 0, true);
-            dispatch(addCourse({ term_id: createdCourse.term_id, course: createdCourse }));
+            dispatch(addCourse({ term_id: createdCourse.term_id, newCourse: createdCourse }));
             toast({
                 variant: "success",
                 title: "Create Successful",
@@ -210,9 +210,9 @@ const FormSubmitService = () => {
             });
             const newScheme: GradingScheme = await _apiService.createGradingScheme(user!.id, courseData!.id, schemeName)
             dispatch(updateCourse({
-                term: termData!.term_name,
-                courseIndex: courseIndex!,
-                course: {
+                term_id: termData!.id,
+                course_id: courseData!.id,
+                updatedCourse: {
                     ...courseData as Course,
                     grading_schemes: [...courseData!.grading_schemes, newScheme],
                 },
@@ -276,9 +276,9 @@ const FormSubmitService = () => {
             // Update course in database with new highest grade
             const updatedCourse: Course = await _apiService.updateCourse(user!.id, { ...courseData!, highest_grade: newHighestGrade })
             dispatch(updateCourse({
-                term: termData!.term_name,
-                courseIndex: courseIndex!,
-                course: {...updatedCourse, highest_grade: newHighestGrade, grading_schemes: updatedSchemes},
+                term_id: termData!.id,
+                course_id: courseData!.id,
+                updatedCourse: {...updatedCourse, highest_grade: newHighestGrade, grading_schemes: updatedSchemes},
             }));
             toast({
                 variant: "success",

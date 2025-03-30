@@ -1,7 +1,6 @@
 // This slice handles all authentication data
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { redirect } from "react-router-dom";
 
 // Type for the user
 interface User {
@@ -27,19 +26,19 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action: PayloadAction<{ user: any, user_id: any}>) {
+      const { user, user_id } = action.payload;
       state.isAuthenticated = true;
       state.user = {
-        id: action.payload.user_id,
-        googleId: action.payload.user.id,
-        name: action.payload.user.name,
-        email: action.payload.user.email,
-        picture: action.payload.user.picture
+        id: user_id,
+        googleId: user.id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture
       }
     },
     logout(state) {
       state.isAuthenticated = false;
       state.user = null;
-      redirect('/')
     }
   },
 });

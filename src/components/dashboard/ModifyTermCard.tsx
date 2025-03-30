@@ -7,13 +7,13 @@ interface EditTermCardProps {
   term: Term;
   isDeleting: boolean;
   setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
-  setTermBeingDeleted: React.Dispatch<React.SetStateAction<string>>;
+  setTermBeingDeleted: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const EditTermCard: React.FC<EditTermCardProps> = ({ term, isDeleting, setIsDeleting, setTermBeingDeleted }) => {
 
     const handleDelete = () => {
-        setTermBeingDeleted(term.term_name)
+        setTermBeingDeleted(term.id)
         setIsDeleting(!isDeleting)
     }
 

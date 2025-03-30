@@ -21,7 +21,7 @@ interface MainTermCardProps {
     isShowingGrades: boolean;
     setIsDeletingTerm: React.Dispatch<React.SetStateAction<boolean>>;
     isDeletingTerm: boolean;
-    setTermBeingDeleted: React.Dispatch<React.SetStateAction<string>>;
+    setTermBeingDeleted: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const MainTermCard: React.FC<MainTermCardProps> = ({
@@ -38,7 +38,7 @@ const MainTermCard: React.FC<MainTermCardProps> = ({
 
     // Handle deletion of term
     const handleDelete = () => {
-        setTermBeingDeleted(term.term_name)
+        setTermBeingDeleted(term.id)
         setIsDeletingTerm(!isDeletingTerm)
     }
 

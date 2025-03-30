@@ -10,7 +10,7 @@ import {
 import { Button } from "../ui/button";
 
 interface ConfirmDeletePopupProps {
-    name: string;
+    name?: string;
     isDeleting: boolean;
     setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
     deleteItem: (name: any) => any;

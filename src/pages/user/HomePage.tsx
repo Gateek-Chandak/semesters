@@ -11,35 +11,15 @@ import { Trigger } from "@/components/sidebar/navTrigger";
 // Hooks
 import { Outlet } from "react-router-dom";
 import { useIsMobile } from "@/hooks/general/use-mobile";
-import { useToast } from "@/hooks/general/use-toast"
 import { Link } from "react-router-dom";
 import useParsedRouteParams from "@/hooks/general/use-parsed-route-params";
-// Redux
-import { useSelector } from "react-redux"
-import { RootState } from "@/redux/store"
 // Custom Components
 import { AppSidebar } from "@/components/sidebar/AppSidebar"
-// Services
-import { useEffect } from "react";
 
 const HomePage = ( ) => {
   // Inits
-  const { toast } = useToast()
   const isMobile = useIsMobile()
 
-  // Dont think this works
-  const error = useSelector((state: RootState) => state.data.error)
-  useEffect(() => {
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: error,
-        description: "Sync failed, please reload the page before making any further changes",
-        duration: 10000000
-      });
-    }
-  }, [error])
-  
   // Get Current Term and Course
   const { parsedTerm: term, parsedCourse: course } = useParsedRouteParams();
 

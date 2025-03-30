@@ -78,7 +78,7 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
 
     const createCourse = async (course: any, term_id: number) => {
         const createdCourse = await _apiService.createCourse(term_id, course.course_title, course.course_subtitle, course.colour, course.highest_grade, course.is_completed);
-        dispatch(addCourse({term_id: term_id, course: createdCourse}));
+        dispatch(addCourse({term_id: term_id, newCourse: createdCourse}));
     }
 
     const createTerm = async (term: any) => {
@@ -87,7 +87,7 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
             return;
         }
         const createdTerm = await _apiService.createTerm(user!.id, term.term_name, term.is_completed);
-        dispatch(addTerm({term: createdTerm}))
+        dispatch(addTerm({newTerm: createdTerm}))
         for (let i = 0; i < term.courses.length; i++) {
             await createCourse(term.courses[i], createdTerm.id)
         }

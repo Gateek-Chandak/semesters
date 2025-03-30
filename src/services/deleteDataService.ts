@@ -4,7 +4,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { setData, updateCourse, deleteCourse } from "@/redux/slices/dataSlice";
+import { deleteTerm, updateCourse, deleteCourse } from "@/redux/slices/dataSlice";
 // Hooks
 import useData from "@/hooks/general/use-data";
 import { useToast } from "@/hooks/general/use-toast";
@@ -17,14 +17,24 @@ const _calculationService = new CalculationService();
 
 const DeleteDataService = () => {
     // Hooks
-    const { courseData, courseIndex, termData, data } = useData();
+    const { courseData, termData, data } = useData();
     const user = useSelector((state: RootState) => state.auth.user);
     const dispatch = useDispatch();
     const { toast } = useToast();
 
     // deleteTerm(name, termBeingDeleted)
-    async function handleDeleteTerm(termName: string, termBeingDeleted: string): Promise<boolean> {
+    async function handleDeleteTerm(term_id: number): Promise<boolean> {
         try {
+            if (term_id == -1) {
+                toast({
+                    variant: "destructive",
+                    title: "Delete Unsuccessful",
+                    description: `Could not be deleted`,
+                    duration: 3000
+                });
+                return false;
+            }
+
             toast({
                 variant: "default",
                 title: "Deleting...",
@@ -32,12 +42,11 @@ const DeleteDataService = () => {
                 duration: 3000
             });
             // Call the API to delete the term
-            const term = data.find((t) => t.term_name == termName);
+            const term = data.find((t) => t.id == term_id);
             const response = await _apiService.deleteTerm(user!.id, term!.id);
     
             // Update local state
-            const updatedTerms = data.filter((t) => t.term_name !== termName);
-            dispatch(setData(updatedTerms));
+            dispatch(deleteTerm({ term_id: term_id }));
 
             // Show success toast
             toast({
@@ -55,7 +64,7 @@ const DeleteDataService = () => {
             toast({
                 variant: "destructive",
                 title: "Delete Unsuccessful",
-                description: `${termBeingDeleted} could not be deleted`,
+                description: `Could not be deleted`,
                 duration: 3000
             });
     
@@ -76,7 +85,7 @@ const DeleteDataService = () => {
             const response = await _apiService.deleteCourse(user!.id, courseId);
     
             // Update local state
-            dispatch(deleteCourse({ term_id: termId, courseId: courseId }));
+            dispatch(deleteCourse({ term_id: termId, course_id: courseId }));
 
             // Show success toast
             toast({
@@ -118,9 +127,9 @@ const DeleteDataService = () => {
             const updatedSchemes = courseData?.grading_schemes.filter((s) => s.id !== scheme_id ) || [];
             dispatch(
                 updateCourse({
-                    term: termData!.term_name,
-                    courseIndex: courseIndex!,
-                    course: { ...courseData!, grading_schemes: updatedSchemes || [] },
+                    term_id: termData!.id,
+                    course_id: courseData!.id,
+                    updatedCourse: { ...courseData!, grading_schemes: updatedSchemes || [] },
                 })
             );
 

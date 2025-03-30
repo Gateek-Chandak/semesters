@@ -45,7 +45,7 @@ const Dashboard = () => {
     const [isDeletingTerm, setIsDeletingTerm] = useState<boolean>(false)
     const [isShowingGrades, setIsShowingGrades] = useState<boolean>(false)
     //  values
-    const [termBeingDeleted, setTermBeingDeleted] = useState<string>('')
+    const [termBeingDeleted, setTermBeingDeleted] = useState<number>(-1)
     // Inits
     const userName = useSelector((state: RootState) => state.auth.user ? state.auth.user.name : '')
     // Get today's date
@@ -57,11 +57,11 @@ const Dashboard = () => {
     const numOfEventsInNext7Days: number = useMemo(() => _calculationService.getEventsInTimeFrame(currentTermCalendarEvents, 7), [currentTermCalendarEvents]);
 
     // Delete a term
-    const triggerDeleteTerm = async (name: string) => {
-        const shouldDeleteTerm = await handleDeleteTerm(name, termBeingDeleted);
+    const triggerDeleteTerm = async (id: number) => {
+        const shouldDeleteTerm = await handleDeleteTerm(id);
         if (shouldDeleteTerm) {
             setIsDeletingTerm(false);
-            setTermBeingDeleted('');
+            setTermBeingDeleted(-1);
         }
     };
 
@@ -182,7 +182,7 @@ const Dashboard = () => {
             {/* Popup form for regular term add */}
             <AddTermPopup isCreatingTerm={isCreatingTerm} setIsCreatingTerm={setIsCreatingTerm}/>
             {/* Popup for deleting a term */}
-            <ConfirmDeletePopup name={termBeingDeleted} deleteItem={triggerDeleteTerm}
+            <ConfirmDeletePopup id={termBeingDeleted} deleteItem={triggerDeleteTerm}
                                 isDeleting={isDeletingTerm} setIsDeleting={setIsDeletingTerm}/>
             {/* Popup for rearranging terms */}
             <RearrangeTermsPopup isRearrangingTerms={IsrearrangingTerms} setIsRearrangingTerms={setIsRearrangingTerms}/>
