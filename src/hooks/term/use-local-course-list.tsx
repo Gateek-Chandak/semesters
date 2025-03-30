@@ -38,7 +38,7 @@ const useLocalCourseList = () => {
                 variant: "destructive",
                 title: "Warning",
                 description: "This course name already exists",
-                duration: 2000
+                duration: 3000
             })
             setCannotSave({ value: true, reason: "This course name already exists"});
             return;
@@ -55,7 +55,7 @@ const useLocalCourseList = () => {
                 variant: "destructive",
                 title: "Warning",
                 description: "Course name cannot be empty",
-                duration: 2000
+                duration: 3000
             })
             setCannotSave({ value: true, reason: "Course name cannot be empty"});
             return;
@@ -72,7 +72,7 @@ const useLocalCourseList = () => {
                 variant: "destructive",
                 title: "Warning",
                 description: "Course subtitle cannot be empty",
-                duration: 2000
+                duration: 3000
             })
             setCannotSave({ value: true, reason: "Course subtitle cannot be empty"});
             return;
@@ -97,14 +97,14 @@ const useLocalCourseList = () => {
                 variant: "success",
                 title: "Update Successful",
                 description: termData?.term_name + " was updated successfully",
-                duration: 1000
+                duration: 3000
             })
         } else {
             toast({
                 variant: "destructive",
                 title: "Update Unsuccessful",
                 description: cannotSave.reason,
-                duration: 1000
+                duration: 3000
             })
         }
 
@@ -121,7 +121,7 @@ const useLocalCourseList = () => {
             variant: "success",
             title: "Discard Successful",
             description: "Changes to " + termData?.term_name + " were discarded",
-            duration: 1000
+            duration: 3000
         })
     }
 

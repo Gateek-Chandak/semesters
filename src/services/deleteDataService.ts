@@ -25,6 +25,12 @@ const DeleteDataService = () => {
     // deleteTerm(name, termBeingDeleted)
     async function handleDeleteTerm(termName: string, termBeingDeleted: string): Promise<boolean> {
         try {
+            toast({
+                variant: "default",
+                title: "Deleting...",
+                description: '',
+                duration: 3000
+            });
             // Call the API to delete the term
             const term = data.find((t) => t.term_name == termName);
             const response = await _apiService.deleteTerm(user!.id, term!.id);
@@ -38,7 +44,7 @@ const DeleteDataService = () => {
                 variant: "success",
                 title: "Delete Successful",
                 description: `${response.term_name} has been successfully deleted!`,
-                duration: 2000
+                duration: 3000
             });
 
             return true;
@@ -50,7 +56,7 @@ const DeleteDataService = () => {
                 variant: "destructive",
                 title: "Delete Unsuccessful",
                 description: `${termBeingDeleted} could not be deleted`,
-                duration: 2000
+                duration: 3000
             });
     
             return false;
@@ -60,6 +66,12 @@ const DeleteDataService = () => {
     // deleteCourse(termName, courseIndex)
     async function handleDeleteCourse(termId: number, courseId: number) {
         try {
+            toast({
+                variant: "default",
+                title: "Deleting...",
+                description: '',
+                duration: 3000
+            });
             // Call the API to delete the term
             const response = await _apiService.deleteCourse(user!.id, courseId);
     
@@ -71,7 +83,7 @@ const DeleteDataService = () => {
                 variant: "success",
                 title: "Delete Successful",
                 description: `${response.course_title} has been successfully deleted!`,
-                duration: 2000
+                duration: 3000
             });
 
             return true;
@@ -83,7 +95,7 @@ const DeleteDataService = () => {
                 variant: "destructive",
                 title: "Delete Unsuccessful",
                 description: `Could not delete`,
-                duration: 2000
+                duration: 3000
             });
     
             return false;
@@ -93,6 +105,12 @@ const DeleteDataService = () => {
     // deleteScheme(schemeName)
     async function handleDeleteScheme(scheme_id: number) {
         try {
+            toast({
+                variant: "default",
+                title: "Deleting...",
+                description: '',
+                duration: 3000
+            });
             // Delete scheme
             const response = await _apiService.deleteGradingScheme(user!.id, scheme_id);
 
@@ -120,7 +138,7 @@ const DeleteDataService = () => {
                 variant: "success",
                 title: "Delete Successful",
                 description: `${response.scheme_name} has been successfully deleted!`,
-                duration: 2000
+                duration: 3000
             });
 
             return true;
@@ -132,7 +150,7 @@ const DeleteDataService = () => {
                 variant: "destructive",
                 title: "Delete Unsuccessful",
                 description: `Could not delete`,
-                duration: 2000
+                duration: 3000
             });
     
             return false;

@@ -47,7 +47,10 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
     //  conditionals
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
-    const updateSchemeInState = async (updatedScheme: GradingScheme, newHighestGrade: number) => {
+    const cachedScheme = scheme;;
+    const cachedCourseGrade = courseData!.highest_grade;
+
+    const updateSchemeInState = (updatedScheme: GradingScheme, newHighestGrade: number) => {
         dispatch(updateCourse({
             term: termData!.term_name,
             courseIndex: courseIndex,
@@ -59,14 +62,6 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
             schemeIndex: schemeIndex,
             scheme: updatedScheme
         }));
-
-    
-        toast({
-            variant: "success",
-            title: "Update Successful",
-            description: `${updatedScheme.scheme_name} was updated successfully`,
-            duration: 1000
-        });
     };
     
     const handleAssessmentChanges = async () => {
@@ -80,17 +75,13 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
         await Promise.all(localScheme.assessments.map(a => _apiService.updateAssessment(user!.id, a)));
     };
     
-    const updateCourseHighestGrade = async (updatedSchemeGrade: number) => {
+    const updateCourseHighestGrade = (updatedSchemeGrade: number) => {
         const otherSchemes = courseData?.grading_schemes.filter(s => s.id !== localScheme.id) || [];
         let newHighestGrade = updatedSchemeGrade;
     
         if (otherSchemes.length > 0) {
             const currentHighestGrade = _calculationService.getHighestCourseGrade(otherSchemes);
             newHighestGrade = Math.max(updatedSchemeGrade, currentHighestGrade);
-        }
-    
-        if (newHighestGrade !== courseData?.highest_grade) {
-            await _apiService.updateCourse(user!.id, { ...courseData!, highest_grade: newHighestGrade });
         }
 
         return newHighestGrade;
@@ -105,22 +96,45 @@ const EditGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { setIs
                 variant: "destructive",
                 title: "Update Unsuccessful",
                 description: cannotSave.reason,
-                duration: 1000
+                duration: 3000
             })
             return;
         }
-        
+    
+
         if (localScheme != scheme) {
+            toast({
+                variant: "default",
+                title: "Saving...",
+                description: '',
+                duration: 3000
+            });
             const updatedSchemeGrade = _calculationService.updateGradingSchemeGrade(localScheme.assessments);
             const updatedScheme = {...localScheme, grade: updatedSchemeGrade}
+            const newHighestGrade = updateCourseHighestGrade(updatedSchemeGrade);
 
-            await _apiService.updateGradingScheme(user!.id, updatedScheme);
-            await handleAssessmentChanges();
-            const newHighestGrade = await updateCourseHighestGrade(updatedSchemeGrade);
-            await updateSchemeInState(updatedScheme, newHighestGrade);
+            updateSchemeInState(updatedScheme, newHighestGrade);
+            setIsEditing(false)
+
+            try {
+                if (newHighestGrade !== courseData?.highest_grade) {
+                    await _apiService.updateCourse(user!.id, { ...courseData!, highest_grade: newHighestGrade });
+                }
+                const updatedGradingScheme = await _apiService.updateGradingScheme(user!.id, updatedScheme);
+                await handleAssessmentChanges();
+
+                toast({
+                    variant: "success",
+                    title: "Update Successful",
+                    description: `${updatedGradingScheme.scheme_name} was updated successfully`,
+                    duration: 3000
+                });
+            } catch {
+                updateSchemeInState(cachedScheme, cachedCourseGrade);
+            }
+        } else {
+            setIsEditing(false)
         }
-
-        setIsEditing(false)
     }
     // discards changes
     const handleDiscardChanges = () => {

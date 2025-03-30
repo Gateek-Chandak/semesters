@@ -60,7 +60,7 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
                     variant: "destructive",
                     title: "File Too Large",
                     description: "Your file must be smaller than 200KB",
-                    duration: 2000
+                    duration: 3000
                 });
                 event.target.value = ""
                 return;
@@ -70,7 +70,7 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
                 variant: "success",
                 title: "File Upload Successful",
                 description: "Your syllabus is ready to be uploaded",
-                duration: 1000
+                duration: 3000
             });
             setUploadedFile(file);
         }
@@ -103,6 +103,12 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
 
             // API request
             try {
+                toast({
+                    variant: "default",
+                    title: "Processing Transcript...",
+                    description: '',
+                    duration: 3000
+                });
                 const response = await _apiService.uploadTranscript(formData);
                 for (let i = 0; i < response.length; i++) {
                     await createTerm(response[i]);
@@ -110,6 +116,12 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
                 setIsUploading(false)
                 setIsActive(false)
                 setUploadedFile(null)
+                toast({
+                    variant: "success",
+                    title: "Transcript Processed...",
+                    description: '',
+                    duration: 3000
+                });
             } catch (error: unknown) {
                 setIsUploading(false);
                 setIsActive(true);

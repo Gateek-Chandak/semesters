@@ -35,22 +35,27 @@ const FormSubmitService = () => {
     
         if (isTermValid) {
             try {
+                toast({
+                    variant: "default",
+                    title: "Creating...",
+                    description: '',
+                    duration: 3000
+                });
                 const newTerm: Term = await _apiService.createTerm(user!.id, assembledName, is_completed);
                 dispatch(addTerm({ term: { ...newTerm } }));
                 toast({
                     variant: "success",
                     title: "Create Successful",
                     description: `${assembledName} has been successfully created!`,
-                    duration: 2000
+                    duration: 3000
                 });
                 return true;
             } catch (error) {
-                console.error("Error creating term:", error);
                 toast({
                     variant: "destructive",
                     title: "Create Unsuccessful",
                     description: `${assembledName} could not be created`,
-                    duration: 2000
+                    duration: 3000
                 });
                 return false;
             }
@@ -59,7 +64,7 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: `${assembledName} could not be created`,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
@@ -73,20 +78,26 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: error,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
 
         if (!file) {
             try {
+                toast({
+                    variant: "default",
+                    title: "Creating...",
+                    description: '',
+                    duration: 3000
+                });
                 const createdCourse: Course = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
                 dispatch(addCourse({ term_id: createdCourse.term_id, course: createdCourse }));
                 toast({
                     variant: "success",
                     title: "Create Successful",
                     description: `${createdCourse.course_title} has been successfully created!`,
-                    duration: 2000
+                    duration: 3000
                 });
                 return true;
             } catch (error: any) {
@@ -95,7 +106,7 @@ const FormSubmitService = () => {
                     variant: "destructive",
                     title: "Create Unsuccessful",
                     description: error.error,
-                    duration: 2000
+                    duration: 3000
                 });
                 return false;
             }
@@ -103,6 +114,12 @@ const FormSubmitService = () => {
             const formData = new FormData()
             formData.append("pdf", file);
             try {
+                toast({
+                    variant: "default",
+                    title: "Creating...",
+                    description: '',
+                    duration: 3000
+                });
                 const response = await _apiService.uploadSchedule(formData);
                 const gradingSchemes = formatNewGradingScheme(response);
                 const createdCourse = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
@@ -138,19 +155,25 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: error,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
 
         try {
+            toast({
+                variant: "default",
+                title: "Creating...",
+                description: '',
+                duration: 3000
+            });
             const createdCourse: Course = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, "", "black", grade || 0, true);
             dispatch(addCourse({ term_id: createdCourse.term_id, course: createdCourse }));
             toast({
                 variant: "success",
                 title: "Create Successful",
                 description: `${createdCourse.course_title} has been successfully created!`,
-                duration: 2000
+                duration: 3000
             });
             return true;
         } catch (error: any) {
@@ -159,7 +182,7 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: error.error,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
@@ -173,12 +196,18 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: error,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
 
         try {
+            toast({
+                variant: "default",
+                title: "Creating...",
+                description: '',
+                duration: 3000
+            });
             const newScheme: GradingScheme = await _apiService.createGradingScheme(user!.id, courseData!.id, schemeName)
             dispatch(updateCourse({
                 term: termData!.term_name,
@@ -192,7 +221,7 @@ const FormSubmitService = () => {
                 variant: "success",
                 title: "Create Successful",
                 description: `${newScheme.scheme_name} has been successfully created!`,
-                duration: 2000
+                duration: 3000
             });
             return true;
         } catch (error: any) {
@@ -201,7 +230,7 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: error.error,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
@@ -215,12 +244,18 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: error,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
 
         try {
+            toast({
+                variant: "default",
+                title: "Creating...",
+                description: '',
+                duration: 3000
+            });
             // Create assessment
             const newAssessment: Assessment = await _apiService.createAssessment(user!.id, scheme_id, name, date, weight, grade)
             // Add new assessment to schemes
@@ -249,7 +284,7 @@ const FormSubmitService = () => {
                 variant: "success",
                 title: "Create Successful",
                 description: `${newAssessment.assessment_name} has been successfully created!`,
-                duration: 2000
+                duration: 3000
             });
             return true;
         } catch (error: any) {
@@ -258,7 +293,7 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Create Unsuccessful",
                 description: error.error,
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
@@ -270,10 +305,16 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "No Date Selected",
                 description: "Please select a date.",
-                duration: 2000
+                duration: 3000
             });
             return false;
         }
+        toast({
+            variant: "default",
+            title: "Creating...",
+            description: '',
+            duration: 3000
+        });
         const dateToAdd = new Date(date);
         const lower = new Date(lowerLimit);
         const upper = new Date(upperLimit);
@@ -283,7 +324,7 @@ const FormSubmitService = () => {
                 variant: "destructive",
                 title: "Date Out Of Range",
                 description: "The date selected is out of range for this term.",
-                duration: 2000
+                duration: 3000
             });
             return false;
         }

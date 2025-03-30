@@ -19,7 +19,7 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
                 variant: "destructive",
                 title: "Warning",
                 description: "Grading scheme name cannot be empty",
-                duration: 2000
+                duration: 3000
             })
             setCannotSave({ value: true, reason: "Grading scheme name cannot be empty"});
             return;
@@ -31,7 +31,7 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
                 variant: "destructive",
                 title: "Warning",
                 description: "This grading scheme name already exists",
-                duration: 2000
+                duration: 3000
             })
             setCannotSave({ value: true, reason: "This grading scheme name already exists"});
             return;
@@ -50,7 +50,7 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
                 variant: "destructive",
                 title: "Warning",
                 description: "This assessment name already exists",
-                duration: 2000
+                duration: 3000
             })
             setCannotSave({ value: true, reason: "This assessment name already exists"});
             return;
@@ -67,7 +67,7 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
                 variant: "destructive",
                 title: "Warning",
                 description: "Assessment name cannot be empty",
-                duration: 2000
+                duration: 3000
             })
             setCannotSave({ value: true, reason: "Assessment name cannot be empty"});
             return;
@@ -83,7 +83,7 @@ const useLocalScheme = (scheme: GradingScheme, schemeIndex: number) => {
             variant: "success",
             title: "Discard Successful",
             description: "Changes to " + localScheme.scheme_name + " were discarded",
-            duration: 1000
+            duration: 3000
         })
     }
 
