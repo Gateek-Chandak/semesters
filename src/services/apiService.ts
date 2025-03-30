@@ -1,7 +1,7 @@
 // This service handles all API calls for the application
 
 // Imports
-import { Assessment, Course, GradingScheme } from "@/types/mainTypes";
+import { Assessment, Course, GradingScheme, Term } from "@/types/mainTypes";
 import axios, { AxiosError } from "axios";
 
 // CONSTANTS
@@ -133,6 +133,25 @@ export class APIService {
         } catch (error) {
             console.error('Error syncing term data:', error);
             throw new Error("Error Syncing Data");
+        }
+    }
+
+    async updateTermOrder(user_id: number, rearrangedTerms: Term[]) {
+        const updatedTerms = rearrangedTerms.map((term: Term) => { return { id: term.id, order_index: term.order_index }});
+
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/term-database/update-term-order`, {
+                user_id, 
+                updatedTerms
+            });
+    
+            if (response.data.success) {
+                return true;
+            } 
+            return false;
+        } catch (error) {
+            console.error('Error syncing term data:', error);
+            return false;
         }
     }
     

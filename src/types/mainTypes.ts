@@ -63,5 +63,6 @@ export type Term = {
     is_completed: boolean;
     start_date: string;
     end_date: string;
+    order_index: number;
     courses: Course[];
 };

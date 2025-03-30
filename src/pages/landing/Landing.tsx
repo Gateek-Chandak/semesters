@@ -79,11 +79,11 @@ const LandingPage = () => {
         {/* Upload Transcript Page */}
         <div className="flex items-center justify-center h-dvh w-[80%] px-4" id="infoPage">
           <div className="py-[120px] flex flex-col lg:flex-row items-center justify-center gap-[72px]">
-            <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
-                {/* <source src="/Videos/LandingPageUploadTranscript.mp4" type="video/mp4" />
-                Your browser does not support the video tag. */}
+            {/* <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
+                <source src="/Videos/LandingPageUploadTranscript.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
                 Preview Currently Unavailiable
-            </video>
+            </video> */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-8 inline-flex px-4">
               <h1 className="self-stretch text-black text-3xl lg:text-5xl font-medium">Upload your Transcript.</h1>
               <h1 className="self-stretch text-black text-md lg:text-xl">We use your transcript to store your courses and grades for your entire academic career.</h1>
@@ -99,11 +99,11 @@ const LandingPage = () => {
         {/* Upload Schedule Page */}
         <div className="flex items-center justify-center h-dvh w-[80%] px-4">
           <div className="py-[120px] flex flex-col lg:flex-row items-center justify-center gap-[72px]">
-            <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
-                {/* <source src="/Videos/LandingPageUploadSyllabus.mp4" type="video/mp4" />
-                Your browser does not support the video tag. */}
+            {/* <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
+                <source src="/Videos/LandingPageUploadSyllabus.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
                  Preview Currently Unavailiable
-            </video>
+            </video> */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-8 inline-flex px-4">
               <h1 className="self-stretch text-black text-3xl lg:text-5xl font-medium">Upload your syllabus.</h1>
               <h1 className="self-stretch text-black text-md lg:text-xl">We use your syllabus to gather deliverable due dates, class times and the grading scheme.</h1>
@@ -120,11 +120,11 @@ const LandingPage = () => {
         {/* Export Calendar Page */}
         <div className="flex items-center justify-center h-dvh w-[80%]">
           <div className="py-[120px] flex flex-col lg:flex-row items-center justify-center gap-[72px]">
-            <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
-              {/* <source src="/Videos/LandingPageGoogleCalendar.mp4" type="video/mp4" />
-              Your browser does not support the video tag. */}
+            {/* <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
+              <source src="/Videos/LandingPageGoogleCalendar.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
               Preview Currently Unavailiable
-            </video>
+            </video> */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-8 inline-flex px-4">
               <h1 className="self-stretch text-black text-3xl lg:text-5xl font-medium">Export Your Calendar.</h1>
               <h1 className="self-stretch text-black text-md lg:text-xl">
@@ -145,11 +145,11 @@ const LandingPage = () => {
         {/* Track Your Grades Page */}
         <div className="flex items-center justify-center h-dvh w-[80%]">
           <div className="py-[120px] flex flex-col lg:flex-row items-center justify-center gap-[72px]">
-            <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
-                {/* <source src="/Videos/LandingPageGradingSchemes.mp4" type="video/mp4" />
-                Your browser does not support the video tag. */}
+            {/* <video width="640" height="360" className="rounded-xl border border-gray-800" autoPlay loop muted>
+                <source src="/Videos/LandingPageGradingSchemes.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
                 Preview Currently Unavailiable
-            </video>
+            </video> */}
             <div className="grow shrink basis-0 flex-col justify-start items-start gap-8 inline-flex px-4">
               <h1 className="self-stretch text-black text-3xl lg:text-5xl font-medium">Track Your Grades.</h1>
               <h1 className="self-stretch text-black text-md lg:text-xl">

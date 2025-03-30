@@ -23,7 +23,7 @@ const DisplayTermCard: React.FC<DisplayTermCardProps> = ({ term, isShowingGrades
 
   // Init all values needed for DND functionality
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
-    id: term.term_name,
+    id: term.id,
     data: {
       type: "Term",
       term
@@ -59,7 +59,7 @@ const DisplayTermCard: React.FC<DisplayTermCardProps> = ({ term, isShowingGrades
             </div>}
         {/* Used in the DashboardPage for default view */}
         {!isShowingGrades && !typeRearrange &&
-          <div className="custom-card hover:border-slate-300 transform transition-all duration-200 hover:scale-[1.04]">
+          <div className="h-40 w-40 custom-card hover:border-slate-300 transform transition-all duration-200 hover:scale-[1.04]">
                   <div className="h-40 w-40 flex flex-col justify-center gap-1 items-center">
                       <h1 className='text-3xl'>{term.term_name.split(' ')[0]}</h1>
                       {term.term_name.split(' ').length > 1 && <h1 className='text-4xl font-medium'>‘{term.term_name.split(' ')[1].slice(-2)}</h1>}
@@ -67,8 +67,8 @@ const DisplayTermCard: React.FC<DisplayTermCardProps> = ({ term, isShowingGrades
           </div>}
         {/* Used in the DashboardPage for showing grades view */}
         {isShowingGrades && !typeRearrange &&
-          <div className="custom-card transform transition-all duration-200 hover:scale-[1.04]">
-                  <div className="h-40 w-40 flex flex-col justify-center gap-4 items-center">
+          <div className="h-40 w-40 custom-card transform transition-all duration-200 hover:scale-[1.04]">
+                  <div className="h-40 w-40 flex flex-col justify-center gap-1 items-center">
                       <h1 className='text-2xl'>{term.term_name}</h1>
                       <h1 className={`${(termGPA === null || term.courses.length <= 0) ? "text-muted-foreground text-3xl" : "text-4xl font-medium"}`}>{(termGPA === null || term.courses.length <= 0) ? 'N/A' : parseFloat(termGPA?.toFixed(2)) + '%'}
                       </h1>
