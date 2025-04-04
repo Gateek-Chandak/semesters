@@ -1,5 +1,5 @@
 // UI
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Slider } from "../ui/slider";
 import { Checkbox } from "../ui/checkbox";
@@ -24,6 +24,13 @@ const GPAEstimator = () => {
     const [estimatedOverallGrade, setEstimatedOverallGrade] = useState<number>(_calculationService.getProjectedCumulativeGPA(data));
     const [selectedIds, setSelectedIds] = useState<number[]>(termData!.courses.map((course: Course) => { return course.id }));
 
+    // Listener for termData upgrades
+    useEffect(() => {
+        setCourseOptions(termData!.courses);
+        setSelectedIds(termData!.courses.map((course: Course) => { return course.id }));
+        setEstimatedTermGrade(termGrade);
+        setEstimatedOverallGrade(_calculationService.getProjectedCumulativeGPA(data));
+    }, [data, termData])
 
     // TODO: Implement debouncing so that it doesnt update on every change
     const calculateEstimatedGrades = (ids: number[], courses: Course[]) => {
@@ -85,7 +92,7 @@ const GPAEstimator = () => {
                         {termData!.term_name.split(' ')[0].slice(0, 1) + ' ' + termData!.term_name.split(' ')[1]} Average
                     </span>
                     <span className="text-lg text-center font-bold leading-none sm:text-3xl">
-                        {estimatedTermGrade.toFixed(2)}
+                        {estimatedTermGrade.toFixed(2)}%
                     </span>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-1 px-6 py-4 even:border-l sm:border-l sm:border-t-0 sm:px-8 sm:py-6">
@@ -93,7 +100,7 @@ const GPAEstimator = () => {
                         Overall Average
                     </span>
                     <span className="text-lg text-center font-bold leading-none sm:text-3xl">
-                        {estimatedOverallGrade.toFixed(2)}
+                        {estimatedOverallGrade.toFixed(2)}%
                     </span>
                 </div>
             </CardHeader>
@@ -112,7 +119,7 @@ const GPAEstimator = () => {
                             </div>
                             <div className="flex flex-row justify-between">
                                 <Slider className="w-[80%]" onValueChange={(e) => handleSliderChange(e, course.id)} value={[course.highest_grade]} max={100} step={0.1} />
-                                <h1 className="text-lg w-[20%] text-center">{course.highest_grade}</h1>
+                                <h1 className="text-lg w-[20%] text-center">{course.highest_grade}%</h1>
                             </div>
                         </div>
                     )
