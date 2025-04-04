@@ -82,12 +82,12 @@ const GPAEstimator = () => {
 
     return ( 
         <Card className="w-full">
-            <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 sm:flex-row">
+            <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-2 sm:p-0 sm:flex-row">
                 <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-5 sm:py-6">
                     <CardTitle>GPA Estimator</CardTitle>
                     <CardDescription>Use the sliders to estimate your averages</CardDescription>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-1 px-6 py-4 even:border-l sm:border-l sm:border-t-0 sm:px-8 sm:py-6">
+                <div className="flex flex-col justify-center items-center gap-1 px-6 sm:border-l sm:border-t-0 sm:px-8 sm:py-6">
                     <span className="text-sm text-muted-foreground">
                         {termData!.term_name.split(' ')[0].slice(0, 1) + ' ' + termData!.term_name.split(' ')[1]} Average
                     </span>
