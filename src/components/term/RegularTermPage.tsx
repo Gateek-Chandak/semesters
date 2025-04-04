@@ -115,7 +115,7 @@ const RegularTermPage = () => {
                         </Card>
                     </div>
                     {/* GPA Estimator */}
-                    <div className="col-span-1 flex flex-col gap-8">
+                    <div className="col-span-1 flex flex-col items-center gap-8">
                         <h1 className="lg:mr-auto text-2xl font-light">Analytics</h1>
                         {/* <Separator /> */}
                         <GPAEstimator />
