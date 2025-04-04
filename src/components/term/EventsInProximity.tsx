@@ -29,7 +29,7 @@ const EventsInProximity: React.FC<EventsInProximityProps> = ( {proximityInDays}:
             <div className="h-full h-min-[15rem] flex flex-col gap-4 justify-between overflow-y-auto">
                 {eventsNextXDays.length > 0 && eventsNextXDays.map((event, index) => {
                     return (
-                        <Card key={index} className={`p-5 h-full ${event.color == "black" ? "!border-black" : `!border-${event.color}-500`}  !rounded-xl`}>
+                        <Card key={index} className={`p-5 h-full !rounded-xl`}>
                             <h1 className={`font-medium text-${event.color}-600`}>{event.course}</h1>
                             <div className="mt-2 flex flex-row justify-between">
                                 <p className="font-normal truncate">{event.title}</p>

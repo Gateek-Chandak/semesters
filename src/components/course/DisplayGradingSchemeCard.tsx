@@ -62,9 +62,9 @@ const DisplayGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { se
                             return (
                                 <TableRow key={assessment.id}>
                                     <TableCell className="text-center w-[25%]">{assessment.assessment_name}</TableCell>
-                                    <TableCell className="text-center w-[25%]">{assessment.due_date ? format(assessment.due_date, `MMMM dd, yyyy '@' hh:mma`) : 'TBD'}</TableCell>
-                                    <TableCell className="text-center w-[25%]">{assessment.weight}</TableCell>
-                                    <TableCell className="text-center w-[25%]">{(assessment.grade === 0 || assessment.grade) ? assessment.grade : ""}</TableCell>
+                                    <TableCell className="text-center w-[35%]">{assessment.due_date ? format(assessment.due_date, `MMMM dd, yyyy '@' hh:mma`) : 'TBD'}</TableCell>
+                                    <TableCell className="text-center w-[20%]">{assessment.weight}</TableCell>
+                                    <TableCell className="text-center w-[20%]">{(assessment.grade === 0 || assessment.grade) ? assessment.grade : ""}</TableCell>
                                 </TableRow>)})}
                     </TableBody> 
                 </Table>

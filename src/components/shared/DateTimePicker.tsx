@@ -1,16 +1,14 @@
-import * as React from "react";
-import { CalendarIcon } from "lucide-react";
+// Libraries
 import { format } from "date-fns";
- 
+// UI
+import { CalendarIcon } from "lucide-react";
 import { cn } from "../../libs/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "../ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import {Popover,PopoverContent,PopoverTrigger,} from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+// Hooks
+import { useState } from "react";
 
 interface DateTimePickerProps {
   dueDate: string | null;
@@ -20,10 +18,13 @@ interface DateTimePickerProps {
 }
 
 export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentChanges, enableHours }: DateTimePickerProps) {
-  const [date, setDate] = React.useState<Date | null>(dueDate ? new Date(dueDate) : null);
-  const [isOpen, setIsOpen] = React.useState(false);
- 
+  // States
+  //  values
+  const [date, setDate] = useState<Date | null>(dueDate ? new Date(dueDate) : null);
   const hours = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+  //  conditionals
+  const [isOpen, setIsOpen] = useState(false);
+ 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       setDate(selectedDate);
@@ -39,10 +40,7 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
     }
   };
  
-  const handleTimeChange = (
-    type: "hour" | "minute" | "ampm",
-    value: string
-  ) => {
+  const handleTimeChange = (type: "hour" | "minute" | "ampm", value: string) => {
     if (date) {
       const newDate = new Date(date);
       if (type === "hour") {
@@ -66,23 +64,30 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
       }
     }
   };
+
+  function displayFormattedDate() {
+    let displayDate = "Date Unavailable";
+    
+    if (date) {
+      if (!enableHours) {
+        displayDate = format(date, `MMM dd, yy`);
+      } else {
+        displayDate = format(date, `MMM dd, yyyy '@' hh:mma`);
+      }
+    }
+
+    return displayDate
+  }
  
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
+        <Button variant="outline" className={cn(
             "justify-start text-left font-normal w-full",
             !date && "text-muted-foreground"
-          )}
-        >
+          )}>
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {(date) ? (
-            format(date, `MMMM dd, yyyy '@' hh:mma`)
-          ) : (
-            <span>Date Unavailable</span>
-          )}
+          {displayFormattedDate()}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-4 border border-slate-300 rounded-lg">

@@ -86,13 +86,13 @@ export class APIService {
 
         if (season == 'Fall') {
             start_date = '2025-09-01';
-            end_date = '2025-12-30';
+            end_date = '2025-12-31';
         } else if (season == 'Winter') {
             start_date = '2025-01-01';
             end_date = '2025-04-30';
         } else {
             start_date = '2025-05-01';
-            end_date = '2025-08-30';
+            end_date = '2025-08-31';
         }
 
         const term = {

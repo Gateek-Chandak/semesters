@@ -293,4 +293,24 @@ export class CalculationService{
         } 
         return 0;
     }
+
+    //getProjectedCumulativeGPA(data, projectedTerm) compares projectedTerm with other completed terms
+    //                                               to determine projected GPA
+    getProjectedCumulativeGPA(data: Term[]): number {
+        // Sum all grades
+        const totalGrades = data.reduce((overallTotal: number, term: Term) => {
+            return overallTotal + term.courses.reduce((termSum: number, course: Course) => {
+                return termSum + course.highest_grade;
+            }, 0);
+        }, 0);
+        // Sum all completed courses
+        const totalCourses = data.reduce((count: number, term) => {
+            return count + term.courses.length;
+        }, 0);
+
+        if (totalCourses > 0) {
+            return totalGrades / totalCourses;
+        } 
+        return 0;
+    }
 } 

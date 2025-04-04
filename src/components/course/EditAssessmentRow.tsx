@@ -77,12 +77,12 @@ const EditAssessmentRow: React.FC<EditAssessmentRowProps> = ( { assessment, asse
 
     return ( 
         <TableRow key={assessmentIndex}>
-            <TableCell className="text-center w-[5%]">
+            <TableCell className="text-center w-[0%]">
                 <Button className="w-5 h-8 hover:text-red-500" variant={'ghost'} onClick={() => setIsDeleting(true)}>
                     <XIcon className="!w-3 !h-3"/>
                 </Button>
             </TableCell>
-            <TableCell className="text-center w-[25%]">
+            <TableCell className="text-center w-[15%]">
                 <Input type="text" name="assessmentName" value={localAssessment.assessment_name} onChange={validateFields} 
                        onBlur={() => syncChanges(assessmentIndex, localAssessment)}/>
             </TableCell>

@@ -72,7 +72,7 @@ const FormSubmitService = () => {
 
     // createCompletedCourse(termData, courseCode, courseNumber, courseSubtitle)
     async function createCourse(termData: any, courseCode: string, courseNumber: string, courseSubtitle: string, colour: string, file: File | null) {
-        const { isValid, error } = _formValidationService.validateNewCourse(termData, courseCode, courseNumber, courseSubtitle);
+        const { isValid, error } = _formValidationService.validateNewCourse(termData, courseCode, courseNumber, courseSubtitle, colour);
         if (!isValid) {
             toast({
                 variant: "destructive",
@@ -386,7 +386,7 @@ export class FormValidationService {
 
     // validateNewCourse(code, number, subtitle)
     //  * code, number, and subtitle must have a value
-    validateNewCourse(termData: Term, code: string, number: string, subtitle: string): { isValid: boolean, error: string } {
+    validateNewCourse(termData: Term, code: string, number: string, subtitle: string, colour: string): { isValid: boolean, error: string } {
         if (!code || code.trim() === "") {
             return { isValid: false, error: "Course code is required"};
         }
@@ -401,6 +401,11 @@ export class FormValidationService {
         const isDuplicate = termData?.courses.find((c) => c.course_title.toLowerCase() === assembledName.toLowerCase())
         if (isDuplicate) {
             return { isValid: false, error: "A course with this name has already been created" };
+        }
+
+        const duplicateColour = termData?.courses.find((c) => c.colour == colour);
+        if (duplicateColour) {
+            return { isValid: false, error: "A course with this colour already exists" };
         }
         return { isValid: true, error: "" };
     }
