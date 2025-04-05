@@ -28,11 +28,11 @@ const _calculationService = new CalculationService();
 
 const chartConfig = {
   termGrade: {
-    label: "termGrade",
+    label: "Term Grade",
     color: "blue",
   },
   overall: {
-    label: "overall",
+    label: "Overall",
     color: "purple"
   }
 } satisfies ChartConfig
