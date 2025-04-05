@@ -4,8 +4,8 @@ import { Button } from "../ui/button";
 import { CarouselItem } from "../ui/carousel"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import AddDeliverablePopup from "./AddDeliverablePopup";
-import AddSchemePopup from "./AddSchemePopup";
+import AddDeliverablePopup from "./popups/AddDeliverablePopup";
+import AddSchemePopup from "./popups/AddSchemePopup";
 // Hooks
 import { useState } from "react";
 import useData from "@/hooks/general/use-data";

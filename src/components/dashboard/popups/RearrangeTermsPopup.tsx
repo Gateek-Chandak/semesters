@@ -2,7 +2,7 @@
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable"
 // UI
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
     Dialog,
     DialogContent,
@@ -14,7 +14,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setData } from "@/redux/slices/dataSlice";
 // Custom Components
-import DisplayTermCard from "./DisplayTermCard";
+import DisplayTermCard from "../DisplayTermCard";
 import { useEffect, useMemo, useState } from "react";
 import { Term } from "@/types/mainTypes";
 import { createPortal } from "react-dom";

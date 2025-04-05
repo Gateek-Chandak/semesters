@@ -1,7 +1,7 @@
 import useData from "@/hooks/general/use-data";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
 import { Button } from "../ui/button";
-import AddSchemePopup from "./AddSchemePopup";
+import AddSchemePopup from "./popups/AddSchemePopup";
 import {useState } from "react";
 
 import EditGradingSchemeCard from "./EditGradingSchemeCard";

@@ -8,8 +8,8 @@ import {
     DialogTitle,
     DialogFooter
   } from "@/components/ui/dialog"
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 // Services
 import FormSubmitService from "@/services/formSubmitService";
 import { InputFieldValidationService } from "@/services/inputFieldValidationService";

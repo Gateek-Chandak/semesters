@@ -1,8 +1,8 @@
 // UI
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Slider } from "../ui/slider";
-import { Checkbox } from "../ui/checkbox";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
+import { Slider } from "../../ui/slider";
+import { Checkbox } from "../../ui/checkbox";
 // Types
 import { Course, Term } from "@/types/mainTypes";
 // Services
@@ -85,19 +85,19 @@ const GPAEstimator = () => {
             <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-2 sm:p-0 sm:flex-row">
                 <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-5 sm:py-6">
                     <CardTitle>GPA Estimator</CardTitle>
-                    <CardDescription>Use the sliders to estimate your averages</CardDescription>
+                    <CardDescription>Use the sliders to estimate your averages, assuming this is your current term.</CardDescription>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-1 px-6 sm:border-l sm:border-t-0 sm:px-8 sm:py-6">
-                    <span className="text-sm text-muted-foreground">
-                        {termData!.term_name.split(' ')[0].slice(0, 1) + ' ' + termData!.term_name.split(' ')[1]} Average
+                <div className="flex flex-col justify-center items-center gap-1 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-6">
+                    <span className="text-sm text-center text-muted-foreground">
+                        Estimated {termData!.term_name.split(' ')[0].slice(0, 1) + ' ' + termData!.term_name.split(' ')[1]} GPA
                     </span>
                     <span className="text-lg text-center font-bold leading-none sm:text-3xl">
                         {estimatedTermGrade.toFixed(2)}%
                     </span>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-1 px-6 py-4 even:border-l sm:border-l sm:border-t-0 sm:px-8 sm:py-6">
-                    <span className="text-sm text-muted-foreground">
-                        Overall Average
+                <div className="flex flex-col justify-center items-center gap-1 px-6 py-4 even:border-l sm:border-l sm:border-t-0 sm:px-4 sm:py-6">
+                    <span className="text-sm text-center text-muted-foreground">
+                        Estimated Overall GPA
                     </span>
                     <span className="text-lg text-center font-bold leading-none sm:text-3xl">
                         {estimatedOverallGrade.toFixed(2)}%
