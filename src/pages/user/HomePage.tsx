@@ -110,8 +110,8 @@ const HomePage = ( ) => {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            {!course && termData && !termData.is_completed && <Button onClick={() => toggleCompleteTerm(true)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 lg:!h-12 md:!text-sm">Mark as Completed</Button>}
-            {!course && termData && termData.is_completed && <Button onClick={() => toggleCompleteTerm(false)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 lg:!h-12 md:!text-sm">Mark as Current Term</Button>}
+            {!course && termData && !termData.is_completed && <Button onClick={() => toggleCompleteTerm(true)} variant={'outline'} className="border-2 border-black !text-xs !h-8 sm:!h-10">Mark as Completed</Button>}
+            {!course && termData && termData.is_completed && <Button onClick={() => toggleCompleteTerm(false)} variant={'outline'} className="border-2 border-black !text-xs !h-8 sm:!h-10">Mark as Current Term</Button>}
           </div>
         </header>
         <Outlet/>
