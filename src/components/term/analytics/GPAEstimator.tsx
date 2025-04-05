@@ -84,14 +84,14 @@ const GPAEstimator = () => {
         <Card className="w-full">
             <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-2 sm:p-0 sm:flex-row">
                 <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-5 sm:py-6">
-                    <CardTitle>GPA Estimator</CardTitle>
-                    <CardDescription>Use the sliders to estimate your averages, assuming this is your current term.</CardDescription>
+                    <CardTitle className="text-xl">GPA Estimator</CardTitle>
+                    <CardDescription>Use the sliders to estimate your averages.</CardDescription>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-1 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-6">
                     <span className="text-sm text-center text-muted-foreground">
-                        Estimated {termData!.term_name.split(' ')[0].slice(0, 1) + ' ' + termData!.term_name.split(' ')[1]} GPA
+                        Estimated {termData!.term_name.split(' ')[0].slice(0, 1) + ' ' + termData!.term_name.split(' ')[1].slice(2)} GPA
                     </span>
-                    <span className="text-lg text-center font-bold leading-none sm:text-3xl">
+                    <span className="text-lg text-center font-bold leading-none sm:text-2xl">
                         {estimatedTermGrade.toFixed(2)}%
                     </span>
                 </div>
@@ -99,7 +99,7 @@ const GPAEstimator = () => {
                     <span className="text-sm text-center text-muted-foreground">
                         Estimated Overall GPA
                     </span>
-                    <span className="text-lg text-center font-bold leading-none sm:text-3xl">
+                    <span className="text-lg text-center font-bold leading-none sm:text-2xl">
                         {estimatedOverallGrade.toFixed(2)}%
                     </span>
                 </div>

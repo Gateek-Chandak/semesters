@@ -89,9 +89,17 @@ const useLocalCourseList = () => {
             return;
         }
         if (!cannotSave.value) {
+            toast({
+                variant: "default",
+                title: "Updating...",
+                duration: 3000
+            })
             dispatch(updateTerm({
                 term_id: termData!.id,
-                updatedCourseList: localTermCourses
+                term: {
+                    ...termData!,
+                    courses: localTermCourses
+                }
             }))
             toast({
                 variant: "success",
