@@ -7,8 +7,8 @@ import {
     DialogTitle,
     DialogFooter
   } from "@/components/ui/dialog"
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+import { Button } from "../../ui/button";
+import { Checkbox } from "../../ui/checkbox";
 import {
     Select,
     SelectContent,
@@ -16,8 +16,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ScrollArea } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
+import { ScrollArea } from "../../ui/scroll-area";
+import { Separator } from "../../ui/separator";
 // Hooks
 import { useState } from "react";
 // Services
@@ -39,7 +39,7 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
     const [error, setError] = useState<string>("")
 
     // list of years to choose from
-    const years = Array.from({ length: 30 }, (_, i) => 2015 + i);
+    const years = Array.from({ length: 30 }, (_, i) => 2019 + i);
         
     // reset all form values on close
     const handleClose = () => {
@@ -65,9 +65,17 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Add a New Term?</DialogTitle>
-                    <DialogDescription></DialogDescription>
+                    <DialogDescription>Mark the term as completed if applicable. This will help provide accurate metrics and estimated grades.</DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col justify-center items-center w-full gap-6 text-sm">
+                    <div className="flex items-center space-x-2 mr-auto mt-5">
+                        <Checkbox id="terms" onCheckedChange={() => setIsTermComplete(!isTermComplete)}/>
+                        <label
+                            htmlFor="terms"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Is Term Completed?
+                        </label>
+                    </div>
                     <div className="w-full flex flex-col gap-3 font-medium text-md">
                         <h1>Term</h1>
                         <Select defaultValue="Fall" onValueChange={(value) => setTermName(value)}>
@@ -95,14 +103,6 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
                                 ))}
                             </div>
                         </ScrollArea>
-                    </div>
-                    <div className="flex items-center space-x-2 mr-auto mt-5">
-                        <Checkbox id="terms" onCheckedChange={() => setIsTermComplete(!isTermComplete)}/>
-                        <label
-                            htmlFor="terms"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Is Term Completed?
-                        </label>
                     </div>
                 </div>
                 <p className="text-left mt-2 text-red-600">{error}</p>

@@ -1,6 +1,6 @@
 // UI
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import {
     Dialog,
     DialogContent,

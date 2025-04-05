@@ -14,15 +14,16 @@ import { useState, useMemo } from "react";
 import { CalendarEvent, Term } from "@/types/mainTypes";
 // Custom Components
 import DisplayTermCard from '@/components/dashboard/DisplayTermCard';
-import UploadTranscriptPopup from '@/components/dashboard/UploadTranscriptPopup';
+import UploadTranscriptPopup from '@/components/dashboard/popups/UploadTranscriptPopup';
 import { CircularProgress } from '@/components/dashboard/CircularProgessBar';
-import AddTermPopup from '@/components/dashboard/AddTermPopup';
+import AddTermPopup from '@/components/dashboard/popups/AddTermPopup';
 import MainTermCard from "@/components/dashboard/MainTermCard";
 import ConfirmDeletePopup from "@/components/shared/ConfirmDeletePopup";
 import EditTermCard from '@/components/dashboard/ModifyTermCard';
-import RearrangeTermsPopup from '@/components/dashboard/RearrangeTermsPopup';
+import RearrangeTermsPopup from '@/components/dashboard/popups/RearrangeTermsPopup';
 import MetricCard from '@/components/shared/MetricCard';
 import Footer from '@/components/shared/Footer';
+import GradeTrendCard from '@/components/dashboard/analytics/GradeTrendGraph';
 // Services
 import { CalculationService } from '@/services/calculationService';
 import DeleteDataService from '@/services/deleteDataService';
@@ -105,7 +106,7 @@ const Dashboard = () => {
                     </div>
                 </div>
                 <Separator />
-                {/* Bottom Row */}
+                {/* Middle Row */}
                 <div className="flex flex-row w-full h-fit gap-6 mb-8">
                     <div className="w-full flex flex-col gap-6"> 
                         {/* Action Buttons */}
@@ -173,6 +174,14 @@ const Dashboard = () => {
                                 </div>
                             </Card>
                         </div>
+                    </div>
+                </div>
+                <Separator />
+                {/* Bottom Row */}
+                <div className="flex flex-col w-full h-fit gap-6 mb-8">
+                    <h1 className="lg:text-left text-center text-2xl font-light">Analytics</h1>
+                    <div className='w-full grid md:grid-cols-2'>
+                        <GradeTrendCard />
                     </div>
                 </div>
             </div>

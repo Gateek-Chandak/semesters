@@ -136,6 +136,25 @@ export class APIService {
         }
     }
 
+    async updateTerm(user_id: number, term: Term) {
+        const { id, term_name, is_completed, start_date, end_date, order_index } = term;
+
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/term-database/update-term`, {
+                user_id, 
+                term: { id, term_name, is_completed, start_date, end_date, order_index }
+            });
+    
+            if (response.data.success) {
+                return response.data.data;
+            } 
+            throw new Error("Error Syncing Data");
+        } catch (error) {
+            console.error('Error syncing term data:', error);
+            throw new Error("Error Syncing Data");
+        }
+    }
+
     async updateTermOrder(user_id: number, rearrangedTerms: Term[]) {
         const updatedTerms = rearrangedTerms.map((term: Term) => { return { id: term.id, order_index: term.order_index }});
 

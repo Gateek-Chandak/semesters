@@ -92,7 +92,7 @@ export function CircularProgress({ isShowingAverage, setIsShowingAverage }: Circ
               {isShowingAverage &&<EyeOffIcon className='!w-6 !h-6'/>}
               {!isShowingAverage &&<EyeIcon className='!w-6 !h-6'/>}
             </Button>
-            <p className="text-xs text-muted-foreground text-center">*only includes completed courses</p>
+            <p className="text-xs text-muted-foreground text-center">*Does not include current term</p>
         </div>
     </Card>
   )

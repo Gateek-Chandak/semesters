@@ -267,25 +267,17 @@ export class CalculationService{
 
     // DASHBOARD CALCULATIONS -------------------------------------------------------------------------
 
-    // getCumulativeGPA(data) gets the cGPT from a list of COMPLETED Terms
+    // getCumulativeGPA(data) gets the cGPT from a list of Terms excluding the Current Term
     getCumulativeGPA(data: Term[]): number {
         // Sum all grades
-        const totalGrades = data.reduce((overallTotal: number, term: Term) => {
-            if (term.is_completed) {
-                return overallTotal + term.courses.reduce((termSum: number, course: Course) => {
-                    return termSum + course.highest_grade;
-                }, 0);
-            } else {
-                return overallTotal + 0
-            } 
+        const totalGrades = data.slice(0, -1).reduce((overallTotal: number, term: Term) => {
+            return overallTotal + term.courses.reduce((termSum: number, course: Course) => {
+                return termSum + course.highest_grade;
+            }, 0);
         }, 0);
         // Sum all completed courses
-        const totalCourses = data.reduce((count: number, term) => {
-            if (term.is_completed) {
-                return count + term.courses.length;
-            } else {
-                return count + 0;
-            }
+        const totalCourses = data.slice(0, -1).reduce((count: number, term) => {
+            return count + term.courses.length;
         }, 0);
 
         if (totalCourses > 0) {
@@ -294,8 +286,7 @@ export class CalculationService{
         return 0;
     }
 
-    //getProjectedCumulativeGPA(data, projectedTerm) compares projectedTerm with other completed terms
-    //                                               to determine projected GPA
+    //getProjectedCumulativeGPA(data, projectedTerm) speculates a GPA based on data
     getProjectedCumulativeGPA(data: Term[]): number {
         // Sum all grades
         const totalGrades = data.reduce((overallTotal: number, term: Term) => {

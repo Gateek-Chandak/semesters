@@ -29,11 +29,11 @@ const dataSlice = createSlice({
               state.data.push(newTerm);
           }
         },            
-        updateTerm(state, action: PayloadAction<{ term_id: number; updatedCourseList: Course[] }>) {
-            const { term_id, updatedCourseList } = action.payload;
+        updateTerm(state, action: PayloadAction<{ term_id: number; term: Term }>) {
+            const { term_id, term } = action.payload;
             const termIndex = state.data.findIndex((t: Term) => t.id === term_id);
             if (termIndex !== -1) {
-              state.data[termIndex].courses = updatedCourseList;
+              state.data[termIndex] = term;
             }
         },
         deleteTerm(state, action: PayloadAction<{ term_id: number }>) {

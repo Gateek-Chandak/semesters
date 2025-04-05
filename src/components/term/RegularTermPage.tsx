@@ -10,9 +10,10 @@ import EventsInProximity from "./EventsInProximity";
 import DisplayCourseCard from "./DisplayCourseCard";
 import EditCourseCard from "./EditCourseCard";
 import { Calendar } from "../shared/Calendar";
-import CreateCoursePopup from "./CreateCoursePopup";
-import ExportGoogleCalPopup from "./ExportGoogleCalPopup";
-import GPAEstimator from "./GPAEstimator";
+import CreateCoursePopup from "./popups/CreateCoursePopup";
+import ExportGoogleCalPopup from "./popups/ExportGoogleCalPopup";
+import GPAEstimator from "./analytics/GPAEstimator";
+// import StudyHoursChart from "./StudyHoursChart";
 // Types
 import { CalendarEvent } from "../shared/Calendar";
 // Hooks

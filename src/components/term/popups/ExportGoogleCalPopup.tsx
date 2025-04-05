@@ -5,9 +5,9 @@ import { Dialog,
          DialogFooter,
          DialogTitle,
          DialogDescription
-        } from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+        } from "../../ui/dialog";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 // Hooks
 import { useState } from "react";
 import { useToast } from "@/hooks/general/use-toast";

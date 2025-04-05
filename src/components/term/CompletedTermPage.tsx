@@ -5,7 +5,7 @@ import { Check, EyeIcon, EyeOffIcon, PencilIcon } from "lucide-react";
 import { CircularProgress } from "./CircularProgessBar";
 import DisplayCourseCard from "./DisplayCourseCard";
 import EditCourseCard from "./EditCourseCard";
-import CreateCompletedCoursePopup from "./CreateCompletedCoursePopup";
+import CreateCompletedCoursePopup from "./popups/CreateCompletedCoursePopup";
 // Hooks
 import useData from "@/hooks/general/use-data";
 import { useState } from "react";

@@ -20,7 +20,7 @@ import { Separator } from "../ui/separator"
 import { useState, useMemo } from "react"
 import useParsedRouteParams from "@/hooks/general/use-parsed-route-params"
 // Custom Components
-import AddStudyLogPopup from "./AddStudyLogPopup"
+import AddStudyLogPopup from "./popups/AddStudyLogPopup"
 
 const chartConfig = {
   views: {

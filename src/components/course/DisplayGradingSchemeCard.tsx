@@ -1,11 +1,11 @@
 // UI
-import { PencilIcon } from "lucide-react";
+import { PencilIcon, PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { CarouselItem } from "../ui/carousel"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import AddDeliverablePopup from "./AddDeliverablePopup";
-import AddSchemePopup from "./AddSchemePopup";
+import AddDeliverablePopup from "./popups/AddDeliverablePopup";
+import AddSchemePopup from "./popups/AddSchemePopup";
 // Hooks
 import { useState } from "react";
 import useData from "@/hooks/general/use-data";
@@ -30,11 +30,11 @@ const DisplayGradingSchemeCard: React.FC<DisplayGradingSchemeCardProps> = ( { se
             <div className='w-full pr-7 flex flex-row justify-between items-center gap-3'>
                 <h1 className={`mr-auto text-left ${courseData!.grading_schemes.length > 1 ? "relative left-20 top-1" : "ml-3" } text-lg font-medium`}>{scheme.scheme_name}</h1>
                 <Button className='bg-white text-black border-2 border-black hover:bg-gray-100' onClick={() => setIsEditing((prev: boolean) => !prev)}>
-                        Edit<PencilIcon/>
+                    Edit<PencilIcon/>
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="default">+ Add</Button>
+                        <Button variant="default">Add<PlusIcon /></Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 flex flex-col gap-1" side="right">
                         <DropdownMenuItem>
