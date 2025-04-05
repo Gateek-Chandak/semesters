@@ -101,9 +101,9 @@ const GradeTrendGraph = () => {
             </CardContent>
             <CardFooter>
             <div className="w-full flex items-center justify-center gap-2 font-medium text-base">
-                Trending up by {latestTrend}% this term 
-                {latestTrend > 0 && <TrendingUp className="text-green-600 h-4 w-4" />}
-                {latestTrend < 0 && <TrendingDown className="text-red-600 h-4 w-4" />}
+                
+                {latestTrend > 0 && <div className="flex items-center gap-2">Trending up by {latestTrend}% this term <TrendingUp className="text-green-600 h-4 w-4" /></div>}
+                {latestTrend < 0 && <div className="flex items-center gap-2">Trending down by {latestTrend}% this term <TrendingDown className="text-red-600 h-4 w-4" /></div>}
             </div>
             </CardFooter>
         </Card>
