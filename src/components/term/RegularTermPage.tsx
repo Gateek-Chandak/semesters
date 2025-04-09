@@ -13,7 +13,7 @@ import { Calendar } from "../shared/Calendar";
 import CreateCoursePopup from "./popups/CreateCoursePopup";
 import ExportGoogleCalPopup from "./popups/ExportGoogleCalPopup";
 import GPAEstimator from "./analytics/GPAEstimator";
-// import StudyHoursChart from "./StudyHoursChart";
+import StudyHoursChart from "./analytics/StudyHoursChart";
 // Types
 import { CalendarEvent } from "../shared/Calendar";
 // Hooks
@@ -127,7 +127,11 @@ const RegularTermPage = () => {
                     <h1 className="lg:mr-auto text-2xl font-light lg:text-left text-center">Term Calendar</h1>
                     <Calendar events={calendarEvents as CalendarEvent[]} setIsExporting={setIsExporting} termView={true} />
                 </div>
+                <div className="col-span-1 lg:col-span-2">
+                    <StudyHoursChart />
+                </div>
             </div>
+
             {/* Popup when creating a incomplete course */}
             <CreateCoursePopup isCreatingCourse={isCreatingCourse} setIsCreatingCourse={setIsCreatingCourse}/>
             {/* Popup when exporting to google calendar */}

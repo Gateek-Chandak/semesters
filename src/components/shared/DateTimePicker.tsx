@@ -70,7 +70,7 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
     
     if (date) {
       if (!enableHours) {
-        displayDate = format(date, `MMM dd, yy`);
+        displayDate = format(date, `MMM dd, yyyy`);
       } else {
         displayDate = format(date, `MMM dd, yyyy '@' hh:mma`);
       }

@@ -16,7 +16,6 @@ const _inputFieldValidationService = new InputFieldValidationService();
 interface AddStudyLogPopupProps {
     isAddingLog: boolean,
     setIsAddingLog: React.Dispatch<React.SetStateAction<boolean>>;
-    forToday: boolean
 }
 
 const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsAddingLog }) => {
@@ -78,7 +77,7 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
                             {termData && termData.courses.map((course: Course) => {
                                 return (
                                     <div key={course.id} className="text-sm flex flex-col gap-2">
-                                        <h1>{course.course_title}</h1>
+                                        <h1 className={`text-foreground`}>{course.course_title}</h1>
                                         <Input type="number" name="hoursStudied" value={hoursStudied} onChange={validateFields}/>
                                     </div>
                                 )
