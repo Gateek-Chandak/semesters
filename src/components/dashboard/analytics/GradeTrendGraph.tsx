@@ -91,7 +91,7 @@ const GradeTrendGraph = () => {
                     <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" hideLabel />} />
                     <XAxis dataKey="term" tickLine={false} axisLine={false}
                         tickMargin={8} tickFormatter={(value) => value.split(' ')[0].slice(0,1) + value.split(' ')[1].slice(2)}/>
-                    <YAxis width={27} domain={[0, 100]}/>
+                    <YAxis width={27} domain={[50, 100]}/>
                     <Area dataKey="termGrade" type="linear" fill="blue"
                           fillOpacity={0.4} stroke="blue"/>
                     <Area dataKey="overall" type="linear" fill="purple"
