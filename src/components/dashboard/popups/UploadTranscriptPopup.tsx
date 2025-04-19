@@ -86,7 +86,8 @@ const UploadTranscriptPopup: React.FC<UploadTranscriptPopupProps> = ({ isActive,
         if (duplicateTerm) {
             return;
         }
-        const createdTerm = await _apiService.createTerm(user!.id, term.term_name, term.is_completed);
+
+        const createdTerm = await _apiService.createTerm(user!.id, term.term_name, term.is_completed, term.term_name.split(' ')[1]);
         dispatch(addTerm({newTerm: createdTerm}))
         for (let i = 0; i < term.courses.length; i++) {
             await createCourse(term.courses[i], createdTerm.id)
