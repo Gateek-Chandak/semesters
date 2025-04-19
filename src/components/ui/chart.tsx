@@ -108,7 +108,9 @@ const ChartTooltipContent = React.forwardRef<
       hideIndicator?: boolean
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
-      labelKey?: string
+      labelKey?: string,
+      valueAddOn?: string,
+      indicatorOpacity?: number
     }
 >(
   (
@@ -126,6 +128,8 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
+      valueAddOn = '',
+      indicatorOpacity = 1
     },
     ref
   ) => {
@@ -164,7 +168,7 @@ const ChartTooltipContent = React.forwardRef<
       hideLabel,
       labelClassName,
       config,
-      labelKey,
+      labelKey
     ])
 
     if (!active || !payload?.length) {
@@ -219,6 +223,7 @@ const ChartTooltipContent = React.forwardRef<
                             {
                               "--color-bg": indicatorColor,
                               "--color-border": indicatorColor,
+                              opacity: indicatorOpacity
                             } as React.CSSProperties
                           }
                         />
@@ -238,7 +243,7 @@ const ChartTooltipContent = React.forwardRef<
                       </div>
                       {item.value && (
                         <span className="font-mono font-medium tabular-nums text-foreground">
-                          {item.value.toLocaleString()}
+                          {item.value.toLocaleString() + ' ' + valueAddOn}
                         </span>
                       )}
                     </div>

@@ -15,58 +15,21 @@ import { useIsMobile } from "@/hooks/general/use-mobile";
 import { Link } from "react-router-dom";
 import useParsedRouteParams from "@/hooks/general/use-parsed-route-params";
 import useData from "@/hooks/general/use-data";
-import { useDispatch } from "react-redux";
-import useUser from "@/hooks/general/use-user";
-import { useToast } from "@/hooks/general/use-toast";
-// Redux
-import { updateTerm } from "@/redux/slices/dataSlice";
+import { useState } from "react";
 // Custom Components
 import { AppSidebar } from "@/components/sidebar/AppSidebar"
-// Services
-import { APIService } from "@/services/apiService";
-
-const _apiService = new APIService();
+import CompleteTermPopup from "@/components/term/popups/CompleteTermPopup";
 
 const HomePage = ( ) => {
-  const { toast } = useToast();
-  const { user } = useUser();
   const { termData } = useData();
-  const dispatch = useDispatch();
   // Inits
   const isMobile = useIsMobile()
+  // States
+  //  conditionals
+  const [isCompletingCourse, setIsCompletingCourse] = useState<boolean>(false)
 
   // Get Current Term and Course
   const { parsedTerm: term, parsedCourse: course } = useParsedRouteParams();
-  
-  const toggleCompleteTerm = async (is_completed: boolean) => {
-    const updatedTerm = { ...termData!, is_completed }
-
-    try {
-      toast({
-        variant: "default",
-        title: "Updating...",
-        duration: 3000
-      })
-      const response = await _apiService.updateTerm(user!.id, updatedTerm);
-      toast({
-        variant: "success",
-        title: "Update Successful!",
-        description: response.term_name + ' was updated',
-        duration: 3000
-      })
-      dispatch(updateTerm({
-        term_id: termData!.id,
-        term: updatedTerm
-      }))
-    } catch {
-      toast({
-        variant: "destructive",
-        title: "Update Unsuccessful",
-        description: termData!.term_name + ' was unable to be updated.',
-        duration: 3000
-      })
-    }
-  }
 
   return (
     <SidebarProvider>
@@ -110,12 +73,14 @@ const HomePage = ( ) => {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            {!course && termData && !termData.is_completed && <Button onClick={() => toggleCompleteTerm(true)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 lg:!h-12 md:!text-sm">Mark as Completed</Button>}
-            {!course && termData && termData.is_completed && <Button onClick={() => toggleCompleteTerm(false)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 lg:!h-12 md:!text-sm">Mark as Current Term</Button>}
+            {!course && termData && !termData.is_completed && <Button onClick={() => setIsCompletingCourse(true)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 md:!text-sm">Mark as Completed</Button>}
+            {/* {!course && termData && termData.is_completed && <Button onClick={() => toggleCompleteTerm(false)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 md:!text-sm">Mark as Current Term</Button>} */}
           </div>
         </header>
         <Outlet/>
       </SidebarInset>
+      {/* Popup when term is being completed */}
+      <CompleteTermPopup visible={isCompletingCourse} setVisible={setIsCompletingCourse} />
     </SidebarProvider>
   );
 }

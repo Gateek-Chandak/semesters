@@ -45,7 +45,7 @@ const CompletedTermPage = () => {
     return ( 
         <div className="min-h-dvh h-fit max-w-[1840px] w-full flex flex-col gap-6 overflow-auto">
             <div className="w-full flex flex-row items-center justify-center md:justify-start gap-4">
-                <h1 className="text-3xl font-bold">{termData!.term_name}</h1>
+                <h1 className="text-3xl font-medium">{termData!.term_name}</h1>
             </div>
             <div className="flex flex-col md:flex-row justify-start gap-6">
                 {/* Overall Average */}

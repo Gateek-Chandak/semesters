@@ -88,7 +88,7 @@ const GradeTrendGraph = () => {
                 <AreaChart accessibilityLayer data={chartData} margin={{left: 4,right: 4,}}>
                     <ChartLegend content={<ChartLegendContent className="!text-sm"/>} />
                     <CartesianGrid vertical={false} />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" hideLabel />} />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent className="w-[150px]"  indicator="dot" hideLabel />} />
                     <XAxis dataKey="term" tickLine={false} axisLine={false}
                         tickMargin={8} tickFormatter={(value) => value.split(' ')[0].slice(0,1) + value.split(' ')[1].slice(2)}/>
                     <YAxis width={27} domain={[50, 100]}/>

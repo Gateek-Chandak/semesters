@@ -115,20 +115,20 @@ const RegularTermPage = () => {
                             <h1 className="text-7xl font-extralight">+</h1>
                         </Card>
                     </div>
-                    {/* GPA Estimator */}
-                    <div className="col-span-1 flex flex-col items-center gap-8">
-                        <h1 className="lg:mr-auto text-2xl font-light">Analytics</h1>
-                        {/* <Separator /> */}
+                    {/* Analytics */}
+                    <h1 className="lg:mr-auto text-2xl font-light">Analytics</h1>
+                    <div className="w-full flex flex-col gap-6">
                         <GPAEstimator />
+                        {/* Hours Studied Logs Component */}
+                        <div className="w-full">
+                            <StudyHoursChart />
+                        </div>
                     </div>
                 </div>
                 {/* Calendar Component */}
                 <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8 rounded-xl">
                     <h1 className="lg:mr-auto text-2xl font-light lg:text-left text-center">Term Calendar</h1>
                     <Calendar events={calendarEvents as CalendarEvent[]} setIsExporting={setIsExporting} termView={true} />
-                </div>
-                <div className="col-span-1 lg:col-span-2">
-                    <StudyHoursChart />
                 </div>
             </div>
 

@@ -78,7 +78,10 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
 
     return displayDate
   }
- 
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -94,7 +97,7 @@ export function DateTimePicker({ dueDate, setLocalDueDate, syncLocalAssessmentCh
         <div className="sm:flex border border-slate-200 rounded-md p-3">
           <Calendar
             mode="single"
-            selected={date ? date : new Date()}
+            selected={date ? date : today}
             onSelect={handleDateSelect}
             initialFocus
           />

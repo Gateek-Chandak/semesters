@@ -1,8 +1,8 @@
 // UI
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { PlusIcon } from "lucide-react"
+import { PlusIcon, ChevronLeft, ChevronRight } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 // Custom Components
 import AddStudyLogPopup from "../popups/AddStudyLogPopup"
@@ -11,138 +11,16 @@ import { useState } from "react"
 import useData from "@/hooks/general/use-data"
 import { Course } from "@/types/mainTypes"
 import { Button } from "@/components/ui/button"
-
-const chartData = [
-    { date: "2024-04-01", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-04-02", "AFM 191": 5, "CFM 101": 6 },
-    { date: "2024-04-03", "AFM 191": 3, "CFM 101": 7 },
-    { date: "2024-04-04", "AFM 191": 11, "CFM 101": 9 },
-    { date: "2024-04-05", "AFM 191": 6, "CFM 101": 12 },
-    { date: "2024-04-06", "AFM 191": 7, "CFM 101": 11 },
-    { date: "2024-04-07", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-04-08", "AFM 191": 12, "CFM 101": 9 },
-    { date: "2024-04-09", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-04-10", "AFM 191": 7, "CFM 101": 6 },
-    { date: "2024-04-11", "AFM 191": 8, "CFM 101": 12 },
-    { date: "2024-04-12", "AFM 191": 5, "CFM 101": 7 },
-    { date: "2024-04-13", "AFM 191": 9, "CFM 101": 12 },
-    { date: "2024-04-14", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-04-15", "AFM 191": 5, "CFM 101": 7 },
-    { date: "2024-04-16", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-04-17", "AFM 191": 12, "CFM 101": 10 },
-    { date: "2024-04-18", "AFM 191": 9, "CFM 101": 12 },
-    { date: "2024-04-19", "AFM 191": 5, "CFM 101": 6 },
-    { date: "2024-04-20", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-04-21", "AFM 191": 4, "CFM 101": 7 },
-    { date: "2024-04-22", "AFM 191": 6, "CFM 101": 5 },
-    { date: "2024-04-23", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-04-24", "AFM 191": 12, "CFM 101": 7 },
-    { date: "2024-04-25", "AFM 191": 5, "CFM 101": 9 },
-    { date: "2024-04-26", "AFM 191": 2, "CFM 101": 4 },
-    { date: "2024-04-27", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-04-28", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-04-29", "AFM 191": 7, "CFM 101": 6 },
-    { date: "2024-04-30", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-05-01", "AFM 191": 5, "CFM 101": 7 },
-    { date: "2024-05-02", "AFM 191": 9, "CFM 101": 10 },
-    { date: "2024-05-03", "AFM 191": 7, "CFM 101": 6 },
-    { date: "2024-05-04", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-05-05", "AFM 191": 12, "CFM 101": 10 },
-    { date: "2024-05-06", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-05-07", "AFM 191": 10, "CFM 101": 7 },
-    { date: "2024-05-08", "AFM 191": 4, "CFM 101": 6 },
-    { date: "2024-05-09", "AFM 191": 6, "CFM 101": 5 },
-    { date: "2024-05-10", "AFM 191": 9, "CFM 101": 11 },
-    { date: "2024-05-11", "AFM 191": 9, "CFM 101": 7 },
-    { date: "2024-05-12", "AFM 191": 5, "CFM 101": 7 },
-    { date: "2024-05-13", "AFM 191": 5, "CFM 101": 6 },
-    { date: "2024-05-14", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-05-15", "AFM 191": 12, "CFM 101": 10 },
-    { date: "2024-05-16", "AFM 191": 9, "CFM 101": 12 },
-    { date: "2024-05-17", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-05-18", "AFM 191": 7, "CFM 101": 8 },
-    { date: "2024-05-19", "AFM 191": 5, "CFM 101": 6 },
-    { date: "2024-05-20", "AFM 191": 4, "CFM 101": 7 },
-    { date: "2024-05-21", "AFM 191": 2, "CFM 101": 4 },
-    { date: "2024-05-22", "AFM 191": 2, "CFM 101": 3 },
-    { date: "2024-05-23", "AFM 191": 7, "CFM 101": 9 },
-    { date: "2024-05-24", "AFM 191": 9, "CFM 101": 6 },
-    { date: "2024-05-25", "AFM 191": 5, "CFM 101": 7 },
-    { date: "2024-05-26", "AFM 191": 5, "CFM 101": 4 },
-    { date: "2024-05-27", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-05-28", "AFM 191": 6, "CFM 101": 5 },
-    { date: "2024-05-29", "AFM 191": 2, "CFM 101": 3 },
-    { date: "2024-05-30", "AFM 191": 9, "CFM 101": 7 },
-    { date: "2024-05-31", "AFM 191": 4, "CFM 101": 7 },
-    { date: "2024-06-01", "AFM 191": 4, "CFM 101": 6 },
-    { date: "2024-06-02", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-06-03", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-06-04", "AFM 191": 12, "CFM 101": 9 },
-    { date: "2024-06-05", "AFM 191": 2, "CFM 101": 4 },
-    { date: "2024-06-06", "AFM 191": 9, "CFM 101": 7 },
-    { date: "2024-06-07", "AFM 191": 10, "CFM 101": 9 },
-    { date: "2024-06-08", "AFM 191": 12, "CFM 101": 8 },
-    { date: "2024-06-09", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-06-10", "AFM 191": 5, "CFM 101": 6 },
-    { date: "2024-06-11", "AFM 191": 2, "CFM 101": 4 },
-    { date: "2024-06-12", "AFM 191": 12, "CFM 101": 10 },
-    { date: "2024-06-13", "AFM 191": 2, "CFM 101": 3 },
-    { date: "2024-06-14", "AFM 191": 12, "CFM 101": 9 },
-    { date: "2024-06-15", "AFM 191": 8, "CFM 101": 8 },
-    { date: "2024-06-16", "AFM 191": 9, "CFM 101": 7 },
-    { date: "2024-06-17", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-06-18", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-06-19", "AFM 191": 9, "CFM 101": 6 },
-    { date: "2024-06-20", "AFM 191": 12, "CFM 101": 10 },
-    { date: "2024-06-21", "AFM 191": 4, "CFM 101": 6 },
-    { date: "2024-06-22", "AFM 191": 7, "CFM 101": 5 },
-    { date: "2024-06-23", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-06-24", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-06-25", "AFM 191": 4, "CFM 101": 6 },
-    { date: "2024-06-26", "AFM 191": 12, "CFM 101": 9 },
-    { date: "2024-06-27", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-06-28", "AFM 191": 4, "CFM 101": 6 },
-    { date: "2024-06-29", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-06-30", "AFM 191": 12, "CFM 101": 10 },
-    { date: "2024-07-01", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-07-02", "AFM 191": 5, "CFM 101": 6 },
-    { date: "2024-07-03", "AFM 191": 3, "CFM 101": 7 },
-    { date: "2024-07-04", "AFM 191": 11, "CFM 101": 9 },
-    { date: "2024-07-05", "AFM 191": 6, "CFM 101": 7 },
-    { date: "2024-07-06", "AFM 191": 7, "CFM 101": 8 },
-    { date: "2024-07-07", "AFM 191": 4, "CFM 101": 5 },
-    { date: "2024-07-08", "AFM 191": 12, "CFM 101": 9 },
-    { date: "2024-07-09", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-07-10", "AFM 191": 7, "CFM 101": 6 },
-    { date: "2024-07-11", "AFM 191": 8, "CFM 101": 12 },
-    { date: "2024-07-12", "AFM 191": 5, "CFM 101": 7 },
-    { date: "2024-07-13", "AFM 191": 9, "CFM 101": 12 },
-    { date: "2024-07-14", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-07-15", "AFM 191": 5, "CFM 101": 7 },
-    { date: "2024-07-16", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-07-17", "AFM 191": 12, "CFM 101": 9 },
-    { date: "2024-07-18", "AFM 191": 9, "CFM 101": 12 },
-    { date: "2024-07-19", "AFM 191": 5, "CFM 101": 6 },
-    { date: "2024-07-20", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-07-21", "AFM 191": 4, "CFM 101": 7 },
-    { date: "2024-07-22", "AFM 191": 6, "CFM 101": 5 },
-    { date: "2024-07-23", "AFM 191": 4, "CFM 101": 8 },
-    { date: "2024-07-24", "AFM 191": 12, "CFM 101": 7 },
-    { date: "2024-07-25", "AFM 191": 5, "CFM 101": 9 },
-    { date: "2024-07-26", "AFM 191": 2, "CFM 101": 4 },
-    { date: "2024-07-27", "AFM 191": 12, "CFM 101": 12 },
-    { date: "2024-07-28", "AFM 191": 3, "CFM 101": 5 },
-    { date: "2024-07-29", "AFM 191": 7, "CFM 101": 6 },
-    { date: "2024-07-30", "AFM 191": 12, "CFM 101": 9 },
-    { date: "2024-07-31", "AFM 191": 3, "CFM 101": 7 },
-  ]  
+import useHoursStudiedLogs from "@/hooks/term/use-hours-studied-logs"
 
 const StudyHoursChart = () => {
     // Hooks
     const { termData } = useData();
+    const { fetchLogs, createLogs, setView, logsToShow, goToNext, goToPrevious, dateRange, view } = useHoursStudiedLogs();
     // States
     //  conditionals
     const [isAddingLog, setIsAddingLog] = useState<boolean>(false);
+
 
     // Init Chart Config
     const chartConfig = termData!.courses.reduce((config, course) => {
@@ -158,31 +36,31 @@ const StudyHoursChart = () => {
 
     return (
         <Card>
-            <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-2 sm:p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-5 sm:py-6">
-                    <CardTitle>Study Hours Log</CardTitle>
-                    <CardDescription>example text here</CardDescription>
+            <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-4 sm:p-0 sm:flex-row">
+                <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-0 px-4 py-4">
+                    <CardTitle className="text-xl">Study Logs</CardTitle>
+                    <CardDescription>Track and view how many hours you've studied during this term.</CardDescription>
+                    <Button onClick={() => setIsAddingLog(true)} variant={"outline"} className="mt-3 !text-sm !p-3 border-2 border-muted">Add Log <PlusIcon /></Button>
                 </div>
-                <div className="flex flex-col justify-center items-center gap-2 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-6">
-                    <span className="text-sm text-center text-muted-foreground">
-                        Total Hours Studied
-                    </span>
-                    <span className="text-lg text-center font-bold leading-none sm:text-2xl">
-                        692
-                    </span>
-                    <Tabs defaultValue="weekly">
-                        <TabsList>
-                            <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                            <TabsTrigger value="monthly">Monthly</TabsTrigger>
-                            <TabsTrigger className="hidden sm:block" value="term">Term</TabsTrigger>
+                <div className="flex flex-col justify-center items-center gap-4 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-4">
+                    <Tabs className="!w-full justify-center flex" defaultValue="term" onValueChange={(view: any) => setView(view)}>
+                        <TabsList className="w-full">
+                            <TabsTrigger className="w-full hover:bg-[#4c4c4c0e]" value="weekly">Weekly</TabsTrigger>
+                            <TabsTrigger className="w-full hover:bg-[#4c4c4c0e]" value="monthly">Monthly</TabsTrigger>
+                            <TabsTrigger className="w-full hover:bg-[#4c4c4c0e]" value="term">Term</TabsTrigger>
                         </TabsList>
                     </Tabs>
+                    <div className="w-full min-w-56 flex flex-row justify-between items-center gap-2 rounded-lg p-1 bg-muted">
+                        <Button disabled={view == 'term'} variant={'ghost'} className="hover:bg-[#4c4c4c0e] !w-10 !h-10" onClick={goToPrevious}><ChevronLeft /></Button>
+                        <h1 className="text-sm">{dateRange}</h1>
+                        <Button disabled={view == 'term'} variant={'ghost'} className="hover:bg-[#4c4c4c0e] !w-10 !h-10" onClick={goToNext}><ChevronRight /></Button>
+                    </div>
                 </div>
             </CardHeader>
-
-            <CardContent className="px-2 py-4 sm:p-6">
-                <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full" >
-                    <BarChart accessibilityLayer data={chartData} margin={{ left: 7, right: 7, }} >
+            <CardContent className="px-4 py-4 sm:py-4 sm:px-6">
+                {termData!.courses.length <= 0 && <h1 className="text-center py-5">Add at least one course to view chart.</h1>}
+                {termData!.courses.length > 0 && <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full" >
+                    <BarChart accessibilityLayer data={logsToShow} margin={{ left: 7, right: 7, }} >
                         <CartesianGrid vertical={false} />
                         <YAxis width={27}/>
                         <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8}
@@ -194,7 +72,7 @@ const StudyHoursChart = () => {
                                                     })
                                                 }}  />
                         <ChartTooltip content={
-                                <ChartTooltipContent className="w-[150px]" nameKey="views"
+                                <ChartTooltipContent className="w-[150px]" nameKey={"views"} indicatorOpacity={0.6} valueAddOn="hours"
                                                     labelFormatter={(value) => {
                                                         return new Date(value).toLocaleDateString("en-US", {
                                                             month: "short",
@@ -203,15 +81,23 @@ const StudyHoursChart = () => {
                                                         })
                                                     }} />}/>
                         { termData!.courses.map((course: Course) => {
-                            return (<Bar key={course.id} dataKey={course.course_title} stackId="a" fill={course.colour}/>)
+                            return (<Bar key={course.id} dataKey={course.course_title} stackId="a" fill={course.colour} opacity={0.6}/>)
                         })}
                     </BarChart>
-                </ChartContainer>
+                </ChartContainer>}
             </CardContent>
-            <CardFooter>
-                <Button onClick={() => setIsAddingLog(true)} variant={"outline"} className="border-2 border-black">Add Log <PlusIcon /></Button>
-            </CardFooter>
-            <AddStudyLogPopup isAddingLog={isAddingLog} setIsAddingLog={setIsAddingLog}/>
+            {/* <Separator />
+            <CardFooter className="mt-4 flex flex-row justify-center">
+                <div className="flex flex-col justify-center items-center gap-2">
+                    <span className="text-sm text-center text-muted-foreground">
+                        Total Hours Studied
+                    </span>
+                    <span className="text-lg text-center font-bold leading-none sm:text-2xl">
+                        692
+                    </span>
+                </div>
+            </CardFooter> */}
+            <AddStudyLogPopup isAddingLog={isAddingLog} setIsAddingLog={setIsAddingLog} fetchLogs={fetchLogs} createLogs={createLogs}/>
         </Card>
     )
 }

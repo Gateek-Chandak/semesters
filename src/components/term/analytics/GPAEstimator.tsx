@@ -104,7 +104,8 @@ const GPAEstimator = () => {
                     </span>
                 </div>
             </CardHeader>
-            <CardContent className="px-4 py-4 sm:p-6 flex flex-col gap-10">
+            <CardContent className="px-4 py-4 sm:p-6 flex flex-col gap-6">
+                {courseOptions.length <= 0 && <h1 className="text-center py-5">No courses found.</h1>}
                 {courseOptions.map((course: Course) => {
                     return (
                         <div key={course.id} className="flex flex-col gap-2 justify-between">
