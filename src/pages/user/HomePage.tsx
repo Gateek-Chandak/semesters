@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import useParsedRouteParams from "@/hooks/general/use-parsed-route-params";
 import useData from "@/hooks/general/use-data";
 import { useState } from "react";
+import { useLocation } from 'react-router-dom';
 // Custom Components
 import { AppSidebar } from "@/components/sidebar/AppSidebar"
 import CompleteTermPopup from "@/components/term/popups/CompleteTermPopup";
@@ -24,6 +25,7 @@ const HomePage = ( ) => {
   const { termData } = useData();
   // Inits
   const isMobile = useIsMobile()
+  const location = useLocation();
   // States
   //  conditionals
   const [isCompletingCourse, setIsCompletingCourse] = useState<boolean>(false)
@@ -36,18 +38,25 @@ const HomePage = ( ) => {
       {/* Actual Sidebar */}
       <AppSidebar />
       <SidebarInset>
+        {/* Breakcrumbs */}
+        {location.pathname != '/home/new-updates' && <div className="text-center w-full border-b border-muted-slate-300 py-1 pt-2 bg-[#e4e4e445]">
+          <Link to="/home/new-updates" className="flex flex-row items-center gap-2 w-full justify-center">
+              <h1 className="text-sm text-black">
+                  See <span className="hover:text-gray-500 transition-colors duration-200 cursor-pointer font-medium">what&apos;s new</span> with Semesters
+              </h1>
+              🔥
+          </Link>
+        </div>}
         {/* Sidebar Opener and Closer */}
         {isMobile && <Trigger />}
-        {/* Breakcrumbs */}
-        <header className="bg-[#f7f7f7] flex h-fit min-h-20 items-center gap-2 px-4 pt-8">
+        <header className="bg-[#f7f7f7] flex h-fit min-h-20 items-center gap-2 px-5 pt-6">
           <div className="w-full flex flex-row justify-between items-cente pr-6 pl-4">
             <div className="flex flex-row items-center gap-2">
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="block text-sm">
-                    {!term && <BreadcrumbPage>Home</BreadcrumbPage>}
-                    {term && <Link to="/home">Home</Link>}
+                    {(term || location.pathname == '/home/new-updates') ? <Link to="/home">Home</Link> : <BreadcrumbPage>Home</BreadcrumbPage>}
                   </BreadcrumbItem>
                   {/* Breadcrumbs for term page */}
                   {term && (
@@ -67,6 +76,15 @@ const HomePage = ( ) => {
                       <BreadcrumbSeparator className="block" />
                       <BreadcrumbItem className="text-sm">
                         <BreadcrumbPage>{course}</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </>
+                  )}
+                  {/* Breadcrumbs for new updates page */}
+                  {location.pathname == '/home/new-updates' && (
+                    <>
+                      <BreadcrumbSeparator className="block" />
+                      <BreadcrumbItem className="text-sm">
+                        <BreadcrumbPage>New Updates</BreadcrumbPage>
                       </BreadcrumbItem>
                     </>
                   )}

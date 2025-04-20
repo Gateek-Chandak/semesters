@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Card } from "../../components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { UploadIcon, EyeIcon, EyeOffIcon, PencilIcon, CheckIcon, Repeat } from "lucide-react";
+import { UploadIcon, EyeIcon, EyeOffIcon, PencilIcon, CheckIcon, Repeat, InfoIcon, XIcon } from "lucide-react";
 // Redux
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -45,6 +45,7 @@ const Dashboard = () => {
     const [isShowingAverage, setIsShowingAverage] = useState<boolean>(false)
     const [isDeletingTerm, setIsDeletingTerm] = useState<boolean>(false)
     const [isShowingGrades, setIsShowingGrades] = useState<boolean>(false)
+    const [isShowingBanner, setIsShowingBanner] = useState<boolean>(true);
     //  values
     const [termBeingDeleted, setTermBeingDeleted] = useState<number>(-1)
     // Inits
@@ -69,8 +70,18 @@ const Dashboard = () => {
     return ( 
         <div className="w-full flex flex-col justify-between items-center gap-6 px-5 lg:px-10 min-h-screen h-full bg-[#f7f7f7]">
             <div className='max-w-[1840px] w-full flex flex-col gap-6'>
+                {isShowingBanner && <div className='w-full flex flex-row items-center justify-between bg-blue-100 border-blue-400 border rounded-xl mt-3 mb-1 p-5 gap-2 text-sm font-normal text-blue-600'>
+                    <div className='flex flex-row gap-4 items-center'>
+                        <InfoIcon /> 
+                        <h1>We&apos;d love your feedback to help make Semesters even better!</h1>
+                    </div>
+                    <div className='flex flex-row items-center gap-2'>
+                        <a href="https://forms.gle/V2twUiUaZUFKaMmMA" target='_blank' className="font-medium hover:text-blue-800 transition-colors duration-200 cursor-pointer">Link To Form</a>
+                        <Button variant={'ghost'} className='!h-5 !w-5 !p-0 hover:bg-transparent' onClick={() => setIsShowingBanner(false)}><XIcon /></Button>
+                    </div>
+                </div>}
                 {/* Welcome Message and Date */}
-                <div className="flex pt-7 flex-col lg:flex-row gap-2 lg:gap-6">
+                <div className={`flex flex-col lg:flex-row gap-2 lg:gap-6 ${!isShowingBanner ? 'mt-7' : ''}`}>
                     <h1 className="text-3xl text-center lg:text-start font-medium">Welcome, {userName.split(' ')[0]} {userName.split(' ').length > 1 && userName.split(' ').at(-1)?.slice(0)}.</h1>
                     <h1 className="text-2xl text-center lg:ml-auto font-light">Today is {formattedDate}</h1>
                 </div>

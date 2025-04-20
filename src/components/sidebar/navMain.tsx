@@ -34,7 +34,7 @@ export function NavMain() {
   const isMobile = useIsMobile()
 
   return (
-    <SidebarGroup className="">
+    <SidebarGroup className="overflow-y-auto overflow-x-clip">
       <SidebarGroupLabel className="text-md mb-3">Terms</SidebarGroupLabel>
       {(isMobile || open) && 
       <SidebarMenu className="">

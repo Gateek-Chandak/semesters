@@ -2,7 +2,6 @@
 import { CheckIcon, EyeIcon, EyeOffIcon, PencilIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-// import { Separator } from "../ui/separator";
 // Custom Components
 import MetricCard from "../shared/MetricCard";
 import { CircularProgress } from "./CircularProgessBar";
@@ -116,13 +115,10 @@ const RegularTermPage = () => {
                         </Card>
                     </div>
                     {/* Analytics */}
-                    <h1 className="lg:mr-auto text-2xl font-light">Analytics</h1>
+                    <h1 className="lg:mr-auto text-2xl font-light text-center lg:text-start">Analytics</h1>
                     <div className="w-full flex flex-col gap-6">
                         <GPAEstimator />
-                        {/* Hours Studied Logs Component */}
-                        <div className="w-full">
-                            <StudyHoursChart />
-                        </div>
+                        <StudyHoursChart />
                     </div>
                 </div>
                 {/* Calendar Component */}
