@@ -70,7 +70,7 @@ const Dashboard = () => {
     return ( 
         <div className="w-full flex flex-col justify-between items-center gap-6 px-5 lg:px-10 min-h-screen h-full bg-[#f7f7f7]">
             <div className='max-w-[1840px] w-full flex flex-col gap-6'>
-                {isShowingBanner && <div className='w-full flex flex-row items-center justify-between bg-blue-100 border-blue-400 border rounded-xl mt-3 mb-1 p-5 gap-2 text-sm font-normal text-blue-600'>
+                {isShowingBanner && <div className='w-full flex flex-row items-center justify-between bg-blue-100 border-blue-400 border rounded-xl mt-2 mb-1 p-5 gap-2 text-sm font-normal text-blue-600'>
                     <div className='flex flex-row gap-4 items-center'>
                         <InfoIcon /> 
                         <h1>We&apos;d love your feedback to help make Semesters even better!</h1>

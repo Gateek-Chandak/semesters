@@ -23,6 +23,7 @@ import useLocalCourseList from "@/hooks/term/use-local-course-list";
 import useUser from "@/hooks/general/use-user";
 // Services
 import { APIService } from "@/services/apiService";
+import { Separator } from "../ui/separator";
 
 const _apiService = new APIService();
 
@@ -88,8 +89,9 @@ const RegularTermPage = () => {
                     {calendarEvents && <EventsInProximity proximityInDays={7} />}
                 </div>
             </div>
+            <Separator />
             {/* Bottom Row */}
-            <div className="w-full h-fit mt-6 grid grid-cols-1 lg:grid-cols-2 grid-rows-[auto_1fr] gap-8">
+            <div className="w-full h-fit grid grid-cols-1 lg:grid-cols-2 grid-rows-[auto_1fr] gap-8">
                 {/* Course List */}
                 <div className="col-span-1 flex flex-col gap-8">
                     {/* Header and Buttons */}

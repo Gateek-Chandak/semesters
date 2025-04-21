@@ -57,7 +57,7 @@ const StudyHoursChart = () => {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="px-4 py-4 sm:py-[9.5px] sm:px-4">
+            <CardContent className="px-4 py-4 sm:py-4 sm:px-4">
                 {termData!.courses.length <= 0 && <h1 className="text-center py-5">Add at least one course to view chart.</h1>}
                 {termData!.courses.length > 0 && <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full" >
                     <BarChart accessibilityLayer data={logsToShow} margin={{ left: 7, right: 7, }} >
