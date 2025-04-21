@@ -43,7 +43,7 @@ const StudyHoursChart = () => {
                     <Button onClick={() => setIsAddingLog(true)} variant={"outline"} className="mt-3 !text-xs !w-fit border">Add Log <PlusIcon /></Button>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-4">
-                    <Tabs className="!w-full justify-center flex" defaultValue="term" onValueChange={(view: any) => setView(view)}>
+                    <Tabs className="!w-full justify-center flex" defaultValue="weekly" onValueChange={(view: any) => setView(view)}>
                         <TabsList className="w-full">
                             <TabsTrigger className="w-full hover:bg-[#4c4c4c0e]" value="weekly">Weekly</TabsTrigger>
                             <TabsTrigger className="w-full hover:bg-[#4c4c4c0e]" value="monthly">Monthly</TabsTrigger>
@@ -57,12 +57,12 @@ const StudyHoursChart = () => {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="px-4 py-4 sm:py-4 sm:px-6">
+            <CardContent className="px-4 py-4 sm:py-[9.5px] sm:px-4">
                 {termData!.courses.length <= 0 && <h1 className="text-center py-5">Add at least one course to view chart.</h1>}
                 {termData!.courses.length > 0 && <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full" >
                     <BarChart accessibilityLayer data={logsToShow} margin={{ left: 7, right: 7, }} >
                         <CartesianGrid vertical={false} />
-                        <YAxis width={27}/>
+                        <YAxis width={17}/>
                         <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8}
                             minTickGap={32} tickFormatter={(value) => {
                                                     const date = new Date(value)
@@ -72,7 +72,7 @@ const StudyHoursChart = () => {
                                                     })
                                                 }}  />
                         <ChartTooltip content={
-                                <ChartTooltipContent className="w-[150px]" nameKey={"views"} indicatorOpacity={0.6} valueAddOn="hours"
+                                <ChartTooltipContent className="w-[150px]" nameKey={"views"} indicatorOpacity={0.65} valueAddOn="hours"
                                                     labelFormatter={(value) => {
                                                         return new Date(value).toLocaleDateString("en-US", {
                                                             month: "short",
@@ -81,7 +81,7 @@ const StudyHoursChart = () => {
                                                         })
                                                     }} />}/>
                         { termData!.courses.map((course: Course) => {
-                            return (<Bar key={course.id} dataKey={course.course_title} stackId="a" fill={course.colour} opacity={0.6}/>)
+                            return (<Bar key={course.id} dataKey={course.course_title} stackId="a" fill={course.colour} opacity={0.65}/>)
                         })}
                     </BarChart>
                 </ChartContainer>}

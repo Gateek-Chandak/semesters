@@ -165,9 +165,9 @@ const Calendar = ({
         today: new Date(),
       }}
     >
-      <div className={`${isFullScreen ? "flex flex-row justify-center items-center z-50 fixed top-0 left-0 w-full h-full p-10 inset-0 bg-black bg-opacity-[82%]" : ""} w-full`}>
-        <div className={`${isFullScreen ? "md:w-full md:h-full" : ""} min-h-[35rem] transition-all ease-in-out duration-300 w-full custom-card p-3 flex flex-col`}>
-          <div className='border border-slate-200 rounded-xl py-3 h-full w-full overflow-auto'>
+      <div className={`${isFullScreen ? "flex flex-row justify-center items-center z-50 fixed top-0 left-0 w-full h-full p-10 inset-0 bg-black bg-opacity-[82%]" : ""} custom-card w-full`}>
+        <div className={`${isFullScreen ? "md:w-full md:h-full" : ""} min-h-[35rem] transition-all ease-in-out duration-300 w-full p-3 flex flex-col`}>
+          <div className='border border-muted rounded-xl py-3 h-full w-full overflow-auto'>
             <div className="flex items-center gap-4 mb-6 overflow-auto px-3">
                   {/* <CalendarViewTrigger view="week" className="aria-[current=true]:bg-accent">Week</CalendarViewTrigger> */}
                   {/* <CalendarViewTrigger view="month" className="aria-[current=true]:bg-accent">Month</CalendarViewTrigger> */}

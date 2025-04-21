@@ -98,7 +98,7 @@ const GPAEstimator = () => {
                 <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-4 sm:py-4">
                     <CardTitle className="text-xl">GPA Estimator</CardTitle>
                     <CardDescription className="flex flex-col items-center sm:items-start gap-2">
-                        Use the sliders to estimate your averages.
+                        Use the sliders to estimate your gpa's.
                         <Button variant={'outline'} onClick={() => resetValues()} className="!text-xs !w-fit text-black">
                             Reset <RotateCcw />
                         </Button>

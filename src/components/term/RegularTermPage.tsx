@@ -114,18 +114,22 @@ const RegularTermPage = () => {
                             <h1 className="text-7xl font-extralight">+</h1>
                         </Card>
                     </div>
-                    {/* Analytics */}
-                    <h1 className="lg:mr-auto text-2xl font-light text-center lg:text-start">Analytics</h1>
-                    <div className="w-full flex flex-col gap-6">
-                        <GPAEstimator />
-                        <StudyHoursChart />
+                    {/* Calendar Component */}
+                    <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8">
+                        <h1 className="lg:mr-auto text-2xl font-light lg:text-left text-center">Term Calendar</h1>
+                        <Calendar events={calendarEvents as CalendarEvent[]} setIsExporting={setIsExporting} termView={true} />
                     </div>
                 </div>
-                {/* Calendar Component */}
+                {/* Analytics */}
                 <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8 rounded-xl">
-                    <h1 className="lg:mr-auto text-2xl font-light lg:text-left text-center">Term Calendar</h1>
-                    <Calendar events={calendarEvents as CalendarEvent[]} setIsExporting={setIsExporting} termView={true} />
+                    <h1 className="lg:mr-auto text-2xl font-light text-center lg:text-start">Analytics</h1>
+                    <div className="w-full flex flex-col gap-6">
+                        <StudyHoursChart />
+                        <GPAEstimator />
+                    </div>
                 </div>
+
+
             </div>
 
             {/* Popup when creating a incomplete course */}

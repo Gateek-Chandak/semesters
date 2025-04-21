@@ -34,8 +34,8 @@ const useHoursStudiedLogs = () => {
     const { termData } = useData();
 
     const [hoursStudiedLogs, setHoursStudiedLogs] = useState<HoursStudiedLog[] | any>([])
-    const [view, setView] = useState<"weekly" | "monthly" | "term">("term");
-    const [anchorDate, setAnchorDate] = useState<Date>(new Date(termData!.start_date));
+    const [view, setView] = useState<"weekly" | "monthly" | "term">("weekly");
+    const [anchorDate, setAnchorDate] = useState<Date>(determineDefaultAnchorDate());
     const [dateRange, setDateRange] = useState<string>(displayRange());
 
     // const chartData = [
@@ -163,9 +163,15 @@ const useHoursStudiedLogs = () => {
 
     useEffect(() => {
         fetchLogs();
-        setAnchorDate(new Date(termData!.start_date))
+        setAnchorDate(determineDefaultAnchorDate())
         setDateRange(displayRange());
     }, [termData])
+
+    function determineDefaultAnchorDate() {
+        return isRangeOutOfTerm(new Date(), new Date(), new Date(termData!.start_date), new Date(termData!.end_date)) 
+            ? new Date(termData!.start_date)
+            : new Date();
+    }
 
     const fetchLogs = async () => {
         const logs = await _apiService.getStudyLogs(user!.id, termData!.id);
