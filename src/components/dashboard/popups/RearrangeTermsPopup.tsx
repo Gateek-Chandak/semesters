@@ -95,7 +95,6 @@ const RearrangeTermsPopup: React.FC<RearrangeTermsPopupProps> = ({ isRearranging
                 duration: 2000
             })
             dispatch(setData(rearrangedTerms))
-            console.log(rearrangedTerms)
             const response = await _apiService.updateTermOrder(user!.id, rearrangedTerms);
             if (!response) {
                 dispatch(setData(cachedData));

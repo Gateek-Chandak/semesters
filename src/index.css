@@ -113,3 +113,31 @@ html {
   box-shadow: 1px 2px 10px 0px rgba(0, 0, 0, 0.03);
   border: 1.8px solid #e2e8f0; /* slate-200 */
 }
+
+.red:hover {
+  @apply text-red-600 border-red-600
+}
+
+.blue:hover {
+  @apply text-blue-600 border-blue-600
+}
+
+.orange:hover {
+  @apply text-orange-600 border-orange-600
+}
+
+.pink:hover {
+  @apply text-pink-600 border-pink-600
+}
+
+.green:hover {
+  @apply text-green-600 border-green-600
+}
+
+.purple:hover {
+  @apply text-purple-600 border-purple-600
+}
+
+.black:hover {
+  @apply text-black border-black
+}

@@ -60,6 +60,23 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
         handleClose();
     };
 
+    // Ensures a user cannot make a past term that is incomplete
+    const checkboxEdgeHandling = () => {
+        const termEndDates: Record<string, (year: number) => Date> = {
+            "Winter": (year) => new Date(year, 3, 30), // April 30
+            "Spring": (year) => new Date(year, 7, 31), // August 31
+            "Fall": (year) => new Date(year, 11, 31),  // December 31
+        };
+
+        const now = new Date();
+        const endDate = termEndDates[termName]?.(selectedYear);
+        
+        // If termName is invalid or no end date found, default to not allowing it
+        if (!endDate) return true;
+        
+        return now > endDate;
+    };
+
     return ( 
         <Dialog open={isCreatingTerm} onOpenChange={handleClose}>
             <DialogContent>
@@ -69,7 +86,7 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
                 </DialogHeader>
                 <div className="flex flex-col justify-center items-center w-full gap-6 text-sm">
                     <div className="flex items-center space-x-2 mr-auto mt-5">
-                        <Checkbox id="terms" onCheckedChange={() => setIsTermComplete(!isTermComplete)}/>
+                        <Checkbox checked={isTermComplete || checkboxEdgeHandling()} disabled={checkboxEdgeHandling()} id="terms" onCheckedChange={() => setIsTermComplete(!isTermComplete)}/>
                         <label
                             htmlFor="terms"
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">

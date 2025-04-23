@@ -15,76 +15,48 @@ import { useIsMobile } from "@/hooks/general/use-mobile";
 import { Link } from "react-router-dom";
 import useParsedRouteParams from "@/hooks/general/use-parsed-route-params";
 import useData from "@/hooks/general/use-data";
-import { useDispatch } from "react-redux";
-import useUser from "@/hooks/general/use-user";
-import { useToast } from "@/hooks/general/use-toast";
-// Redux
-import { updateTerm } from "@/redux/slices/dataSlice";
+import { useState } from "react";
+import { useLocation } from 'react-router-dom';
 // Custom Components
 import { AppSidebar } from "@/components/sidebar/AppSidebar"
-// Services
-import { APIService } from "@/services/apiService";
-
-const _apiService = new APIService();
+import CompleteTermPopup from "@/components/term/popups/CompleteTermPopup";
 
 const HomePage = ( ) => {
-  const { toast } = useToast();
-  const { user } = useUser();
   const { termData } = useData();
-  const dispatch = useDispatch();
   // Inits
   const isMobile = useIsMobile()
+  const location = useLocation();
+  // States
+  //  conditionals
+  const [isCompletingCourse, setIsCompletingCourse] = useState<boolean>(false)
 
   // Get Current Term and Course
   const { parsedTerm: term, parsedCourse: course } = useParsedRouteParams();
-  
-  const toggleCompleteTerm = async (is_completed: boolean) => {
-    const updatedTerm = { ...termData!, is_completed }
-
-    try {
-      toast({
-        variant: "default",
-        title: "Updating...",
-        duration: 3000
-      })
-      const response = await _apiService.updateTerm(user!.id, updatedTerm);
-      toast({
-        variant: "success",
-        title: "Update Successful!",
-        description: response.term_name + ' was updated',
-        duration: 3000
-      })
-      dispatch(updateTerm({
-        term_id: termData!.id,
-        term: updatedTerm
-      }))
-    } catch {
-      toast({
-        variant: "destructive",
-        title: "Update Unsuccessful",
-        description: termData!.term_name + ' was unable to be updated.',
-        duration: 3000
-      })
-    }
-  }
 
   return (
     <SidebarProvider>
       {/* Actual Sidebar */}
       <AppSidebar />
       <SidebarInset>
+        {/* Breakcrumbs */}
+        {location.pathname != '/home/new-updates' && <div className="text-center w-full border-b border-muted-slate-300 py-1 pt-2 bg-sidebar">
+          <Link to="/home/new-updates" className="flex flex-row items-center gap-2 w-full justify-center">
+              <h1 className="text-sm text-black">
+                  Click here to see <span className="hover:text-gray-500 transition-colors duration-200 cursor-pointer font-medium">what&apos;s new</span> with Semesters
+              </h1>
+              🔥
+          </Link>
+        </div>}
         {/* Sidebar Opener and Closer */}
         {isMobile && <Trigger />}
-        {/* Breakcrumbs */}
-        <header className="bg-[#f7f7f7] flex h-fit min-h-20 items-center gap-2 px-4 pt-8">
+        <header className="bg-[#f7f7f7] flex h-fit min-h-20 items-center gap-2 px-5 pt-6">
           <div className="w-full flex flex-row justify-between items-cente pr-6 pl-4">
             <div className="flex flex-row items-center gap-2">
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="block text-sm">
-                    {!term && <BreadcrumbPage>Home</BreadcrumbPage>}
-                    {term && <Link to="/home">Home</Link>}
+                    {(term || location.pathname == '/home/new-updates') ? <Link to="/home">Home</Link> : <BreadcrumbPage>Home</BreadcrumbPage>}
                   </BreadcrumbItem>
                   {/* Breadcrumbs for term page */}
                   {term && (
@@ -107,15 +79,26 @@ const HomePage = ( ) => {
                       </BreadcrumbItem>
                     </>
                   )}
+                  {/* Breadcrumbs for new updates page */}
+                  {location.pathname == '/home/new-updates' && (
+                    <>
+                      <BreadcrumbSeparator className="block" />
+                      <BreadcrumbItem className="text-sm">
+                        <BreadcrumbPage>New Updates</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </>
+                  )}
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            {!course && termData && !termData.is_completed && <Button onClick={() => toggleCompleteTerm(true)} variant={'outline'} className="border-2 border-black !text-xs !h-8 sm:!h-10">Mark as Completed</Button>}
-            {!course && termData && termData.is_completed && <Button onClick={() => toggleCompleteTerm(false)} variant={'outline'} className="border-2 border-black !text-xs !h-8 sm:!h-10">Mark as Current Term</Button>}
+            {!course && termData && !termData.is_completed && <Button onClick={() => setIsCompletingCourse(true)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 md:!text-sm">Mark as Completed</Button>}
+            {/* {!course && termData && termData.is_completed && <Button onClick={() => toggleCompleteTerm(false)} variant={'outline'} className="border-2 border-black !h-8 !text-xs sm:!h-10 md:!text-sm">Mark as Current Term</Button>} */}
           </div>
         </header>
         <Outlet/>
       </SidebarInset>
+      {/* Popup when term is being completed */}
+      <CompleteTermPopup visible={isCompletingCourse} setVisible={setIsCompletingCourse} />
     </SidebarProvider>
   );
 }

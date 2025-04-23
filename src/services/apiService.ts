@@ -79,20 +79,20 @@ export class APIService {
     }
 
     // TERM ROUTES 
-    async createTerm(user_id: number, term_name: string, is_completed: boolean) {
+    async createTerm(user_id: number, term_name: string, is_completed: boolean, selectedYear: number) {
         const season = term_name.split(' ')[0];
         let start_date;
         let end_date;
 
         if (season == 'Fall') {
-            start_date = '2025-09-01';
-            end_date = '2025-12-31';
+            start_date = `${selectedYear.toString()}-09-01T05:00:00.000Z`;
+            end_date = `${selectedYear.toString()}-12-31T05:00:00.000Z`;
         } else if (season == 'Winter') {
-            start_date = '2025-01-01';
-            end_date = '2025-04-30';
+            start_date = `${selectedYear.toString()}-01-01T05:00:00.000Z`;
+            end_date = `${selectedYear.toString()}-04-30T05:00:00.000Z`;
         } else {
-            start_date = '2025-05-01';
-            end_date = '2025-08-31';
+            start_date = `${selectedYear.toString()}-05-01T05:00:00.000Z`;
+            end_date = `${selectedYear.toString()}-08-31T05:00:00.000Z`;
         }
 
         const term = {
@@ -274,6 +274,22 @@ export class APIService {
         }
     }
 
+    async deleteAllGradingSchemes(term_id: number) {
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/api/term-database/delete-all-grading-schemes`, {
+                data: { term_id },
+            });
+    
+            if (response.data.success) {
+                return true
+            } 
+            throw new Error("Error Deleting Data");
+        } catch (error) {
+            console.error('Error Deleting Data:', error);
+            throw new Error("Error Deleting Data");
+        }
+    }
+
     async updateGradingScheme(user_id: number, grading_scheme: GradingScheme) {
         const { id, scheme_name, grade } = grading_scheme;
         try {
@@ -293,7 +309,7 @@ export class APIService {
     }
 
     // ASSESSMENT ROUTES
-    async createAssessment(user_id: number, grading_scheme_id: number, assessment_name: string, due_date: String | null, weight: number, grade: number | null) {
+    async createAssessment(user_id: number, grading_scheme_id: number, assessment_name: string, due_date: string | null, weight: number, grade: number | null) {
         const assessment = { assessment_name, due_date, weight, grade, grading_scheme_id }
 
         try {
@@ -344,6 +360,58 @@ export class APIService {
         } catch (error) {
             console.error('Error syncing term data:', error);
             throw new Error("Error Syncing Data");
+        }
+    }
+
+    // HOURS STUDIED LOGS ROUTES
+    async getStudyLogs(user_id: number, term_id: number) {
+        try {
+            const response = await axios.get(
+                `${API_BASE_URL}/api/hours-studied-logs/`, 
+                { params: { user_id, term_id } },
+            );
+            
+            if (response.data.success) {
+                return response.data.data
+            } 
+            throw new Error("Error Creating Logs");
+        } catch (error) {
+            // Handle errors and return a rejected value
+            console.error('Error Creating Logs:', error);
+            throw new Error("Error Creating Logs");
+        }
+    }
+    async createStudyLog(user_id: number, term_id: number, date: string, logs: {course_id: number, hours_studied: number}[]) {
+        try {
+            const response = await axios.post(
+                `${API_BASE_URL}/api/hours-studied-logs/`, 
+                { user_id, term_id, date, logs },
+            );
+            
+            if (response.data.success) {
+                return true
+            } 
+            throw new Error("Error Creating Logs");
+        } catch (error) {
+            // Handle errors and return a rejected value
+            throw new Error("Error Creating Logs");
+        }
+    }
+
+    async deleteStudyLogs(term_id: number) {
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/api/hours-studied-logs/`, {
+                data: { term_id },
+            });
+    
+            if (response.data.success) {
+                return true
+            } 
+            throw new Error("Error deleting Data");
+        } catch (error) {
+            console.error('Error deleting study logs:', error);
+            throw new Error("Error deleting study logs");
+
         }
     }
 }

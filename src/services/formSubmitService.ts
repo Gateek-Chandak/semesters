@@ -41,7 +41,7 @@ const FormSubmitService = () => {
                     description: '',
                     duration: 3000
                 });
-                const newTerm: Term = await _apiService.createTerm(user!.id, assembledName, is_completed);
+                const newTerm: Term = await _apiService.createTerm(user!.id, assembledName, is_completed, selectedYear);
                 dispatch(addTerm({ newTerm: { ...newTerm } }));
                 toast({
                     variant: "success",

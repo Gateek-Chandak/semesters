@@ -66,3 +66,9 @@ export type Term = {
     order_index: number;
     courses: Course[];
 };
+
+export type HoursStudiedLog = {
+    date: string;
+  } & {
+    [course_name: string]: number;
+  };

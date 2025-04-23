@@ -2,7 +2,6 @@
 import { CheckIcon, EyeIcon, EyeOffIcon, PencilIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-// import { Separator } from "../ui/separator";
 // Custom Components
 import MetricCard from "../shared/MetricCard";
 import { CircularProgress } from "./CircularProgessBar";
@@ -13,7 +12,7 @@ import { Calendar } from "../shared/Calendar";
 import CreateCoursePopup from "./popups/CreateCoursePopup";
 import ExportGoogleCalPopup from "./popups/ExportGoogleCalPopup";
 import GPAEstimator from "./analytics/GPAEstimator";
-// import StudyHoursChart from "./StudyHoursChart";
+import StudyHoursChart from "./analytics/StudyHoursChart";
 // Types
 import { CalendarEvent } from "../shared/Calendar";
 // Hooks
@@ -24,6 +23,7 @@ import useLocalCourseList from "@/hooks/term/use-local-course-list";
 import useUser from "@/hooks/general/use-user";
 // Services
 import { APIService } from "@/services/apiService";
+import { Separator } from "../ui/separator";
 
 const _apiService = new APIService();
 
@@ -89,8 +89,9 @@ const RegularTermPage = () => {
                     {calendarEvents && <EventsInProximity proximityInDays={7} />}
                 </div>
             </div>
+            <Separator />
             {/* Bottom Row */}
-            <div className="w-full h-fit mt-6 grid grid-cols-1 lg:grid-cols-2 grid-rows-[auto_1fr] gap-8">
+            <div className="w-full h-fit grid grid-cols-1 lg:grid-cols-2 grid-rows-[auto_1fr] gap-8">
                 {/* Course List */}
                 <div className="col-span-1 flex flex-col gap-8">
                     {/* Header and Buttons */}
@@ -115,19 +116,24 @@ const RegularTermPage = () => {
                             <h1 className="text-7xl font-extralight">+</h1>
                         </Card>
                     </div>
-                    {/* GPA Estimator */}
-                    <div className="col-span-1 flex flex-col items-center gap-8">
-                        <h1 className="lg:mr-auto text-2xl font-light">Analytics</h1>
-                        {/* <Separator /> */}
+                    {/* Calendar Component */}
+                    <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8">
+                        <h1 className="lg:mr-auto text-2xl font-light lg:text-left text-center">Term Calendar</h1>
+                        <Calendar events={calendarEvents as CalendarEvent[]} setIsExporting={setIsExporting} termView={true} />
+                    </div>
+                </div>
+                {/* Analytics */}
+                <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8 rounded-xl">
+                    <h1 className="lg:mr-auto text-2xl font-light text-center lg:text-start">Analytics</h1>
+                    <div className="w-full flex flex-col gap-6">
+                        <StudyHoursChart />
                         <GPAEstimator />
                     </div>
                 </div>
-                {/* Calendar Component */}
-                <div className="mt-4 lg:mt-0 col-span-1 flex flex-col items-center justify-start gap-8 rounded-xl">
-                    <h1 className="lg:mr-auto text-2xl font-light lg:text-left text-center">Term Calendar</h1>
-                    <Calendar events={calendarEvents as CalendarEvent[]} setIsExporting={setIsExporting} termView={true} />
-                </div>
+
+
             </div>
+
             {/* Popup when creating a incomplete course */}
             <CreateCoursePopup isCreatingCourse={isCreatingCourse} setIsCreatingCourse={setIsCreatingCourse}/>
             {/* Popup when exporting to google calendar */}

@@ -9,6 +9,7 @@ import CoursePage from './pages/user/CoursePage.js';
 import Dashboard from './pages/user/Dashboard.js';
 import TermPage from './pages/user/TermPage.js';
 import PrivacyPolicyTermsConditions from './pages/landing/PP&TC.js';
+import NewUpdates from './pages/user/NewUpdates.js';
 import ProtectedRoute from './components/shared/ProtectedRoute.js'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route index element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path=":term/:course" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
             <Route path=":term" element={<ProtectedRoute><TermPage /></ProtectedRoute>} />
+            <Route path="new-updates" element={<ProtectedRoute><NewUpdates /></ProtectedRoute>} />
           </Route>
         </Routes>
         <Toaster />

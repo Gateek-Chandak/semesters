@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
 import { Slider } from "../../ui/slider";
 import { Checkbox } from "../../ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 // Types
 import { Course, Term } from "@/types/mainTypes";
 // Services
@@ -10,7 +12,7 @@ import { CalculationService } from "@/services/calculationService";
 // Hooks
 import useData from "@/hooks/general/use-data";
 import useTermGrade from "@/hooks/term/use-term-grade";
-
+import { Input } from "@/components/ui/input";
 const _calculationService = new CalculationService();
 
 const GPAEstimator = () => {
@@ -31,6 +33,13 @@ const GPAEstimator = () => {
         setEstimatedTermGrade(termGrade);
         setEstimatedOverallGrade(_calculationService.getProjectedCumulativeGPA(data));
     }, [data, termData])
+
+    const resetValues = () => {
+        setCourseOptions(termData!.courses);
+        setEstimatedTermGrade(termGrade);
+        setEstimatedOverallGrade(_calculationService.getProjectedCumulativeGPA(data));
+        setSelectedIds(termData!.courses.map((course: Course) => { return course.id }));
+    }
 
     // TODO: Implement debouncing so that it doesnt update on every change
     const calculateEstimatedGrades = (ids: number[], courses: Course[]) => {
@@ -69,9 +78,12 @@ const GPAEstimator = () => {
 
     // Slider change event
     const handleSliderChange = (e: any, id: number) => {
+        if (!Array.isArray(e) && (Number(e) < 0 || Number(e) > 110)) {
+            return;
+        }
         const newCourseOptions = courseOptions.map((course: Course) => {
             if (course.id == id) {
-                return { ...course, highest_grade: e[0]}
+                return { ...course, highest_grade: Array.isArray(e) ? e[0] : e}
             } 
             return course
         });
@@ -83,9 +95,14 @@ const GPAEstimator = () => {
     return ( 
         <Card className="w-full">
             <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-2 sm:p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-5 sm:py-6">
+                <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-4 sm:py-4">
                     <CardTitle className="text-xl">GPA Estimator</CardTitle>
-                    <CardDescription>Use the sliders to estimate your averages.</CardDescription>
+                    <CardDescription className="flex flex-col items-center sm:items-start gap-2">
+                        Use the sliders to estimate your gpa's.
+                        <Button variant={'outline'} onClick={() => resetValues()} className="!text-xs !w-fit text-black">
+                            Reset <RotateCcw />
+                        </Button>
+                    </CardDescription>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-1 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-6">
                     <span className="text-sm text-center text-muted-foreground">
@@ -104,7 +121,8 @@ const GPAEstimator = () => {
                     </span>
                 </div>
             </CardHeader>
-            <CardContent className="px-4 py-4 sm:p-6 flex flex-col gap-10">
+            <CardContent className="px-4 py-4 sm:py-4 sm:px-6 flex flex-col gap-6">
+                {courseOptions.length <= 0 && <h1 className="text-center py-5">No courses found.</h1>}
                 {courseOptions.map((course: Course) => {
                     return (
                         <div key={course.id} className="flex flex-col gap-2 justify-between">
@@ -118,8 +136,9 @@ const GPAEstimator = () => {
                                 </label>
                             </div>
                             <div className="flex flex-row justify-between">
-                                <Slider className="w-[80%]" onValueChange={(e) => handleSliderChange(e, course.id)} value={[course.highest_grade]} max={100} step={0.1} />
-                                <h1 className="text-lg w-[20%] text-center">{course.highest_grade}%</h1>
+                                <Slider className="w-[75%]" onValueChange={(e) => handleSliderChange(e, course.id)} value={[course.highest_grade]} max={100} step={0.1} />
+                                {/* <h1 className="text-lg w-[20%] text-center">{course.highest_grade}%</h1> */}
+                                <Input className="w-20" type="number" value={course.highest_grade} onChange={(e) => handleSliderChange(Number(e.target.value), course.id)}/>
                             </div>
                         </div>
                     )
