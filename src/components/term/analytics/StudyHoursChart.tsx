@@ -39,7 +39,7 @@ const StudyHoursChart = () => {
             <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-4 sm:p-0 sm:flex-row">
                 <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-0 px-4 py-4">
                     <CardTitle className="text-xl">Study Logs</CardTitle>
-                    <CardDescription>Track and view how many hours you've studied during this term.</CardDescription>
+                    <CardDescription className="flex flex-col items-center sm:items-start">Track and view how many hours you've studied during this term.</CardDescription>
                     <Button onClick={() => setIsAddingLog(true)} variant={"outline"} className="mt-3 !text-xs !w-fit border">Add Log <PlusIcon /></Button>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-4">
