@@ -60,7 +60,7 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
 
         setInputFields(prev =>
             prev.map(field =>
-                field.course_id === courseId ? { ...field, hours_studied: value } : field
+                field.course_id === courseId ? { ...field, hours_studied: parseFloat(value.toFixed(2)) } : field
             )
         );
     }

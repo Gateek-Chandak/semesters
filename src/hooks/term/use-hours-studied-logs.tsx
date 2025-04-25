@@ -22,11 +22,24 @@ const getLogsInRange = (logs: HoursStudiedLog[], rangeStart: Date, rangeEnd: Dat
     });
 };
 
+// Checks if the range provided falls within the current term or not
 const isRangeOutOfTerm = (rangeStart: Date, rangeEnd: Date, termStart: Date, termEnd: Date) => {
     return isBefore(rangeEnd, termStart) || isAfter(rangeStart, termEnd);
 };
 
+// Used to calculate the total hours studied in a time period
+const calculateHoursStudied = (logs: HoursStudiedLog[]) => {
+    return logs.reduce((acc, log) => {
+        const hoursStudiedOnDay = Object.keys(log).reduce((acc, key) => {
+            if (typeof log[key] == 'number') {
+                return acc + log[key]
+            } 
+            return acc + 0
+        }, 0)
 
+        return acc + hoursStudiedOnDay
+    }, 0)
+}
 
 const useHoursStudiedLogs = () => {
     // inits
@@ -37,6 +50,10 @@ const useHoursStudiedLogs = () => {
     const [view, setView] = useState<"weekly" | "monthly" | "term">("weekly");
     const [anchorDate, setAnchorDate] = useState<Date>(determineDefaultAnchorDate());
     const [dateRange, setDateRange] = useState<string>(displayRange());
+
+    // Metrics
+    const [hoursStudied, setHoursStudied] = useState<number>(0);
+    const [avgHoursStudied, setAvgHoursStudied] = useState<number>(0); 
 
     // const chartData = [
     //     { date: "2025-01-01", "AFM 191": 4, "CFM 101": 8 },
@@ -230,6 +247,20 @@ const useHoursStudiedLogs = () => {
         }
     }
 
+    // Used to get hours studied for a certain course in a time period
+    const calculateHoursStudiedByCourse = (course: string) => {
+        return logsToShow.reduce((acc: number, log: HoursStudiedLog) => {
+            const hoursStudiedOnDay = Object.keys(log).reduce((acc, key) => {
+                if (typeof log[key] == 'number' && key == course) {
+                    return acc + log[key]
+                } 
+                return acc + 0
+            }, 0)
+
+            return acc + hoursStudiedOnDay
+        }, 0)
+    }
+
     const getWeeklyLogs = (targetDate = new Date()) => {
         if (!termData) return [];
     
@@ -297,10 +328,21 @@ const useHoursStudiedLogs = () => {
         setDateRange(range);
         switch (view) {
             case "weekly":
-                return getWeeklyLogs(anchorDate);
+                const weeklyLogs = getWeeklyLogs(anchorDate);
+                const weeklyHoursStudied = calculateHoursStudied(weeklyLogs)
+                setHoursStudied(weeklyHoursStudied)
+                setAvgHoursStudied(weeklyLogs.length > 0 ? (weeklyHoursStudied / weeklyLogs.length) : 0)
+                return weeklyLogs;
             case "monthly":
-                return getMonthlyLogs(anchorDate);
+                const monthlyLogs = getMonthlyLogs(anchorDate);
+                const monthlyHoursStudied = calculateHoursStudied(monthlyLogs)
+                setHoursStudied(monthlyHoursStudied)
+                setAvgHoursStudied(monthlyLogs.length > 0 ? (monthlyHoursStudied / monthlyLogs.length) : 0)
+                return monthlyLogs
             case "term":
+                const totalHoursStudied = calculateHoursStudied(hoursStudiedLogs)
+                setHoursStudied(totalHoursStudied)
+                setAvgHoursStudied(hoursStudiedLogs.length > 0 ? (totalHoursStudied / hoursStudiedLogs.length) : 0)
                 setDateRange(termData!.term_name)
                 return hoursStudiedLogs;
             default:
@@ -308,7 +350,19 @@ const useHoursStudiedLogs = () => {
         }
     }, [view, hoursStudiedLogs, anchorDate]);
 
-    return { hoursStudiedLogs, createLogs, fetchLogs, getWeeklyLogs, getMonthlyLogs, setView, view, logsToShow, goToNext, goToPrevious, displayRange, dateRange }
+    return { 
+        createLogs, 
+        fetchLogs, 
+        setView, 
+        view, 
+        logsToShow, 
+        goToNext, 
+        goToPrevious, 
+        dateRange, 
+        hoursStudied,
+        avgHoursStudied,
+        calculateHoursStudiedByCourse
+    }
 }
  
 export default useHoursStudiedLogs;

@@ -2,7 +2,7 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { PlusIcon, ChevronLeft, ChevronRight } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 // Custom Components
 import AddStudyLogPopup from "../popups/AddStudyLogPopup"
@@ -12,15 +12,31 @@ import useData from "@/hooks/general/use-data"
 import { Course } from "@/types/mainTypes"
 import { Button } from "@/components/ui/button"
 import useHoursStudiedLogs from "@/hooks/term/use-hours-studied-logs"
+import { Separator } from "@/components/ui/separator"
 
 const StudyHoursChart = () => {
     // Hooks
     const { termData } = useData();
-    const { fetchLogs, createLogs, setView, logsToShow, goToNext, goToPrevious, dateRange, view } = useHoursStudiedLogs();
+    const { 
+        fetchLogs, 
+        createLogs, 
+        setView, 
+        logsToShow, 
+        goToNext, 
+        goToPrevious, 
+        dateRange, 
+        view, 
+        hoursStudied, 
+        avgHoursStudied,
+        calculateHoursStudiedByCourse
+    } = useHoursStudiedLogs();
     // States
     //  conditionals
     const [isAddingLog, setIsAddingLog] = useState<boolean>(false);
 
+    // Statics
+    const metricLabels = ['Total Hours Studied', 'Avg. Hours Studied'];
+    const metricValues = [hoursStudied.toFixed(2), avgHoursStudied.toFixed(2)];
 
     // Init Chart Config
     const chartConfig = termData!.courses.reduce((config, course) => {
@@ -39,7 +55,7 @@ const StudyHoursChart = () => {
             <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-4 sm:p-0 sm:flex-row">
                 <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-0 px-4 py-4">
                     <CardTitle className="text-xl">Study Logs</CardTitle>
-                    <CardDescription className="flex flex-col items-center sm:items-start">Track and view how many hours you've studied during this term.</CardDescription>
+                    <CardDescription className="flex flex-col items-center sm:items-start">Track and view how many hours you've studied this term.</CardDescription>
                     <Button onClick={() => setIsAddingLog(true)} variant={"outline"} className="mt-3 !text-xs !w-fit border">Add Log <PlusIcon /></Button>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-4 px-6 sm:border-l sm:border-t-0 sm:px-4 sm:py-4">
@@ -72,7 +88,7 @@ const StudyHoursChart = () => {
                                                     })
                                                 }}  />
                         <ChartTooltip content={
-                                <ChartTooltipContent className="w-[150px]" nameKey={"views"} indicatorOpacity={0.65} valueAddOn="hours"
+                                <ChartTooltipContent className="w-[175px]" nameKey={"views"} indicatorOpacity={0.65} valueAddOn="hours"
                                                     labelFormatter={(value) => {
                                                         return new Date(value).toLocaleDateString("en-US", {
                                                             month: "short",
@@ -86,17 +102,35 @@ const StudyHoursChart = () => {
                     </BarChart>
                 </ChartContainer>}
             </CardContent>
-            {/* <Separator />
-            <CardFooter className="mt-4 flex flex-row justify-center">
-                <div className="flex flex-col justify-center items-center gap-2">
-                    <span className="text-sm text-center text-muted-foreground">
-                        Total Hours Studied
-                    </span>
-                    <span className="text-lg text-center font-bold leading-none sm:text-2xl">
-                        692
-                    </span>
+            <Separator />
+            <CardFooter className="p-0 flex flex-col justify-center items-center">
+                <div className="w-full flex flex-row justify-between items-stretch">
+                    {termData!.courses.map((course, index) => {
+                        console.log('hello')
+                        return (
+                            <div className={`py-3 w-full flex flex-col justify-center items-center gap-0 ${index < termData!.courses.length -1 ? 'border-r' : '' }`}>
+                               <h1 style={{color: course.colour, opacity: 0.8}} className="text-xs md:text-sm">{course.course_title}</h1>
+                               <h1 className="font-semibold text-md md:text-lg">{calculateHoursStudiedByCourse(course.course_title).toFixed(2)}</h1>
+                            </div>
+                        )
+                    })}
                 </div>
-            </CardFooter> */}
+                <Separator />
+                <div className="w-full flex flex-row justify-between items-stretch">
+                    {metricLabels.map((metric: string, index: number) => {
+                        return (
+                            <div className={`py-3 w-full flex flex-col justify-center items-center gap-1 lg:gap-0 ${index < metricLabels.length -1 ? 'border-r' : '' }`}>
+                                <span className="text-xs md:text-sm text-center text-muted-foreground">
+                                    {metric}
+                                </span>
+                                <span className="text-lg md:text-lg text-center font-semibold leading-none">
+                                    {metricValues.at(index)}
+                                </span>
+                            </div>
+                        )
+                    })}
+                </div>
+            </CardFooter>
             <AddStudyLogPopup isAddingLog={isAddingLog} setIsAddingLog={setIsAddingLog} fetchLogs={fetchLogs} createLogs={createLogs}/>
         </Card>
     )
