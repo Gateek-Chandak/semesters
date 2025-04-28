@@ -30,7 +30,7 @@ const EventsInProximity: React.FC<EventsInProximityProps> = ( {proximityInDays}:
                 {eventsNextXDays.length > 0 && eventsNextXDays.map((event, index) => {
                     return (
                         <Card key={index} className={`p-4 h-full !rounded-xl`}>
-                            <h1 className={`font-medium text-${event.color}-600`}>{event.course}</h1>
+                            <h1 className={`font-medium text${event.color}`}>{event.course}</h1>
                             <div className="mt-2 flex flex-row justify-between">
                                 <p className="font-normal truncate">{event.title}</p>
                                 <p className="font-extralight text-sm">{format(event.start!, `MMMM dd, yyyy '@' hh:mma`)}</p>

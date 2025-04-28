@@ -25,10 +25,9 @@ const ColourPicker: React.FC<ColourPickerProps> = ({selectedColour, setSelectedC
                         height: '33px',
                         borderRadius: '50%',
                         cursor: 'pointer',
-                        opacity: (selectedColour !== colour) ? '50%' : '100%'
+                        opacity: (selectedColour !== colour) ? '40%' : '100%',
                     }}
-                    className={`${colour === 'black' ? 'bg-black' : `bg-${colour}-500`}
-                                ${selectedColour === colour ? `transform transition-all duration-200 scale-110 border-${colour}-600'` : ''}`}
+                    className={`border${colour} bg${colour} transform transition-all duration-200 scale-110`}
                 ></div>
             ))}
         </div>

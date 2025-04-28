@@ -9,7 +9,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import useData from "@/hooks/general/use-data";
 import { useToast } from "@/hooks/general/use-toast";
 
-export type InputField = { course_id: number; course_title: string; hours_studied: number };
+export type InputField = { course_id: number; course_title: string; hours_studied: number, colour: string };
 interface AddStudyLogPopupProps {
     isAddingLog: boolean,
     setIsAddingLog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,7 +34,8 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
             const fields = termData.courses.map(course => ({
                 course_id: course.id,
                 course_title: course.course_title,
-                hours_studied: 0
+                hours_studied: 0,
+                colour: course.colour
             }));
             setInputFields(fields);
         }
@@ -108,7 +109,8 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
         const fields = termData!.courses.map(course => ({
             course_id: course.id,
             course_title: course.course_title,
-            hours_studied: 0
+            hours_studied: 0,
+            colour: course.colour
         }));
         setInputFields(fields);
         setDate(today.toISOString());
@@ -116,7 +118,7 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
 
     return ( 
         <Dialog open={isAddingLog} onOpenChange={handleClose}>
-            <DialogContent>
+            <DialogContent className="max-h-[95%] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Log Your Study Hours</DialogTitle>
                     <DialogDescription>You can override logs by choosing the same date.</DialogDescription>
@@ -128,7 +130,10 @@ const AddStudyLogPopup: React.FC<AddStudyLogPopupProps> = ({ isAddingLog, setIsA
                         <div className="ml-0 flex flex-col gap-4">
                             {inputFields.map((field) => (
                                 <div key={field.course_id} className="text-sm flex flex-col gap-2">
-                                    <h1 className="text-foreground">{field.course_title}</h1>
+                                    <div className="flex flex-row gap-2 items-center">
+                                        <div className={`rounded-sm h-[12px] w-[12px] bg${field.colour}`}></div>
+                                        <h1 className="text-foreground">{field.course_title}</h1>
+                                    </div>
                                     <Input
                                         type="number"
                                         name={field.course_title}

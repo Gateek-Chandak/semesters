@@ -95,7 +95,7 @@ const GPAEstimator = () => {
     return ( 
         <Card className="w-full">
             <CardHeader className="flex flex-col items-center sm:items-stretch space-y-0 border-b p-0 pb-2 sm:p-0 sm:flex-row">
-                <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-6 py-4 sm:py-4">
+                <div className="flex flex-1 flex-col items-center sm:items-start justify-center gap-1 px-4 py-4">
                     <CardTitle className="text-xl">GPA Estimator</CardTitle>
                     <CardDescription className="flex flex-col items-center sm:items-start gap-2">
                         Use the sliders to estimate your gpa's.
@@ -121,7 +121,7 @@ const GPAEstimator = () => {
                     </span>
                 </div>
             </CardHeader>
-            <CardContent className="px-4 py-4 sm:py-4 sm:px-6 flex flex-col gap-6">
+            <CardContent className="px-4 py-4 flex flex-col gap-[22.4px]">
                 {courseOptions.length <= 0 && <h1 className="text-center py-5">No courses found.</h1>}
                 {courseOptions.map((course: Course) => {
                     return (

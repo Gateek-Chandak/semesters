@@ -90,26 +90,20 @@ export function NavMain() {
       <div className="w-full flex flex-col-reverse justify-center items-center gap-4">
         {!open && !isMobile && selectedCourse && selectedTermData!.courses.map((course: Course) => {
           if (course.course_title === selectedCourse) {
-            let hoverColour ='black'
-            if (course.colour === 'black') {
-              hoverColour = 'black'
-            } else {
-              hoverColour = `${course.colour}-500`
-            }
             return (
-              <Link key={course.course_title} to={`/home/${selectedTerm?.replace(/\s+/g, '-')}/${course.course_title.replace(/\s+/g, '-')}`}>
-                <Button variant='outline' className={`w-12 h-12 rounded-xl text-sm border border-slate-300 bg-${hoverColour} hover:bg-${hoverColour} hover:text-gray-200 text-white flex flex-col gap-0`}>
-                  <h1>{course.course_title.split(' ')[0]}</h1>
+              <Link key={course.course_title} to={`/home/${selectedTerm?.replace(/\s+/g, '-')}/${course.course_title.replace(/\s+/g, '-')}`} className={`bg${course.colour} rounded-3xl`}>
+                <Button variant='outline' className={`w-12 h-12 rounded-xl border border-slate-300 bg${course.colour} hover:bg-inherit text-white hover:text-white flex flex-col gap-0`}>
+                  <h1>{course.course_title.split(' ')[0].slice(0, 4)}</h1>
                   <h1>{course.course_title.split(' ')[1]}</h1>
                 </Button>
               </Link>
             )
           } else {
             return (
-              <Link key={course.course_title} to={`/home/${selectedTerm?.replace(/\s+/g, '-')}/${course.course_title.replace(/\s+/g, '-')}`}>
-                <Button variant='outline' className="w-12 h-12 p-2 rounded-xl text-sm border border-slate-300 flex flex-col gap-0">
-                <h1 className="">{course.course_title.split(' ')[0]}</h1>
-                <h1 className="">{course.course_title.split(' ')[1]}</h1>
+              <Link key={course.course_title} to={`/home/${selectedTerm?.replace(/\s+/g, '-')}/${course.course_title.replace(/\s+/g, '-')}`} className={`rounded-3xl`}>
+                <Button variant='outline' className="w-12 h-12 p-2 rounded-xl !text-[14px] border border-slate-300 flex flex-col gap-0">
+                  <h1>{course.course_title.split(' ')[0].slice(0, 4)}</h1>
+                  <h1 className="">{course.course_title.split(' ')[1]}</h1>
                 </Button>
               </Link>
             )

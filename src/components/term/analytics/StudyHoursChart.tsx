@@ -34,6 +34,8 @@ const StudyHoursChart = () => {
     //  conditionals
     const [isAddingLog, setIsAddingLog] = useState<boolean>(false);
 
+    const OPACITY_VALUE = 0.9
+
     // Statics
     const metricLabels = ['Total Hours Studied', 'Avg. Hours Studied'];
     const metricValues = [hoursStudied.toFixed(2), avgHoursStudied.toFixed(2)];
@@ -88,7 +90,7 @@ const StudyHoursChart = () => {
                                                     })
                                                 }}  />
                         <ChartTooltip content={
-                                <ChartTooltipContent className="w-[175px]" nameKey={"views"} indicatorOpacity={0.65} valueAddOn="hours"
+                                <ChartTooltipContent className="w-[175px]" nameKey={"views"} indicatorOpacity={OPACITY_VALUE} valueAddOn="hours"
                                                     labelFormatter={(value) => {
                                                         return new Date(value).toLocaleDateString("en-US", {
                                                             month: "short",
@@ -97,40 +99,43 @@ const StudyHoursChart = () => {
                                                         })
                                                     }} />}/>
                         { termData!.courses.map((course: Course) => {
-                            return (<Bar key={course.id} dataKey={course.course_title} stackId="a" fill={course.colour} opacity={0.65}/>)
+                            return (<Bar className={`fill${course.colour}`} key={course.id} dataKey={course.course_title} stackId="a" fill={course.colour} opacity={OPACITY_VALUE}/>)
                         })}
                     </BarChart>
                 </ChartContainer>}
             </CardContent>
-            <Separator />
-            <CardFooter className="p-0 flex flex-col justify-center items-center">
-                <div className="w-full flex flex-row justify-between items-stretch">
-                    {termData!.courses.map((course, index) => {
-                        console.log('hello')
-                        return (
-                            <div className={`py-3 w-full flex flex-col justify-center items-center gap-0 ${index < termData!.courses.length -1 ? 'border-r' : '' }`}>
-                               <h1 style={{color: course.colour, opacity: 0.8}} className="text-xs md:text-sm">{course.course_title}</h1>
-                               <h1 className="font-semibold text-md md:text-lg">{calculateHoursStudiedByCourse(course.course_title).toFixed(2)}</h1>
-                            </div>
-                        )
-                    })}
-                </div>
-                <Separator />
-                <div className="w-full flex flex-row justify-between items-stretch">
-                    {metricLabels.map((metric: string, index: number) => {
-                        return (
-                            <div className={`py-3 w-full flex flex-col justify-center items-center gap-1 lg:gap-0 ${index < metricLabels.length -1 ? 'border-r' : '' }`}>
-                                <span className="text-xs md:text-sm text-center text-muted-foreground">
-                                    {metric}
-                                </span>
-                                <span className="text-lg md:text-lg text-center font-semibold leading-none">
-                                    {metricValues.at(index)}
-                                </span>
-                            </div>
-                        )
-                    })}
-                </div>
-            </CardFooter>
+            {termData!.courses.length > 0 && <Separator />}
+            {termData!.courses.length > 0 &&
+                <CardFooter className="p-0 flex flex-col justify-center items-center">
+                    <div className="w-full flex flex-row justify-between items-stretch">
+                        {termData!.courses.map((course, index) => {
+                            return (
+                                <div key={course.id} className={`py-3 w-full flex flex-col justify-center items-center gap-0 ${index < termData!.courses.length -1 ? 'border-r' : '' }`}>
+                                    <div className="flex flex-row gap-[6px] items-center">
+                                        <div style={{opacity: OPACITY_VALUE}} className={`bg${course.colour} rounded-sm h-[10px] w-[10px]`}></div>
+                                        <h1 className="text-xs md:text-sm text-center text-muted-foreground">{course.course_title}</h1>
+                                    </div>
+                                    <h1 className="font-semibold text-md">{calculateHoursStudiedByCourse(course.course_title).toFixed(2)}</h1>
+                                </div>
+                            )
+                        })}
+                    </div>
+                    <Separator />
+                    <div className="w-full flex flex-row justify-between items-stretch">
+                        {metricLabels.map((metric: string, index: number) => {
+                            return (
+                                <div key={index} className={`py-3 w-full flex flex-col justify-center items-center gap-1 ${index < metricLabels.length -1 ? 'border-r' : '' }`}>
+                                    <span className="text-xs md:text-sm text-center text-muted-foreground">
+                                        {metric}
+                                    </span>
+                                    <span className="text-lg text-center font-semibold leading-none">
+                                        {metricValues.at(index)}
+                                    </span>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </CardFooter> }
             <AddStudyLogPopup isAddingLog={isAddingLog} setIsAddingLog={setIsAddingLog} fetchLogs={fetchLogs} createLogs={createLogs}/>
         </Card>
     )

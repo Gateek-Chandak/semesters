@@ -17,7 +17,7 @@ const DisplayCourseCard: React.FC<CourseCardProps> = ({ course, gradesShown, isC
         return ( 
         <Link key={course.course_title} to={`/home/${term?.replace(/\s+/g, '-')}/${course.course_title.replace(/\s+/g, '-')}`} className="">
             <div className={`h-40 w-40 custom-card transform transition-all duration-200 hover:scale-[1.04] ${course.colour}`}>
-                <div className="h-40 w-40 flex flex-col justify-center gap-1 items-center">
+                <div className={`text${course.colour} h-40 w-40 flex flex-col justify-center gap-1 items-center`}>
                     {!gradesShown && <h1 className="text-2xl">{course.course_title.split(' ')[0]}</h1>}
                     {gradesShown && <h1 className="text-xl">{course.course_title}</h1>}
                     {!gradesShown && <h1 className="text-4xl font-medium">{course.course_title.split(' ')[1]}</h1>}

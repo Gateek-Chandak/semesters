@@ -40,12 +40,12 @@ const monthEventVariants = cva('size-2 rounded-full', {
   variants: {
     variant: {
       black: 'bg-black',
-      blue: 'bg-blue-500',
-      green: 'bg-green-500',
+      blue: 'bg-blue-600',
+      green: 'bg-green-600',
       pink: 'bg-pink-500',
-      purple: 'bg-purple-500',
+      purple: 'bg-purple-600',
       orange: 'bg-orange-500',
-      red: 'bg-red-500',
+      red: 'bg-red-600',
     },
   },
   defaultVariants: {
