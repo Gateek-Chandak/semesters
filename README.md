@@ -7,28 +7,15 @@
   <p align="center">
     An app that helps students track, analyze, and manage their grades throughout their entire university education.
     <br />
-     <a href="https://semesters.ca">semesters.ca</a>
+     <a href="https://semesters.ca" target="_blank" >semesters.ca</a>
   </p>
-</div>
-
-<!-- REMOVE THIS IF YOU DON'T HAVE A DEMO -->
-<!-- TIP: You can alternatively directly upload a video up to 100MB by dropping it in while editing the README on GitHub. This displays a video player directly on GitHub instead of making it so that you have to click an image/link -->
-<div align="center">
-  <h1>Home & Term Page Demo</h1>
-  https://github.com/user-attachments/assets/1debfc00-59e8-48db-b887-dcf976329936
-  https://github.com/user-attachments/assets/5fd050ce-621e-4c96-b293-16e9e20ff8ba
 </div>
 
 ## Table of Contents
 
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#key-features">Key Features</a></li>
-    <!-- <li><a href="#architecture">Architecture</a></li> -->
-  </ol>
-</details>
+- **About The Project**
+- **Key Features**
+- **Demos**
 
 ## About The Project
 
@@ -59,3 +46,22 @@ Semesters is a web app made to help students organize their academic lives. It a
 **Backend (API):**
 
 Currently a private repo (As of April 30th, 2025)
+
+<!-- REMOVE THIS IF YOU DON'T HAVE A DEMO -->
+<!-- TIP: You can alternatively directly upload a video up to 100MB by dropping it in while editing the README on GitHub. This displays a video player directly on GitHub instead of making it so that you have to click an image/link -->
+## Demos
+
+<div id='demos' align="center">
+
+
+https://github.com/user-attachments/assets/024b0d1f-38d7-4dee-895e-fc428b49e58b
+
+
+  https://github.com/user-attachments/assets/7767d4cc-247d-44cd-9bca-7d45d2eb49c4
+
+
+
+https://github.com/user-attachments/assets/9d60014d-251e-48eb-91fd-2b8491995db1
+
+  
+</div>
