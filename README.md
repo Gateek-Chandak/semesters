@@ -14,7 +14,9 @@
 <!-- REMOVE THIS IF YOU DON'T HAVE A DEMO -->
 <!-- TIP: You can alternatively directly upload a video up to 100MB by dropping it in while editing the README on GitHub. This displays a video player directly on GitHub instead of making it so that you have to click an image/link -->
 <div align="center">
-  <img src="public/Videos//Semesters_Demo.mov" alt="Project Demo">
+  <h1>Home & Term Page Demo</h1>
+  https://github.com/user-attachments/assets/1debfc00-59e8-48db-b887-dcf976329936
+  https://github.com/user-attachments/assets/5fd050ce-621e-4c96-b293-16e9e20ff8ba
 </div>
 
 ## Table of Contents
