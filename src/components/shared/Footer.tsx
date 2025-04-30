@@ -11,6 +11,7 @@ const Footer = () => {
                 </div>
                 <a href="/privacy-policy-and-terms-conditions" className="text-xs md:text-md text-muted-foreground">Privacy Policy</a>
                 <a href="/privacy-policy-and-terms-conditions" className="text-xs md:text-md text-muted-foreground">Terms & Conditions</a>
+                <a href="https://forms.gle/V2twUiUaZUFKaMmMA" target="_blank" className="text-xs md:text-md text-muted-foreground">Feedback</a>
                 <h1 className="text-xs md:text-md">
                     Made by <a href="https://www.linkedin.com/in/gateek-chandak/" target="_blank" className="underline">Gateek Chandak</a> & <a href="https://www.davidstirling.me/" target="_blank" className="underline">David Stirling</a>
                 </h1>

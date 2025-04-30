@@ -45,7 +45,7 @@ const Dashboard = () => {
     const [isShowingAverage, setIsShowingAverage] = useState<boolean>(false)
     const [isDeletingTerm, setIsDeletingTerm] = useState<boolean>(false)
     const [isShowingGrades, setIsShowingGrades] = useState<boolean>(false)
-    const [isShowingBanner, setIsShowingBanner] = useState<boolean>(true);
+    const [isShowingBanner, setIsShowingBanner] = useState<boolean>(false);
     //  values
     const [termBeingDeleted, setTermBeingDeleted] = useState<number>(-1)
     // Inits
