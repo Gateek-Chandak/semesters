@@ -63,7 +63,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }, [data]);
 
   // If still loading, show a loading indicator or nothing
-  if (!loading) {
+  if (loading) {
     return (
       <div className='w-full h-dvh bg-[#f7f7f7] flex flex-row justify-center items-start gap-6 pt-72'>
         <SemestersLogoAnim width='42'/>
