@@ -54,8 +54,21 @@ const LandingPage = () => {
   // Handles log-in logic for API request and routing
   const handleLogin = async () => {
       try {
-          const googleAuthUrl = await _apiService.handleLogin()
+        const isInAppBrowser = /LinkedInApp|FBAN|FBAV|Instagram|Messenger/i.test(navigator.userAgent);
+
+        if (isInAppBrowser) {
+          document.body.innerHTML = `
+            <div style="text-align:center;padding:2em;font-family:sans-serif">
+              <h1>⚠️ Google Login isn't supported here</h1>
+              <p>Please open this page in Chrome or Safari to continue.</p>
+              <button onclick="window.location.href='https://yourwebsite.com';" style="padding:1em;font-size:1em">Open in browser</button>
+            </div>
+          `;
+        } else {
+          // normal Google login redirect
+          const googleAuthUrl = await _apiService.handleLogin();
           window.location.href = googleAuthUrl;
+        }
       } catch (error: unknown) {
         toast({
           variant: "destructive",
