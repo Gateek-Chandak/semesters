@@ -58,10 +58,10 @@ const LandingPage = () => {
 
         if (isInAppBrowser) {
           document.body.innerHTML = `
-            <div style="text-align:center;padding:2em;font-family:sans-serif">
-              <h1>⚠️ Google Login isn't supported here</h1>
-              <p>Please open this page in Chrome or Safari to continue.</p>
-              <button onclick="window.location.href='https://yourwebsite.com';" style="padding:1em;font-size:1em">Open in browser</button>
+            <div style="h-full text-align:center;padding:2em;font-family:sans-serif">
+              <h1>⚠️ Google Login isn't supported through the linkedln browser due to security reasons.</h1>
+              <p>Please open this page in your external browser to continue.</p>
+              <button onclick="window.location.href='https://semesters.ca';" style="padding:1em;font-size:1em">Open in browser</button>
             </div>
           `;
         } else {
