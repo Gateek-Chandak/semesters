@@ -13,7 +13,7 @@ const Footer = () => {
                 <a href="/privacy-policy-and-terms-conditions" className="text-xs md:text-md text-muted-foreground">Terms & Conditions</a>
                 <a href="https://forms.gle/V2twUiUaZUFKaMmMA" target="_blank" className="text-xs md:text-md text-muted-foreground">Feedback</a>
                 <h1 className="text-xs md:text-md">
-                    Made by <a href="https://www.linkedin.com/in/gateek-chandak/" target="_blank" className="underline">Gateek Chandak</a> & <a href="https://www.davidstirling.me/" target="_blank" className="underline">David Stirling</a>
+                    Made for UW Students, by UW students.
                 </h1>
             </div>
         </div>

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { RootState } from '../../redux/store'; // Path to your store
 import useData from '@/hooks/general/use-data';
 import { redirect } from 'react-router-dom';
+import SemestersLogoAnim from './SemestersLogoAnim';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -65,8 +66,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (loading) {
     return (
       <div className='w-full h-dvh bg-[#f7f7f7] flex flex-row justify-center items-start gap-4 pt-60'>
-        <img src="/Objects/SemesterLogo.svg" className='bg-[#f7f7f7] h-10 w-10' alt="Semester Logo" />
-        <h1 className='bg-[#f7f7f7] text-4xl'>Loading</h1>
+        <SemestersLogoAnim width='42'/>
+        <h1 className='bg-[#f7f7f7] text-4xl'>Semesters</h1>
       </div>
     )
   }
