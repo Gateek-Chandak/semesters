@@ -21,15 +21,15 @@ const SemestersLogoAnim: React.FC<SemestersLogoAnimProps> = ( { width } ) => {
               key={index}
               d={path.d}
               fill={path.fill}
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
+              initial={{ pathLength: 0, opacity: 1 }}
+              animate={{ pathLength: 1, opacity: 0 }}
               transition={{
-                duration: 3,
-                delay: index * 0.3,
+                duration: 1.5,
+                delay: index * 0.15,
                 ease: "easeInOut",
                 repeat: Infinity,
                 repeatType: "loop",
-                repeatDelay: 0.5,
+                repeatDelay: 0.3,
               }}
             />
           ))}
