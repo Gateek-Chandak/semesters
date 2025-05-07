@@ -52,7 +52,7 @@ function createChartData(data: Term[]) {
 }
 
 function calculateLatestTrend(data: Term[]) {
-    const currentGPA = _calculationService.getCumulativeGPA(data); // gets all except curr term
+    const currentGPA = _calculationService.calculateGpaExcludingCurrent(data); // gets all except curr term
     const newGPA = _calculationService.getProjectedCumulativeGPA(data); // gets all including curr term
 
     const change = ((newGPA - currentGPA) / currentGPA) * 100;

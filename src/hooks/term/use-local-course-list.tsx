@@ -85,7 +85,7 @@ const useLocalCourseList = () => {
 
     // save action
     const saveTermCoursesChanges = () => {
-        if (termData?.courses == localTermCourses) {
+        if (termData?.courses == localTermCourses) { // TODO: Stringify object
             return;
         }
         if (!cannotSave.value) {

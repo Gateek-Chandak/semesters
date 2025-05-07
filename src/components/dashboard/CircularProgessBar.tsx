@@ -17,7 +17,7 @@ interface CircularProgressProps {
 export function CircularProgress({ isShowingAverage, setIsShowingAverage }: CircularProgressProps) {
     const { data } = useData();
     // Get user's cumulative GPA
-    const percentage: number = useMemo(() => _calculationService.getCumulativeGPA(data), [data]);
+    const percentage: number = useMemo(() => _calculationService.getCompletedTermsCumulativeGPA(data), [data]);
 
   const circumference = 2 * Math.PI * 70
   const strokeDasharray = circumference
@@ -92,7 +92,7 @@ export function CircularProgress({ isShowingAverage, setIsShowingAverage }: Circ
               {isShowingAverage &&<EyeOffIcon className='!w-6 !h-6'/>}
               {!isShowingAverage &&<EyeIcon className='!w-6 !h-6'/>}
             </Button>
-            <p className="text-xs text-muted-foreground text-center">*Does not include current term</p>
+            <p className="text-xs text-muted-foreground text-center">*Only includes completed terms</p>
         </div>
     </Card>
   )
