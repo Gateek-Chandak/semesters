@@ -21,14 +21,14 @@ export class APIService {
         }
     }
 
-    // uploadSchedule(formData) sends a request to make a new course with a syllabus
-    async uploadSchedule(formData: FormData) {
+    // uploadSyllabus(formData) sends a request to make a new course with a syllabus
+    async uploadSyllabus(formData: FormData) {
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/pdf/upload-schedule/`, formData, {
+            const response = await axios.post(`${API_BASE_URL}/api/syllabus/upload-syllabus/`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true
             });
-            return response.data;
+            return JSON.parse(response.data);
         } catch (error: unknown) {
             console.log(error);
             if (error instanceof AxiosError) {

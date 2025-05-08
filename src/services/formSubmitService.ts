@@ -3,6 +3,7 @@
 // Hooks
 import { useToast } from "@/hooks/general/use-toast";
 import useData from "@/hooks/general/use-data";
+import useUser from "@/hooks/general/use-user";
 // Redux
 import { useDispatch } from "react-redux";
 import { addTerm, addCourse, updateCourse } from "@/redux/slices/dataSlice";
@@ -12,15 +13,13 @@ import { AxiosError } from "axios";
 // Services
 import { APIService } from "./apiService";
 import { CalculationService } from "./calculationService";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 const _apiService = new APIService();
 const _calculationService = new CalculationService();
 
 const FormSubmitService = () => {
     // redux inits
     const { data } = useData();
-    const user = useSelector((state: RootState) => state.auth.user);
+    const {user} =  useUser();
     const dispatch = useDispatch();
     // hooks
     const { toast } = useToast();
@@ -116,14 +115,20 @@ const FormSubmitService = () => {
             try {
                 toast({
                     variant: "default",
-                    title: "Creating...",
+                    title: "Parsing Syllabus...",
                     description: '',
+                    duration: 8000
+                });
+                const response = await _apiService.uploadSyllabus(formData);
+                const createdCourse = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
+                const gradingSchemes = await createGradingSchemesAndAssessments(response, createdCourse.id, user!.id);
+                dispatch(addCourse({ term_id: createdCourse.term_id, newCourse: {...createdCourse, grading_schemes: gradingSchemes} }));
+                toast({
+                    variant: "success",
+                    title: "Create Successful",
+                    description: `${createdCourse.course_title} has been successfully created!`,
                     duration: 3000
                 });
-                const response = await _apiService.uploadSchedule(formData);
-                const gradingSchemes = formatNewGradingScheme(response);
-                const createdCourse = await _apiService.createCourse(termData.id, courseCode + ' ' + courseNumber, courseSubtitle, colour, 0, false);
-                dispatch(addCourse({ term_id: createdCourse.term_id, newCourse: {...createdCourse, grading_schemes: gradingSchemes} }));
                 return true;
             } catch (error: unknown) {
                 if (error instanceof AxiosError) {
@@ -442,18 +447,33 @@ export class FormValidationService {
 }
 
 // formatNewGradingScheme(courseInfo) takes in incoming course info from api and returns it as formatted
-function formatNewGradingScheme(courseInfo: IncomingCourseInfo) {
-    console.log(courseInfo)
-    const response =  courseInfo.gradingSchemes.map((scheme) => ({
-        schemeName: scheme.schemeName,
-        grade: 0,
-        assessments: scheme.assessments.map((assessment) => ({
-            assessmentName: assessment.assessmentName,
-            dueDate: assessment.dueDate ? new Date(assessment.dueDate).toISOString() : null,
-            weight: assessment.weight,
-            grade: null,
-        })),
+async function createGradingSchemesAndAssessments(courseInfo: IncomingCourseInfo, courseId: number, user_id: number) {
+
+    const res = await Promise.all(courseInfo.grading_schemes.map( async (scheme) => {
+        const createdGradingScheme = await _apiService.createGradingScheme(user_id, courseId, scheme.scheme_name);
+
+        const assessments = await Promise.all(
+            scheme.assessments.map(async (assessment) => {
+                const dueDate = assessment.due_date === "null" ? null : assessment.due_date;
+                const createdAssessment = await _apiService.createAssessment(
+                    user_id,
+                    createdGradingScheme.id,
+                    assessment.assessment_name,
+                    dueDate,
+                    assessment.weight,
+                    null
+                );
+
+                return createdAssessment;
+            })
+        );
+
+        return {
+            ...createdGradingScheme,
+            assessments
+        };
     }));
-    console.log(response)
-    return response;
-};
+
+    // console.log(res);
+    return res;
+}

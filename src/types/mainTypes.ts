@@ -2,18 +2,18 @@
 
 // Incoming Assessments from API
 export type IncomingAssessments = {
-    assessmentName: string,
+    assessment_name: string,
     weight: number,
-    dueDate: Date | null
+    due_date: string | null
 }
 // Incoming Schemes From API
 export type IncomingScheme = {
-    schemeName: string,
+    scheme_name: string,
     assessments: IncomingAssessments[]
 }
 // Incoming Course Info From API
 export type IncomingCourseInfo = {
-    gradingSchemes: IncomingScheme[]
+    grading_schemes: IncomingScheme[]
 }
 // Calendar Event for Calendar Components
 export type CalendarEvent = {

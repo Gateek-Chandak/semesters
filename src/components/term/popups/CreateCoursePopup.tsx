@@ -18,6 +18,7 @@ import { InputFieldValidationService } from "@/services/inputFieldValidationServ
 import FormSubmitService from "@/services/formSubmitService";
 // Hooks
 import useData from "@/hooks/general/use-data";
+import { useToast } from "@/hooks/general/use-toast";
 
 const _inputFieldValidationService = new InputFieldValidationService();
 
@@ -31,6 +32,7 @@ const CreateCoursePopup: React.FC<CreateCoursePopupProps> = ({ isCreatingCourse,
     const { createCourse } = FormSubmitService();
     // Hooks
     const { termData } = useData();
+    const { toast } = useToast();
     // States
     //  values
     const [courseCode, setCourseCode] = useState<string>("");
@@ -70,39 +72,41 @@ const CreateCoursePopup: React.FC<CreateCoursePopupProps> = ({ isCreatingCourse,
         }
     }
 
-    // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    //     const MAX_FILE_SIZE = 1 * 1024 * 1024;
-    //     let file = event.target.files ? event.target.files[0] : null;
-    //     if (file) {
-    //         if (file.size > MAX_FILE_SIZE) {
-    //             toast({
-    //                 variant: "destructive",
-    //                 title: "File Too Large",
-    //                 description: "Your file must be smaller than 1MB",
-    //                 duration: 2000
-    //             });
-    //             event.target.value = ""
-    //             return;
-    //         }
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const MAX_FILE_SIZE = 1 * 1024 * 1024;
+        let file = event.target.files ? event.target.files[0] : null;
+        if (file) {
+            if (file.size > MAX_FILE_SIZE) {
+                toast({
+                    variant: "destructive",
+                    title: "File Too Large",
+                    description: "Your file must be smaller than 1MB",
+                    duration: 2000
+                });
+                event.target.value = ""
+                return;
+            }
 
-    //         toast({
-    //             variant: "success",
-    //             title: "File Upload Successful",
-    //             description: "Your syllabus is ready to be uploaded",
-    //             duration: 1000
-    //         });
-    //         setUploadedFile(file);
-    //     }
-    // };
+            toast({
+                variant: "success",
+                title: "File Upload Successful",
+                description: "Your syllabus is ready to be uploaded",
+                duration: 1000
+            });
+            setUploadedFile(file);
+        }
+    };
 
     // Create a new course
     const handleCreateCourse = async (): Promise<void> => {
+        setIsUploading(true)
         const shouldCreateCourse = await createCourse(termData!, courseCode, courseNumber, courseSubtitle,selectedColour, uploadedFile);
 
         if (shouldCreateCourse) {
             handleClose();
             setIsCreatingCourse(false);
         }
+        setIsUploading(false)
     };
     
 
@@ -110,10 +114,10 @@ const CreateCoursePopup: React.FC<CreateCoursePopupProps> = ({ isCreatingCourse,
         <Dialog open={isCreatingCourse || isUploading} onOpenChange={handleClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Add Course</DialogTitle>
-                    <DialogDescription>Add a new course by entering its name and uploading the syllabus. Although the upload is optional, we'll use this information to st up your calendar and grading system</DialogDescription>
+                    {!isUploading && <DialogTitle>Add Course</DialogTitle>}
+                    {!isUploading && <DialogDescription>Add a new course by entering its name and uploading the syllabus. Although the upload is optional, we'll use this information to st up your calendar and grading system</DialogDescription>}
                 </DialogHeader>
-                {isCreatingCourse && !isUploading &&
+                {!isUploading &&
                     <div className="flex flex-col gap-6 text-sm">
                         <div className="flex flex-col gap-4">
                             <h1 className="font-medium">Course Code *</h1>
@@ -133,25 +137,27 @@ const CreateCoursePopup: React.FC<CreateCoursePopupProps> = ({ isCreatingCourse,
                         </div>
                         <div className="flex flex-col gap-4">
                             <h1 className="font-medium">Syllabus Upload</h1>
-                            {/* <Input
+                            <Input
                                 type="file" // Accept only PDF files
                                 accept=".pdf"
                                 onChange={handleFileChange} // Handle file change
                                 className="hover:border-gray-200 hover:bg-gray-50 border-gray-100"
-                            /> */}
+                            />
                             <p>Currently working on improving syllabus upload!</p>
                         </div>
                     </div>}
-                {isUploading && !isCreatingCourse &&
-                    <div className="mt-10">
-                        <h1 className="text-center font-bold text-2xl">Creating Your Class</h1>
-                        <div className="flex flex-col justify-center items-center gap-4 py-10">
-                            <p>this may take up to 15 seconds...</p>
+                {isUploading &&
+                    <div className="py-10">
+                        <h1 className="text-center text-xl">Creating Your Class</h1>
+                        <div className="flex flex-col justify-center items-center gap-4">
+                            <p>This may take a few seconds...</p>
+                            <p className="text-center">You may close this popup while you wait, your new course will appear shortly.</p>
                         </div>
                     </div>}
+                {!isUploading && 
                 <DialogFooter>
                     <Button onClick={handleCreateCourse}>Add Course</Button>
-                </DialogFooter>
+                </DialogFooter>}
             </DialogContent>
         </Dialog>
 
