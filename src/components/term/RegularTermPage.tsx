@@ -113,7 +113,7 @@ const RegularTermPage = () => {
                             className="h-40 w-40 custom-card flex justify-center items-center custom-card transform transition-all duration-200 hover:scale-[1.04] hover:border-slate-300"
                             role="button" 
                             tabIndex={0}>
-                            <h1 className="text-7xl font-extralight">+</h1>
+                            <h1 className='text-xl font-[350] text-center'>Add Course<br /> <span className='text-5xl font-extralight'>+</span></h1>
                         </Card>
                     </div>
                     {/* Calendar Component */}

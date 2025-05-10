@@ -95,11 +95,11 @@ const Dashboard = () => {
                     {/* Current and Last Term */}
                     <div className="grid grid-cols-1 gap-6">
                         {data.length === 0 
-                        ? (<Card className="h-full border flex flex-col justify-between gap-5 lg:gap-0 p-10">
-                                <h1>Current Term</h1>
+                        ? (<Card className="h-full border flex flex-col justify-center gap-5 lg:gap-0 p-10">
                                 <div>
                                     <h1 className="text-4xl font-medium">No term to display</h1>
                                     <p className="pt-3 text-sm">Upload a transcript or create a term using the + icon.</p>
+                                    <Button onClick={() => setIsCreatingTerm(!isCreatingTerm)} variant={'outline'} className='mt-10 w-[40%]'>Add A New Term</Button>
                                 </div>
                             </Card>) 
                         : (<MainTermCard name="Current Term" isManagingCourses={isManagingTerms} term={data[data.length - 1]} 
@@ -122,7 +122,7 @@ const Dashboard = () => {
                     <div className="w-full flex flex-col gap-6"> 
                         {/* Action Buttons */}
                         <div className="flex flex-col gap-7 justify-center lg:justify-between lg:flex-row w-full">
-                            <h1 className="lg:text-left text-center text-2xl font-light">Term Archive</h1>
+                            <h1 className="lg:text-left text-center text-2xl font-light">Other Terms</h1>
                             <div className={`grid ${!isManagingTerms ? "lg:grid-cols-4 grid-cols-2" : "lg:grid-cols-1" } justify-center lg:justify-end gap-4`}>
                                 {!isShowingGrades && !isManagingTerms &&
                                     <Button variant={'default'} onClick={() => setIsShowingGrades(!isShowingGrades)}>
@@ -181,7 +181,7 @@ const Dashboard = () => {
                                 ))}
                             <Card onClick={() => setIsCreatingTerm(!isCreatingTerm)} className="custom-card transform transition-all duration-200 hover:scale-[1.04] hover:border-gray-300">
                                 <div className="h-40 w-40 flex flex-col justify-center gap-1 items-center">
-                                    <h1 className='text-7xl font-extralight'>+</h1>
+                                    <h1 className='text-2xl font-[400] text-center'>Add Term<br /> <span className='text-5xl font-[250]'>+</span></h1>
                                 </div>
                             </Card>
                         </div>
