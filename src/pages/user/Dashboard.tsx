@@ -42,7 +42,7 @@ const Dashboard = () => {
     const [isManagingTerms, setIsManagingTerms] = useState<boolean>(false)
     const [isActive, setIsActive] = useState<boolean>(false)
     const [isCreatingTerm, setIsCreatingTerm] = useState<boolean>(false)
-    const [isShowingAverage, setIsShowingAverage] = useState<boolean>(false)
+    const [isShowingAverage, setIsShowingAverage] = useState<boolean>(true)
     const [isDeletingTerm, setIsDeletingTerm] = useState<boolean>(false)
     const [isShowingGrades, setIsShowingGrades] = useState<boolean>(false)
     const [isShowingBanner, setIsShowingBanner] = useState<boolean>(false);
