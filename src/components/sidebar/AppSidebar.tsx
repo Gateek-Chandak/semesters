@@ -10,7 +10,7 @@ import {
   SidebarRail,
   SidebarSeparator
 } from "@/components/ui/sidebar"
-import { HomeIcon } from "lucide-react"
+import { HomeIcon, NotebookIcon } from "lucide-react"
 
 import { Link } from "react-router-dom"
 import { useSidebar } from "@/components/ui/sidebar"
@@ -38,14 +38,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <Trigger/>
       </SidebarHeader>
       <SidebarContent>
-        <div className={(open || openMobile) 
+        <Link to="/home" 
+              className={(open || openMobile) 
                         ? "px-6 py-4 flex flex-row items-center gap-2 rounded-xl hover:bg-gray-100" 
                         : "ml-[0.4rem] mr-1 my-1 px-4 py-3 flex flex-row items-center gap-2 rounded-md hover:bg-gray-100"}>
-          <Link to="/home">
-            <HomeIcon className="!h-5 !w-5"/>
-          </Link>
-          {(open || openMobile) && <Link to="/home" className="w-full truncate relative text-sm">Home</Link>}
-        </div>
+          <HomeIcon className="!h-5 !w-5"/>
+          {(open || openMobile) && <span className="w-full truncate relative text-sm">Home</span>}
+        </Link>
+        {(open || openMobile) && <SidebarSeparator />}
+        <Link to="/home/degree-planner" className={(open || openMobile) 
+                        ? "px-6 py-4 flex flex-row items-center gap-2 rounded-xl hover:bg-gray-100" 
+                        : "ml-[0.4rem] mr-1 my-1 px-4 py-3 flex flex-row items-center gap-2 rounded-md hover:bg-gray-100"}>
+          <NotebookIcon className="!h-5 !w-5"/>
+          {(open || openMobile) && <span className="w-full truncate relative text-sm">Degree Planner</span>}
+        </Link>
         {(open || openMobile) && <SidebarSeparator />}
         <NavMain/>
       </SidebarContent>

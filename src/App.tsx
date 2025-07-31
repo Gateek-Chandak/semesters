@@ -11,6 +11,7 @@ import TermPage from './pages/user/TermPage.js';
 import PrivacyPolicyTermsConditions from './pages/landing/PP&TC.js';
 import NewUpdates from './pages/user/NewUpdates.js';
 import ProtectedRoute from './components/shared/ProtectedRoute.js'
+import DegreePlanning from './pages/user/DegreePlanning.js';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             <Route path=":term/:course" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
             <Route path=":term" element={<ProtectedRoute><TermPage /></ProtectedRoute>} />
             <Route path="new-updates" element={<ProtectedRoute><NewUpdates /></ProtectedRoute>} />
+            <Route path="degree-planner" element={<ProtectedRoute><DegreePlanning /></ProtectedRoute>} />
           </Route>
         </Routes>
         <Toaster />

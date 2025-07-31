@@ -56,7 +56,7 @@ const HomePage = ( ) => {
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="block text-sm">
-                    {(term || location.pathname == '/home/new-updates') ? <Link to="/home">Home</Link> : <BreadcrumbPage>Home</BreadcrumbPage>}
+                    {(term || location.pathname == '/home/new-updates' || location.pathname == '/home/degree-planner') ? <Link to="/home">Home</Link> : <BreadcrumbPage>Home</BreadcrumbPage>}
                   </BreadcrumbItem>
                   {/* Breadcrumbs for term page */}
                   {term && (
@@ -85,6 +85,14 @@ const HomePage = ( ) => {
                       <BreadcrumbSeparator className="block" />
                       <BreadcrumbItem className="text-sm">
                         <BreadcrumbPage>New Updates</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </>
+                  )}
+                  {location.pathname == '/home/degree-planner' && (
+                    <>
+                      <BreadcrumbSeparator className="block" />
+                      <BreadcrumbItem className="text-sm">
+                        <BreadcrumbPage>Degree Planner</BreadcrumbPage>
                       </BreadcrumbItem>
                     </>
                   )}
