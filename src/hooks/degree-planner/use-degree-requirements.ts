@@ -1,13 +1,22 @@
 import { useState, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/redux/store";
 import { CreditCategory } from "@/types/degreePlanningTypes";
 import { useToast } from "../general/use-toast";
+import {
+    addRequirement as addRequirementAction,
+    updateRequirement,
+    deleteRequirement as deleteRequirementAction,
+} from "@/redux/slices/degreeRequirementsSlice";
 
 const useDegreeRequirements = () => {
-    // State for managing requirements
-    const [degreeRequirements, setDegreeRequirements] = useState<CreditCategory[]>([]);
-    const [editingRequirement, setEditingRequirement] = useState<CreditCategory | null>(null); // Requirement being edited
-    const [deletingRequirement, setDeletingRequirement] = useState<CreditCategory | null>(null); // Requirement being deleted
-
+    // Redux state for requirements data
+    const degreeRequirements = useSelector((state: RootState) => state.degreeRequirements.requirements);
+    const dispatch = useDispatch();
+    
+    // Local UI state
+    const [editingRequirement, setEditingRequirement] = useState<CreditCategory | null>(null);
+    const [deletingRequirement, setDeletingRequirement] = useState<CreditCategory | null>(null);
     const [isAddingRequirement, setIsAddingRequirement] = useState(false);
     const [isEditingRequirement, setIsEditingRequirement] = useState(false);
     const [isDeletingRequirement, setIsDeletingRequirement] = useState(false);
@@ -51,7 +60,7 @@ const useDegreeRequirements = () => {
 
         // All validations passed
         return { value: false, reason: "" };
-    }, []);
+    }, [degreeRequirements]);
 
     // Open edit dialog
     const initEditRequirement = useCallback((requirement: CreditCategory) => {
@@ -91,7 +100,7 @@ const useDegreeRequirements = () => {
             return false;
         }
 
-        setDegreeRequirements(prev => [...prev, newRequirement]);
+        dispatch(addRequirementAction({ requirement: newRequirement }));
         setIsAddingRequirement(false);
 
         toast({
@@ -102,7 +111,7 @@ const useDegreeRequirements = () => {
         });
 
         return true;
-    }, [toast, validateRequirements]);
+    }, [dispatch, toast, validateRequirements]);
 
     // Edit an existing requirement
     const editRequirement = useCallback((updatedRequirement: CreditCategory): boolean => {
@@ -126,11 +135,7 @@ const useDegreeRequirements = () => {
             return false;
         }
 
-        setDegreeRequirements(prev => 
-            prev.map(req => 
-                req.id === updatedRequirement.id ? updatedRequirement : req
-            )
-        );
+        dispatch(updateRequirement({ updatedRequirement: updatedRequirement }));
         cancelEdit();
 
         toast({
@@ -141,7 +146,7 @@ const useDegreeRequirements = () => {
         });
 
         return true;
-    }, [toast, cancelEdit, validateRequirements]);
+    }, [dispatch, degreeRequirements, toast, cancelEdit, validateRequirements]);
 
     // Delete a requirement
     const deleteRequirement = useCallback((): boolean => {
@@ -155,7 +160,7 @@ const useDegreeRequirements = () => {
             return false;
         }
 
-        setDegreeRequirements(prev => prev.filter(req => req.id !== deletingRequirement.id));
+        dispatch(deleteRequirementAction({ requirementId: deletingRequirement.id }));
 
         toast({
             variant: "success",
@@ -165,13 +170,11 @@ const useDegreeRequirements = () => {
         });
 
         return true;
-    }, [degreeRequirements, toast, deletingRequirement]);
+    }, [dispatch, toast, deletingRequirement]);
 
     return {
         // State
         degreeRequirements,
-        setDegreeRequirements,
-
         editingRequirement,
         deletingRequirement,
 
