@@ -14,6 +14,7 @@ interface ConfirmDeletePopupProps {
     isDeleting: boolean;
     setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
     deleteItem: (name: any) => any;
+    itemObject?: any;
     id?: number
 }
 
@@ -22,8 +23,18 @@ const ConfirmDeletePopup: React.FC<ConfirmDeletePopupProps> = ({
     isDeleting,
     setIsDeleting,
     deleteItem,
-    id
+    id,
+    itemObject
 }) => {
+
+    const handleDelete = () => {
+        if (itemObject) {
+            deleteItem(itemObject);
+        } else {
+            deleteItem(id ? id : name);
+        }
+        setIsDeleting(false);
+    }
 
     return ( 
         <Dialog open={isDeleting} onOpenChange={setIsDeleting}>
@@ -34,7 +45,7 @@ const ConfirmDeletePopup: React.FC<ConfirmDeletePopupProps> = ({
                 </DialogHeader>
                 <DialogFooter>
                     <Button variant={"outline"} onClick={() => setIsDeleting(false)} className="w-full">Cancel</Button>
-                    <Button variant={"destructive"} onClick={() => deleteItem(id ? id : name)} className="w-full">Confirm</Button>
+                    <Button variant={"destructive"} onClick={handleDelete} className="w-full">Confirm</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
