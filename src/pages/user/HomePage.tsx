@@ -39,14 +39,14 @@ const HomePage = ( ) => {
       <AppSidebar />
       <SidebarInset>
         {/* Breakcrumbs */}
-        {location.pathname != '/home/new-updates' && <div className="text-center w-full border-b border-muted-slate-300 py-1 pt-2 bg-sidebar">
+        {/* {location.pathname != '/home/new-updates' && <div className="text-center w-full border-b border-muted-slate-300 py-1 pt-2 bg-sidebar">
           <Link to="/home/new-updates" className="flex flex-row items-center gap-2 w-full justify-center">
               <h1 className="text-sm text-black">
                   Click here to see <span className="hover:text-gray-500 transition-colors duration-200 cursor-pointer font-medium">what&apos;s new</span> with Semesters
               </h1>
               🔥
           </Link>
-        </div>}
+        </div>} */}
         {/* Sidebar Opener and Closer */}
         {isMobile && <Trigger />}
         <header className="bg-[#f7f7f7] flex h-fit min-h-20 items-center gap-2 px-5 pt-6">
