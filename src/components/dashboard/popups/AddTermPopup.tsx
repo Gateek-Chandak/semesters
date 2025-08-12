@@ -50,16 +50,6 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
         setError("")
     }
 
-    const handleCreate = async () => {
-        const shouldCreateTerm = await createTerm(termName, selectedYear, isTermComplete);
-        if (!shouldCreateTerm) {
-            setError('This term already exists');
-            return;
-        }
-
-        handleClose();
-    };
-
     // Ensures a user cannot make a past term that is incomplete
     const checkboxEdgeHandling = () => {
         const termEndDates: Record<string, (year: number) => Date> = {
@@ -73,8 +63,25 @@ const AddTermPopup: React.FC<AddTermPopupProps> = ({isCreatingTerm, setIsCreatin
         
         // If termName is invalid or no end date found, default to not allowing it
         if (!endDate) return true;
-        
+
         return now > endDate;
+    };
+
+    const handleCreate = async () => {
+        let shouldCreateTerm = false;
+        if (checkboxEdgeHandling()) {
+            setIsTermComplete(true);
+            shouldCreateTerm = await createTerm(termName, selectedYear, true);
+        } else {
+            shouldCreateTerm = await createTerm(termName, selectedYear, isTermComplete);
+        }
+        
+        if (!shouldCreateTerm) {
+            setError('This term already exists');
+            return;
+        }
+
+        handleClose();
     };
 
     return ( 
