@@ -1,6 +1,5 @@
 // UI
 import { Card } from "../ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 // Libraries
 import { format } from "date-fns";
 // Services
@@ -15,7 +14,11 @@ import { CalendarEvent } from "@/types/mainTypes";
 const EST_OFFSET_IN_MILLISECONDS = 18000000;
 const DAY_IN_MILLISECONDS = 86400000;
 
-const EventsInProximity = () => {
+interface EventsInProximityProps {
+    selectedPeriod: string;
+}
+
+const EventsInProximity: React.FC<EventsInProximityProps> = ({ selectedPeriod }) => {
 
     const { calendarEvents } = useTermCalendarEvents();
     const { termData } = useData();
@@ -31,7 +34,6 @@ const EventsInProximity = () => {
         { value: "180", label: "Next 4 Months", days: 180 },
     ];
 
-    const [selectedPeriod, setSelectedPeriod] = useState("7"); // Default to "This Week"
     const [eventsNextXDays, setEventsNextXDays] = useState<CalendarEvent[]>([]);
     const proximityInDays = useMemo(() => timeOptions.find(option => option.value === selectedPeriod)?.days ?? 7, [selectedPeriod]);
 
@@ -60,24 +62,7 @@ const EventsInProximity = () => {
 
     return ( 
         <Card className="w-[100%] h-full h-min-[15rem] h-max-[25rem] overflow-y-auto p-4 flex flex-col gap-2">
-            {/* Dropdown for time period selection */}
-            <div className="flex flex-row justify-between items-center mb-2">
-                <h2 className="text-lg font-medium">Upcoming Events</h2>
-                <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-                    <SelectTrigger className="w-[140px] h-8">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {timeOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            
-            <div className="h-full h-min-[12rem] flex flex-col gap-4 justify-between overflow-y-auto">
+            <div className="h-full h-min-[15rem] flex flex-col gap-4 justify-between overflow-y-auto">
                 {eventsNextXDays.length > 0 && eventsNextXDays.map((event, index) => {
                     return (
                         <Link key={index} to={`/home/${termData?.term_name}/${event.course}`}>

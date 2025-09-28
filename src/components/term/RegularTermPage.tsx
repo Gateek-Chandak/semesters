@@ -24,6 +24,7 @@ import useUser from "@/hooks/general/use-user";
 // Services
 import { APIService } from "@/services/apiService";
 import { Separator } from "../ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const _apiService = new APIService();
 
@@ -39,6 +40,18 @@ const RegularTermPage = () => {
     const [isExporting, setIsExporting] = useState<boolean>(false);
     const [isManagingCourses, setIsManagingCourses] = useState<boolean>(false)
     const [isGradesShowing, setIsGradesShowing] = useState<boolean>(false);
+    const [selectedPeriod, setSelectedPeriod] = useState("7"); // Default to "7 Days"
+
+    // Time period options
+    const timeOptions = [
+        { value: "0", label: "Today", days: 0 },
+        { value: "7", label: "7 Days", days: 7 },
+        { value: "14", label: "14 Days", days: 14 },
+        { value: "30", label: "This Month", days: 30 },
+        { value: "60", label: "Next 2 Months", days: 60 },
+        { value: "90", label: "Next 3 Months", days: 90 },
+        { value: "180", label: "Next 4 Months", days: 180 },
+    ];
 
     const handleSaveChanges = async () => {
         saveTermCoursesChanges();
@@ -64,8 +77,20 @@ const RegularTermPage = () => {
                     <h1 className="text-3xl font-medium">{termData?.term_name}</h1>
                 </div>
                 {/* Upcoming Deliverables Title - Large Screens */}
-                <div className="hidden lg:col-span-2 lg:block">
+                <div className="hidden lg:col-span-2 lg:flex flex-row justify-between items-center">
                     <h1 className="text-2xl font-light">Upcoming Deliverables</h1>
+                    <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                        <SelectTrigger className="w-[140px] h-8">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {timeOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
                 {/* Left Section: Progress Bar (60%) + Metrics (40%) */}
                 <div className="col-span-1 lg:col-span-3 grid grid-cols-1 lg:grid-cols-[35%_auto] gap-6">
@@ -81,12 +106,26 @@ const RegularTermPage = () => {
                 </div>
                 {/* Upcoming Deliverables Title - Medium-Small Screens */}
                 <div className="lg:hidden mt-4 col-span-1 block lg:text-left text-center">
-                    <h1 className="text-2xl font-light">Upcoming Deliverables</h1>
+                    <div className="flex flex-col justify-center items-center gap-4">
+                        <h1 className="text-2xl font-light">Upcoming Deliverables</h1>      
+                        <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                            <SelectTrigger className="w-[140px] h-8">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {timeOptions.map((option) => (
+                                    <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
                 
                 {/* Upcoming Deliverables */}
                 <div className="col-span-1 lg:col-span-2 flex flex-col gap-6 min-h-[10rem]">
-                    {calendarEvents && <EventsInProximity />}
+                    {calendarEvents && <EventsInProximity selectedPeriod={selectedPeriod} />}
                 </div>
             </div>
             <Separator />
