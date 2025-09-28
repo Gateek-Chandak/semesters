@@ -2,10 +2,11 @@ import useData from "@/hooks/general/use-data";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
 import { Button } from "../ui/button";
 import AddSchemePopup from "./popups/AddSchemePopup";
-import {useState } from "react";
+import {useEffect, useState } from "react";
 
 import EditGradingSchemeCard from "./EditGradingSchemeCard";
 import DisplayGradingSchemeCard from "./DisplayGradingSchemeCard";
+import { GradingScheme } from "@/types/mainTypes";
 
 const DeliverablesCard = ( ) => {
     // Hooks
@@ -15,10 +16,31 @@ const DeliverablesCard = ( ) => {
     const [isAddingScheme, setIsAddingScheme] = useState<boolean>(false)
     const [isEditing, setIsEditing] = useState<boolean>(false)
 
+
+    const [sortedSchemes, setSortedSchemes] = useState<GradingScheme[]>(courseData?.grading_schemes || [])
+
+    // Sorts assessments in scheme by due date
+    useEffect(() => {
+        const schemesWithSortedAssessments = courseData?.grading_schemes.map(scheme => ({
+            ...scheme,
+            assessments: [...scheme.assessments].sort((a, b) => {
+                // Handle null/undefined due dates by putting them at the end
+                if (!a.due_date && !b.due_date) return 0;
+                if (!a.due_date) return 1;
+                if (!b.due_date) return -1;
+                
+                // Compare actual dates
+                return new Date(a.due_date).getTime() - new Date(b.due_date).getTime();
+            })
+        })) || [];
+        
+        setSortedSchemes(schemesWithSortedAssessments);
+    }, [courseData?.grading_schemes])
+
     return ( 
         <Carousel className="w-full">
             <CarouselContent>
-                {courseData && (courseData.grading_schemes.length > 0) && courseData.grading_schemes.map((scheme, index) => (
+                {courseData && (courseData.grading_schemes.length > 0) && sortedSchemes.map((scheme, index) => (
                     isEditing ? <EditGradingSchemeCard key={scheme.id} schemeIndex={index} setIsEditing={setIsEditing} scheme={scheme}/> : 
                                 <DisplayGradingSchemeCard key={scheme.id} setIsEditing={setIsEditing} scheme={scheme} />))}
                 {courseData && (courseData.grading_schemes.length <= 0) && 
