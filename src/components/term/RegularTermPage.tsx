@@ -86,7 +86,7 @@ const RegularTermPage = () => {
                 
                 {/* Upcoming Deliverables */}
                 <div className="col-span-1 lg:col-span-2 flex flex-col gap-6 min-h-[10rem]">
-                    {calendarEvents && <EventsInProximity proximityInDays={7} />}
+                    {calendarEvents && <EventsInProximity />}
                 </div>
             </div>
             <Separator />
