@@ -5,6 +5,9 @@ import { format } from "date-fns";
 // Services
 // Hooks
 import useTermCalendarEvents from "@/hooks/term/use-term-calendar-events";
+import { Link } from "react-router-dom";
+import useData from "@/hooks/general/use-data";
+import { SquareArrowOutUpRightIcon } from "lucide-react";
 
 interface EventsInProximityProps {
     proximityInDays: number;
@@ -13,6 +16,7 @@ interface EventsInProximityProps {
 const EventsInProximity: React.FC<EventsInProximityProps> = ( {proximityInDays}: EventsInProximityProps ) => {
 
     const { calendarEvents } = useTermCalendarEvents();
+    const { termData } = useData();
 
     // Today + ProximityInDays
     const proximityDaysFromNow = new Date(Date.now() + proximityInDays * 86400000);
@@ -29,13 +33,19 @@ const EventsInProximity: React.FC<EventsInProximityProps> = ( {proximityInDays}:
             <div className="h-full h-min-[15rem] flex flex-col gap-4 justify-between overflow-y-auto">
                 {eventsNextXDays.length > 0 && eventsNextXDays.map((event, index) => {
                     return (
-                        <Card key={index} className={`p-4 h-full !rounded-xl`}>
-                            <h1 className={`font-medium text${event.color}`}>{event.course}</h1>
-                            <div className="mt-2 flex flex-row justify-between">
-                                <p className="font-normal truncate">{event.title}</p>
-                                <p className="font-extralight text-sm">{format(event.start!, `MMMM dd, yyyy '@' hh:mma`)}</p>
-                            </div>
-                        </Card>)})} 
+                        <Link key={index} to={`/home/${termData?.term_name}/${event.course}`}>
+                            <Card key={index} className={`p-3 h-full !rounded-xl transform transition-all duration-200 hover:bg-gray-100`}>
+                                <div className="flex flex-row justify-between items-center">
+                                    <h1 className={`font-medium text${event.color}`}>{event.course}</h1>
+                                    <SquareArrowOutUpRightIcon className="w-4 h-4 -mt-3  !text-muted-foreground" />
+                                </div>
+                                <div className="mt-2 flex flex-row justify-between">
+                                    <p className="font-normal truncate">{event.title}</p>
+                                    <p className="font-extralight text-sm">{format(event.start!, `MMMM dd, yyyy '@' hh:mma`)}</p>
+                                </div>
+                            </Card>
+                        </Link>
+                        )})} 
                 {eventsNextXDays.length <= 0 && 
                     <div className="w-full h-full flex flex-row justify-center items-center">
                         <h1 className="font-medium">No Upcoming Deliverables.</h1>
