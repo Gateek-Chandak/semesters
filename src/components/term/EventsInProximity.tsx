@@ -54,9 +54,12 @@ const EventsInProximity: React.FC<EventsInProximityProps> = ({ selectedPeriod })
         }
 
         // Filter Events
-        setEventsNextXDays(calendarEvents.filter(event => {
+        setEventsNextXDays(calendarEvents
+            .filter(event => {
             const eventDate = new Date(event.start!);
             return eventDate >= now && eventDate <= proximityDaysFromNow;
+            }).sort((a, b) => {
+            return new Date(a.start!).getTime() - new Date(b.start!).getTime();
         }));
     }, [calendarEvents, proximityInDays])
 
