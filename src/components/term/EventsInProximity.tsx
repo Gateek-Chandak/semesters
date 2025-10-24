@@ -28,7 +28,7 @@ const EventsInProximity: React.FC<EventsInProximityProps> = ({ selectedPeriod })
         { value: "0", label: "Today", days: 0 },
         { value: "7", label: "7 Days", days: 7 },
         { value: "14", label: "14 Days", days: 14 },
-        { value: "30", label: "This Month", days: 30 },
+        { value: "30", label: "Next Month", days: 30 },
         { value: "60", label: "Next 2 Months", days: 60 },
         { value: "90", label: "Next 3 Months", days: 90 },
         { value: "180", label: "Next 4 Months", days: 180 },
